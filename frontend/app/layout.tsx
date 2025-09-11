@@ -1,18 +1,33 @@
-// fe/app/layout.tsx
-import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import './globals.css'
+import { Providers } from './providers'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: "Pro FE",
-  description: "Next.js + Tailwind v4 + PrimeReact",
-};
+  title: 'Smart Travel - Vietnam Personalized Travel',
+  description: 'Discover the beauty of Vietnam with personalized travel experiences',
+}
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="vi">
-      <body className="min-h-dvh bg-background text-foreground antialiased">
-        {children}
+    <html lang="en">
+      <head>
+        <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+        />
+      </head>
+      <body className={inter.className}>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
-  );
+  )
 }
