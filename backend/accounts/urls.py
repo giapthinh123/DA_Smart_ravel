@@ -7,4 +7,5 @@ router.register(r'users', UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('check-admin/', UserViewSet.as_view({'get': 'check_admin'}), name='check_admin'),
 ]

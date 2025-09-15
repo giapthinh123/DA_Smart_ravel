@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { Tour } from '@/types/domain'
-import { TravelService } from '@/services/travel.service'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 
@@ -46,8 +45,7 @@ export function FeaturedTours() {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const fetchedTours = await TravelService.getFeaturedTours()
-        setTours(fetchedTours.length > 0 ? fetchedTours : defaultTours)
+        setTours(defaultTours)
       } catch (error) {
         console.error('Error fetching tours:', error)
         setTours(defaultTours)
@@ -100,7 +98,7 @@ export function FeaturedTours() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {tours.map((tour) => (
+          {/* {tours.map((tour) => (
             <div key={tour.id} className="tour-card">
               <img 
                 src={tour.image} 
@@ -132,7 +130,7 @@ export function FeaturedTours() {
                 </Button>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </section>

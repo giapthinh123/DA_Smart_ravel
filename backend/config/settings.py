@@ -66,6 +66,7 @@ DATABASES = {
     }
 }
 CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Next.js frontend
     "http://localhost:4000",
     "http://localhost:3001",
     "http://localhost:3002",
@@ -84,3 +85,4 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 CORS_ALLOW_ALL_ORIGINS = True  # dev; production thì whitelist origin FE
+CORS_ALLOW_CREDENTIALS = True  # Allow cookies/auth headers

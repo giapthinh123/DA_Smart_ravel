@@ -41,20 +41,6 @@ export class TravelService {
     
     throw new Error(response.data.message || 'Flight search failed')
   }
-
-  /**
-   * Get featured tours
-   */
-  static async getFeaturedTours(): Promise<Tour[]> {
-    const response = await api.get<ApiResponse<Tour[]>>('/api/tours/featured')
-    
-    if (response.data.success && response.data.data) {
-      return response.data.data
-    }
-    
-    return [] // Return empty array if no tours found
-  }
-
   /**
    * Get tour details
    */
@@ -66,24 +52,6 @@ export class TravelService {
     }
     
     throw new Error(response.data.message || 'Failed to get tour details')
-  }
-
-  /**
-   * Get site configuration
-   */
-  static async getSiteConfig(): Promise<SiteConfig> {
-    const response = await api.get<ApiResponse<SiteConfig>>('/api/admin/load-config')
-    
-    if (response.data.success && response.data.data) {
-      return response.data.data
-    }
-    
-    // Return default config if API fails
-    return {
-      timezone: 'Asia/Ho_Chi_Minh',
-      version: '1.0.0',
-      showVersionFooter: true
-    }
   }
 
   /**

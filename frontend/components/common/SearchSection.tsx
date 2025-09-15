@@ -9,7 +9,7 @@ import { AirlineSearchForm } from '@/components/forms/AirlineSearchForm'
 import { AuthModal } from './AuthModal'
 import { Button } from '@/components/ui/Button'
 
-type TabType = 'travel' | 'hotel' | 'airline' | 'package' | 'other'
+type TabType = 'travel' | 'hotel' | 'airline' | 'package' | 'restaurant'
 
 export function SearchSection() {
   const { isAuthenticated } = useAuthStore()
@@ -41,9 +41,9 @@ export function SearchSection() {
       label: language === 'vi' ? 'Tour trọn gói' : 'Package tour'
     },
     {
-      id: 'other' as TabType,
-      icon: 'fas fa-chevron-down',
-      label: language === 'vi' ? 'Dịch vụ khác' : 'Other services'
+      id: 'restaurant' as TabType,
+      icon: 'fas fa-utensils',
+      label: language === 'vi' ? 'Dịch vụ khác' : 'Restaurant'
     }
   ]
 
@@ -112,17 +112,17 @@ export function SearchSection() {
             </p>
           </div>
         )
-      case 'other':
+      case 'restaurant':
         return (
           <div className="text-center py-12">
             <i className="fas fa-concierge-bell text-6xl text-gray-300 mb-4"></i>
             <h3 className="text-xl font-semibold text-gray-600 mb-2">
-              {language === 'vi' ? 'Dịch Vụ Bổ Sung' : 'Additional Services'}
+              {language === 'vi' ? 'Dịch Vụ Bổ Sung' : 'Restaurant'}
             </h3>
             <p className="text-gray-500">
               {language === 'vi' 
-                ? 'Nhiều dịch vụ khác sẽ sớm được cung cấp!'
-                : 'More services will be available soon!'
+                ? 'Nhà hàng sẽ sớm được cung cấp!'
+                : 'Restaurant will be available soon!'
               }
             </p>
           </div>
@@ -150,7 +150,6 @@ export function SearchSection() {
                   >
                     <i className={`${tab.icon} mr-2 ${tab.id === 'airline' ? 'text-orange-500' : ''}`}></i>
                     <span>{tab.label}</span>
-                    {tab.id === 'other' && <i className="fas fa-chevron-down ml-2"></i>}
                   </button>
                 ))}
               </div>
