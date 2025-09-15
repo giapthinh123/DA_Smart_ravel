@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useAppStore } from '@/store/useAppStore'
 import { TravelService } from '@/services/travel.service'
-import { SiteConfig } from '@/types/domain'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useToast } from '@/hooks/useToast'
@@ -14,20 +13,6 @@ export function Footer() {
   
   const [email, setEmail] = useState('')
   const [isSubscribing, setIsSubscribing] = useState(false)
-  const [siteConfig, setSiteConfig] = useState<SiteConfig | null>(null)
-
-  useEffect(() => {
-    const loadSiteConfig = async () => {
-      try {
-        const config = await TravelService.getSiteConfig()
-        setSiteConfig(config)
-      } catch (err) {
-        console.error('Error loading site config:', err)
-      }
-    }
-
-    loadSiteConfig()
-  }, [])
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -161,19 +146,6 @@ export function Footer() {
               }
             </p>
             
-            {siteConfig && siteConfig.showVersionFooter && (
-              <div className="text-gray-400 text-sm mt-2 md:mt-0">
-                <span>
-                  <i className="fas fa-globe mr-1"></i>
-                  {getTimezoneDisplay(siteConfig.timezone)}
-                </span>
-                <span className="mx-2">|</span>
-                <span>
-                  <i className="fas fa-code-branch mr-1"></i>
-                  v{siteConfig.version}
-                </span>
-              </div>
-            )}
           </div>
         </div>
       </div>

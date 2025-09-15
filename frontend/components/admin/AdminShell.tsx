@@ -2,9 +2,10 @@
 import { useState, useEffect } from "react";
 import AdminSidebar from "@/components/common/AdminSidebar";
 import UserManagement from "@/components/admin/UserManagement";
-import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
-import { useLanguage } from "@/hooks/useLanguage";
-import { useNotify } from "@/hooks/useNotifications";
+// import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
+import { Language } from "@/types/domain";
+import { useToast } from "@/hooks/useToast";
+import { useAppStore } from "@/store/useAppStore";
 
 
 export type AdminSection = "users" | "analysis";
@@ -12,20 +13,26 @@ export type AdminSection = "users" | "analysis";
 
 export default function AdminShell() {
     const [section, setSection] = useState<AdminSection>("users");
-    const { changeLanguage } = useLanguage();
-    const notify = useNotify();
+    const { language, setLanguage } = useAppStore();
+    const toast = useToast();
 
 
     useEffect(() => {
         // Admin gate
         (async () => {
             try {
-                const res = await fetch("/api/check-admin", { credentials: "include" });
+                // Call backend directly to avoid Next.js rewrite loop
+                const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+                const res = await fetch(`${apiUrl}/api/check-admin`, { 
+                    credentials: "include",
+                    mode: 'cors'
+                });
                 const data = await res.json();
                 if (!data?.is_admin) {
                     window.location.href = "/";
                 }
             } catch (e) {
+                console.error('Admin check failed:', e);
                 window.location.href = "/";
             }
         })();
@@ -48,8 +55,8 @@ export default function AdminShell() {
             }
             return { language: "vi" };
         })();
-        if (prefs?.language) changeLanguage(prefs.language);
-    }, [changeLanguage]);
+        if (prefs?.language) setLanguage(prefs.language);
+    }, [setLanguage]);
 
 
     return (
@@ -58,9 +65,16 @@ export default function AdminShell() {
             <div className="flex-1 p-8 admin-content">
                 <div className="max-w-6xl mx-auto grid grid-cols-1 gap-8">
                     {section === "users" ? (
-                        <UserManagement onError={(m) => notify.error(m)} onInfo={(m) => notify.info(m)} />
+                        <UserManagement onError={(m: string) => toast.error(m)} onInfo={(m: string) => toast.info(m)} />
                     ) : (
-                        <AnalyticsDashboard onInfo={(m: string) => notify.info(m)} />
+                        <div className="bg-white rounded-2xl shadow-xl p-8">
+                            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                                {language === 'vi' ? 'Phân tích dữ liệu' : 'Analytics Dashboard'}
+                            </h2>
+                            <p className="text-gray-600">
+                                {language === 'vi' ? 'Tính năng đang được phát triển...' : 'Feature under development...'}
+                            </p>
+                        </div>
                     )}
                 </div>
             </div>

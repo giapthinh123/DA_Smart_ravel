@@ -1,128 +1,199 @@
-"use client";
+'use client'
 
+import { useState, useEffect } from 'react'
+import { useAppStore } from '@/store/useAppStore'
 
-import { useEffect, useMemo, useState } from "react";
-import { useLanguage } from "@/hooks/useLanguage";
-import { fetchUsers } from "@/lib/api";
-
-
-interface UserItem {
-    user_id: string;
-    name?: string;
-    email: string;
-    phone_number?: string;
-    city?: string;
-    country?: string;
-    is_admin?: boolean;
+interface UserManagementProps {
+  onError?: (message: string) => void
+  onInfo?: (message: string) => void
 }
 
+interface User {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  role: 'user' | 'admin'
+  created_at: string
+}
 
-interface Pagination { current_page: number; total_pages: number; total_users: number; limit: number }
+export default function UserManagement({ onError, onInfo }: UserManagementProps) {
+  const { language } = useAppStore()
+  const [users, setUsers] = useState<User[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
+  // Mock data for now - replace with actual API call
+  useEffect(() => {
+    const loadUsers = async () => {
+      try {
+        setLoading(true)
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        
+        const mockUsers: User[] = [
+          {
+            id: '1',
+            name: 'Admin User',
+            email: 'admin@example.com',
+            phone: '+84123456789',
+            role: 'admin',
+            created_at: '2024-01-01T00:00:00Z'
+          },
+          {
+            id: '2', 
+            name: 'John Doe',
+            email: 'john@example.com',
+            phone: '+84987654321',
+            role: 'user',
+            created_at: '2024-01-15T00:00:00Z'
+          },
+          {
+            id: '3',
+            name: 'Jane Smith', 
+            email: 'jane@example.com',
+            role: 'user',
+            created_at: '2024-02-01T00:00:00Z'
+          }
+        ]
+        
+        setUsers(mockUsers)
+        setTotalPages(1)
+        onInfo?.(language === 'vi' ? 'Đã tải danh sách người dùng' : 'Users loaded successfully')
+      } catch (error) {
+        onError?.(language === 'vi' ? 'Không thể tải danh sách người dùng' : 'Failed to load users')
+      } finally {
+        setLoading(false)
+      }
+    }
 
-export default function UserManagement({ onError, onInfo }: { onError?: (m: string) => void; onInfo?: (m: string) => void }) {
-    const { t, lang } = useLanguage();
-    const [loading, setLoading] = useState(true);
-    const [users, setUsers] = useState<UserItem[]>([]);
-    const [page, setPage] = useState(1);
-    const [pagination, setPagination] = useState<Pagination | null>(null);
-    const [search, setSearch] = useState("");
-    const [role, setRole] = useState<string>("");
+    loadUsers()
+  }, [currentPage, searchTerm, onError, onInfo, language])
 
+  const filteredUsers = users.filter(user =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  )
 
-    const limit = 10;
-
-
-    const headerTexts = useMemo(
-        () => (lang === "en" ? ["ID", "Name", "Email", "Phone", "Role", "Actions"] : ["ID", "Họ Tên", "Email", "Số ĐT", "Vai Trò", "Thao Tác"]),
-        [lang]
-    );
-
-
-    useEffect(() => {
-        (async () => {
-            try {
-                setLoading(true);
-                const res = await fetchUsers({ page, limit, search, role });
-                if (res.success) {
-                    setUsers(res.users || []);
-                    setPagination(res.pagination);
-                } else {
-                    onError?.(res.message || "Không thể tải danh sách người dùng");
-                }
-            } catch (e: any) {
-                onError?.(e?.message || "Không thể tải danh sách người dùng");
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, [page, search, role, onError]);
-
-
-    const infoText = useMemo(() => {
-        if (!pagination) return "";
-        const start = (pagination.current_page - 1) * limit + 1;
-        const end = Math.min(start + limit - 1, pagination.total_users);
-        return lang === "en"
-            ? `Showing ${start} - ${end} of ${pagination.total_users} users`
-            : `Hiển thị ${start} - ${end} của ${pagination.total_users} người dùng`;
-    }, [pagination, lang]);
-
-
+  if (loading) {
     return (
-        <aside className="admin-sidebar w-72 p-8 text-white relative z-10">
-            <div className="mb-10">
-                <div className="flex items-center space-x-4 mb-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-lg">
-                        <i className="fas fa-cogs text-white text-xl" />
+      <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+          <span className="ml-4 text-gray-600">
+            {language === 'vi' ? 'Đang tải...' : 'Loading...'}
+          </span>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="bg-white rounded-2xl shadow-xl p-8">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          {language === 'vi' ? 'Quản lý người dùng' : 'User Management'}
+        </h2>
+        <p className="text-gray-600">
+          {language === 'vi' ? 'Quản lý tài khoản người dùng trong hệ thống' : 'Manage user accounts in the system'}
+        </p>
+      </div>
+
+      {/* Search */}
+      <div className="mb-6">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder={language === 'vi' ? 'Tìm kiếm theo tên hoặc email...' : 'Search by name or email...'}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <i className="fas fa-search absolute left-3 top-4 text-gray-400"></i>
+        </div>
+      </div>
+
+      {/* Users Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-200">
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">
+                {language === 'vi' ? 'Tên' : 'Name'}
+              </th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">Email</th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">
+                {language === 'vi' ? 'Số điện thoại' : 'Phone'}
+              </th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">
+                {language === 'vi' ? 'Vai trò' : 'Role'}
+              </th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">
+                {language === 'vi' ? 'Ngày tạo' : 'Created'}
+              </th>
+              <th className="text-left py-4 px-4 font-semibold text-gray-700">
+                {language === 'vi' ? 'Thao tác' : 'Actions'}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.map((user) => (
+              <tr key={user.id} className="border-b border-gray-100 hover:bg-gray-50">
+                <td className="py-4 px-4">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold mr-3">
+                      {user.name.charAt(0).toUpperCase()}
                     </div>
-                    <div>
-                        <h1 className="text-2xl font-bold">{t("Admin Panel", "Bảng Điều Khiển Admin")}</h1>
-                        <p className="text-sm opacity-80">{t("System Configuration", "Cấu Hình Hệ Thống")}</p>
-                    </div>
-                </div>
-                <StatusIndicator text={t("System Ready", "Hệ Thống Sẵn Sàng")} />
-                <div className="mt-4 pt-4 border-t border-white/20">
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm opacity-80">Language:</span>
-                        <div className="flex space-x-1">
-                            <button
-                                className={`px-2 py-1 text-xs rounded transition ${lang === "en" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
-                                onClick={() => changeLanguage("en")}
-                            >
-                                EN
-                            </button>
-                            <button
-                                className={`px-2 py-1 text-xs rounded transition ${lang === "vi" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
-                                onClick={() => changeLanguage("vi")}
-                            >
-                                VI
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <nav className="space-y-2">
-                <button
-                    className={`nav-item flex w-full items-center space-x-4 p-4 rounded-xl transition ${active === "users" ? "active" : ""}`}
-                    onClick={() => onChange("users")}
-                >
-                    <i className="fas fa-users text-xl" />
-                    <span>{t("User Management", "Quản Lý Người Dùng")}</span>
-                </button>
-                <button
-                    className={`nav-item flex w-full items-center space-x-4 p-4 rounded-xl transition ${active === "analysis" ? "active" : ""}`}
-                    onClick={() => onChange("analysis")}
-                >
-                    <i className="fas fa-chart-bar text-xl" />
-                    <span>{t("Analytics", "Phân Tích")}</span>
-                </button>
-                <hr className="border-white/30 my-6" />
-                <a href="/dashboard" className="nav-item flex items-center space-x-4 p-4 rounded-xl transition text-yellow-200 hover:text-white">
-                    <i className="fas fa-arrow-left text-xl" />
-                    <span>{t("Back to Dashboard", "Quay Lại Dashboard")}</span>
-                </a>
-            </nav>
-        </aside>
-    );
+                    <span className="font-medium text-gray-900">{user.name}</span>
+                  </div>
+                </td>
+                <td className="py-4 px-4 text-gray-600">{user.email}</td>
+                <td className="py-4 px-4 text-gray-600">{user.phone || '-'}</td>
+                <td className="py-4 px-4">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    user.role === 'admin' 
+                      ? 'bg-red-100 text-red-800' 
+                      : 'bg-green-100 text-green-800'
+                  }`}>
+                    {user.role === 'admin' 
+                      ? (language === 'vi' ? 'Quản trị' : 'Admin')
+                      : (language === 'vi' ? 'Người dùng' : 'User')
+                    }
+                  </span>
+                </td>
+                <td className="py-4 px-4 text-gray-600">
+                  {new Date(user.created_at).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}
+                </td>
+                <td className="py-4 px-4">
+                  <div className="flex space-x-2">
+                    <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                      {language === 'vi' ? 'Sửa' : 'Edit'}
+                    </button>
+                    <button className="text-red-600 hover:text-red-800 text-sm font-medium">
+                      {language === 'vi' ? 'Xóa' : 'Delete'}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination Info */}
+      <div className="mt-6 flex items-center justify-between">
+        <div className="text-sm text-gray-600">
+          {language === 'vi' 
+            ? `Hiển thị ${filteredUsers.length} người dùng`
+            : `Showing ${filteredUsers.length} users`
+          }
+        </div>
+        <div className="text-sm text-gray-500">
+          {language === 'vi' ? 'Trang 1 / 1' : 'Page 1 of 1'}
+        </div>
+      </div>
+    </div>
+  )
 }

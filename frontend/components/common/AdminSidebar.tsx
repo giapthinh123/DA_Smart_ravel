@@ -3,7 +3,7 @@
 
 import { AdminSection } from "@/components/admin/AdminShell";
 import StatusIndicator from "@/components/common/StatusIndicator";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useAppStore } from "@/store/useAppStore";
 
 
 export default function AdminSidebar({
@@ -13,7 +13,7 @@ export default function AdminSidebar({
     active: AdminSection;
     onChange: (s: AdminSection) => void;
 }) {
-    const { lang, changeLanguage, t } = useLanguage();
+    const { language, setLanguage } = useAppStore();
 
 
     return (
@@ -24,24 +24,24 @@ export default function AdminSidebar({
                         <i className="fas fa-cogs text-white text-xl" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold">{t("Admin Panel", "Bảng Điều Khiển Admin")}</h1>
-                        <p className="text-sm opacity-80">{t("System Configuration", "Cấu Hình Hệ Thống")}</p>
+                        <h1 className="text-2xl font-bold">{language === "en" ? "Admin Panel" : "Bảng Điều Khiển Admin"}</h1>
+                        <p className="text-sm opacity-80">{language === "en" ? "System Configuration" : "Cấu Hình Hệ Thống"}</p>
                     </div>
                 </div>
-                <StatusIndicator text={t("System Ready", "Hệ Thống Sẵn Sàng")} />
+                <StatusIndicator text={language === "en" ? "System Ready" : "Hệ Thống Sẵn Sàng"} />
                 <div className="mt-4 pt-4 border-t border-white/20">
                     <div className="flex items-center justify-between">
                         <span className="text-sm opacity-80">Language:</span>
                         <div className="flex space-x-1">
                             <button
-                                className={`px-2 py-1 text-xs rounded transition ${lang === "en" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
-                                onClick={() => changeLanguage("en")}
+                                className={`px-2 py-1 text-xs rounded transition ${language === "en" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
+                                onClick={() => setLanguage("en")}
                             >
                                 EN
                             </button>
                             <button
-                                className={`px-2 py-1 text-xs rounded transition ${lang === "vi" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
-                                onClick={() => changeLanguage("vi")}
+                                className={`px-2 py-1 text-xs rounded transition ${language === "vi" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
+                                onClick={() => setLanguage("vi")}
                             >
                                 VI
                             </button>
@@ -57,19 +57,19 @@ export default function AdminSidebar({
                     onClick={() => onChange("users")}
                 >
                     <i className="fas fa-users text-xl" />
-                    <span>{t("User Management", "Quản Lý Người Dùng")}</span>
+                    <span>{language === "en" ? "User Management" : "Quản Lý Người Dùng"}</span>
                 </button>
                 <button
                     className={`nav-item flex w-full items-center space-x-4 p-4 rounded-xl transition ${active === "analysis" ? "active" : ""}`}
                     onClick={() => onChange("analysis")}
                 >
                     <i className="fas fa-chart-bar text-xl" />
-                    <span>{t("Analytics", "Phân Tích")}</span>
+                    <span>{language === "en" ? "Analytics" : "Phân Tích"}</span>
                 </button>
                 <hr className="border-white/30 my-6" />
                 <a href="/dashboard" className="nav-item flex items-center space-x-4 p-4 rounded-xl transition text-yellow-200 hover:text-white">
                     <i className="fas fa-arrow-left text-xl" />
-                    <span>{t("Back to Dashboard", "Quay Lại Dashboard")}</span>
+                    <span>{language === "en" ? "Back to Dashboard" : "Quay Lại Dashboard"}</span>
                 </a>
             </nav>
         </aside>

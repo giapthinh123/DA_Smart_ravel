@@ -27,7 +27,7 @@ export function TravelSearchForm() {
     recreation: '',
     days: 1,
     budget: 0,
-    localTransport: ''
+    localTransport: undefined
   })
 
   const locationOptions = [
@@ -72,7 +72,7 @@ export function TravelSearchForm() {
   const localTransportOptions = [
     { value: '', label: language === 'vi' ? 'Chọn loại xe' : 'Select Vehicle Type' },
     { value: 'Motorbike', label: language === 'vi' ? 'Xe máy' : 'Motorbike' },
-    { value: 'Taxi', label: 'Taxi' },
+    { value: 'Taxi', label: language === 'vi' ? 'Taxi' : 'Taxi' },
     { value: 'Bus', label: language === 'vi' ? 'Xe buýt' : 'Bus' },
     { value: 'Bicycle', label: language === 'vi' ? 'Xe đạp' : 'Bicycle' }
   ]
