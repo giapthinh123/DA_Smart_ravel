@@ -1,8 +1,10 @@
 import api from '@/lib/axios'
-import { TravelSearchParams, HotelSearchParams, AirlineSearchParams, Tour, SiteConfig } from '@/types/domain'
+import { TravelSearchParams, HotelSearchParams, AirlineSearchParams, Tour, SiteConfig, City } from '@/types/domain'
 import { ApiResponse } from '@/types/api'
 
 export class TravelService {
+
+
   /**
    * Search personalized travel tours
    */
