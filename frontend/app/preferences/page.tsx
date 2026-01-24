@@ -78,13 +78,200 @@ type CategoryKey = keyof typeof CATEGORY_CONFIG
 function PreferencesContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { user, logout } = useAuthStore()
+  const { user, logout, token } = useAuthStore()
   const [categories, setCategories] = useState<CategorySection[]>([])
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['Restaurants', 'Hotels', 'Recreation Places', 'Local Transport'])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [tripData, setTripData] = useState<any>(null)
-  const [preferencesData, setPreferencesData] = useState<PreferencesData | null>(null)
+  const [itineraryId, setItineraryId] = useState<string | null>(null)
+  const [isCreatingTour, setIsCreatingTour] = useState(false)
+  const [isEditingExistingDay, setIsEditingExistingDay] = useState(false)
+  const [preferencesData, setPreferencesData] = useState<PreferencesData>({
+    like_hotel: [],
+    like_restaurant: [],
+    like_attraction: [],
+    like_local_transport: [],
+    dislike_hotel: [],
+    dislike_restaurant: [],
+    dislike_attraction: [],
+    dislike_local_transport: [],
+  })
+
+  const API_BASE = 'http://localhost:5000/api'
+
+  // API helper
+  const apiCall = async (endpoint: string, options: RequestInit = {}) => {
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...options.headers
+      }
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'API Error')
+    return data
+  }
+
+  // Load trip data from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedTripData = localStorage.getItem('currentTripData')
+      if (savedTripData) {
+        try {
+          setTripData(JSON.parse(savedTripData))
+        } catch (e) {
+          console.error('Failed to parse trip data:', e)
+        }
+      }
+    }
+  }, [])
+
+  // Create base itinerary if not exists
+  useEffect(() => {
+    const createBaseItinerary = async () => {
+      const urlItineraryId = searchParams.get('itineraryId')
+
+      // If itineraryId already in URL, use it
+      if (urlItineraryId) {
+        setItineraryId(urlItineraryId)
+        return
+      }
+
+      // Need user, token, and tripData to create
+      if (!user || !token || !tripData?.destination_city_id) {
+        return
+      }
+
+      // Avoid creating duplicate
+      if (isCreatingTour || itineraryId) {
+        return
+      }
+
+      try {
+        setIsCreatingTour(true)
+        setError(null)
+
+        // Calculate trip duration - handle various date formats
+        let durationDays = 3 // default
+        
+        // Helper to parse date string (handles DD/MM/YYYY or YYYY-MM-DD)
+        const parseDate = (dateStr: string): Date | null => {
+          if (!dateStr) return null
+          
+          // Try DD/MM/YYYY format
+          if (dateStr.includes('/')) {
+            const parts = dateStr.split('/')
+            if (parts.length === 3) {
+              const [day, month, year] = parts
+              return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+            }
+          }
+          
+          // Try standard format (YYYY-MM-DD or ISO)
+          const date = new Date(dateStr)
+          return isNaN(date.getTime()) ? null : date
+        }
+
+        if (tripData.departureDate && tripData.returnDate) {
+          const start = parseDate(tripData.departureDate)
+          const end = parseDate(tripData.returnDate)
+          
+          console.log('Parsing dates:', {
+            departureDate: tripData.departureDate,
+            returnDate: tripData.returnDate,
+            parsedStart: start,
+            parsedEnd: end
+          })
+          
+          if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
+            const diffTime = Math.abs(end.getTime() - start.getTime())
+            durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+            // Ensure at least 1 day
+            if (durationDays < 1) durationDays = 1
+          }
+        }
+        
+        // Also check tripData.days if available
+        if (tripData.days && typeof tripData.days === 'number' && tripData.days > 0) {
+          durationDays = tripData.days
+        }
+
+        console.log('Creating itinerary with duration:', durationDays)
+
+        // Format start_date to YYYY-MM-DD for backend
+        let startDateStr = new Date().toISOString().split('T')[0]
+        if (tripData.departureDate) {
+          const parsed = parseDate(tripData.departureDate)
+          if (parsed) {
+            startDateStr = parsed.toISOString().split('T')[0]
+          }
+        }
+
+        // Create base tour
+        const result = await apiCall('/itinerary/create', {
+          method: 'POST',
+          body: JSON.stringify({
+            city_id: tripData.destination_city_id,
+            trip_duration_days: durationDays,
+            start_date: startDateStr,
+            guest_count: (tripData.adults || 2) + (tripData.children || 0),
+            budget: tripData.budget || 1000
+          })
+        })
+        
+        console.log('Itinerary created:', result)
+
+        const newItineraryId = result.itinerary_id
+        setItineraryId(newItineraryId)
+
+        // Update URL with itineraryId
+        const cityId = searchParams.get('cityId')
+        const params = new URLSearchParams()
+        if (cityId) params.set('cityId', cityId)
+        params.set('itineraryId', newItineraryId)
+        router.replace(`/preferences?${params.toString()}`)
+
+        console.log('Base itinerary created:', newItineraryId)
+      } catch (err: any) {
+        console.error('Failed to create base itinerary:', err)
+        setError(err.message || 'Failed to create base itinerary')
+      } finally {
+        setIsCreatingTour(false)
+      }
+    }
+
+    createBaseItinerary()
+  }, [user, token, tripData, searchParams, itineraryId, isCreatingTour])
+
+  // Check if editing an existing day
+  useEffect(() => {
+    const checkDayExists = async () => {
+      const editDay = searchParams.get('editDay')
+      const urlItineraryId = searchParams.get('itineraryId') || itineraryId
+
+      if (!editDay || !urlItineraryId || !token) {
+        setIsEditingExistingDay(false)
+        return
+      }
+
+      try {
+        const response = await apiCall(`/itinerary/${urlItineraryId}`)
+        const dayNumber = parseInt(editDay)
+        const dayExists = response.daily_itinerary?.some((d: any) => d.day_number === dayNumber) || false
+        setIsEditingExistingDay(dayExists)
+        console.log(`Day ${dayNumber} exists: ${dayExists}`)
+      } catch (err) {
+        console.error('Error checking day existence:', err)
+        setIsEditingExistingDay(false)
+      }
+    }
+
+    checkDayExists()
+  }, [searchParams, itineraryId, token])
+
   // Fetch places from API based on city ID
   useEffect(() => {
     const fetchPlaces = async () => {
@@ -180,19 +367,85 @@ function PreferencesContent() {
     fetchPlaces()
   }, [searchParams])
 
-  // Load trip data from localStorage
+
+
+  // Load saved preferences when categories are loaded
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedTripData = localStorage.getItem('currentTripData')
-      if (savedTripData) {
-        try {
-          setTripData(JSON.parse(savedTripData))
-        } catch (e) {
-          console.error('Failed to parse trip data:', e)
+    const loadSavedPreferences = async () => {
+      const cityId = searchParams.get('cityId')
+
+      // Only load if we have user, cityId, and categories are loaded
+      if (!user?.id || !cityId || categories.length === 0) {
+        return
+      }
+
+      try {
+        console.log('Loading saved preferences for user:', user.id, 'city:', cityId)
+        const savedPrefs = await PlacesService.getPreferences(user.id, cityId)
+
+        // Check if there are any saved preferences
+        const hasPreferences =
+          savedPrefs.like_hotel.length > 0 ||
+          savedPrefs.like_restaurant.length > 0 ||
+          savedPrefs.like_attraction.length > 0 ||
+          savedPrefs.dislike_hotel.length > 0 ||
+          savedPrefs.dislike_restaurant.length > 0 ||
+          savedPrefs.dislike_attraction.length > 0
+
+        if (!hasPreferences) {
+          console.log('No saved preferences found')
+          return
         }
+
+        console.log('Applying saved preferences:', savedPrefs)
+
+        // Apply saved preferences to categories
+        setCategories((prevCategories) =>
+          prevCategories.map((category) => {
+            if (category.title === 'Hotels') {
+              return {
+                ...category,
+                items: category.items.map((item) => ({
+                  ...item,
+                  liked: savedPrefs.like_hotel.includes(item.id.toString()),
+                  skipped: savedPrefs.dislike_hotel.includes(item.id.toString()),
+                })),
+              }
+            } else if (category.title === 'Restaurants') {
+              return {
+                ...category,
+                items: category.items.map((item) => ({
+                  ...item,
+                  liked: savedPrefs.like_restaurant.includes(item.id.toString()),
+                  skipped: savedPrefs.dislike_restaurant.includes(item.id.toString()),
+                })),
+              }
+            } else if (category.title === 'Recreation Places') {
+              return {
+                ...category,
+                items: category.items.map((item) => ({
+                  ...item,
+                  liked: savedPrefs.like_attraction.includes(item.id.toString()),
+                  skipped: savedPrefs.dislike_attraction.includes(item.id.toString()),
+                })),
+              }
+            }
+            return category
+          })
+        )
+
+        // Update preferencesData state
+        setPreferencesData(savedPrefs)
+
+        console.log('Preferences applied successfully')
+      } catch (error) {
+        console.error('Error loading saved preferences:', error)
+        // Don't show error to user, just continue with empty preferences
       }
     }
-  }, [])
+
+    loadSavedPreferences()
+  }, [categories.length, user?.id, searchParams])
 
   // Calculate stats
   const likedCount = useMemo(() => {
@@ -214,6 +467,44 @@ function PreferencesContent() {
 
   // Handle like/skip
   const handleLike = (categoryTitle: string, itemId: string | number) => {
+    const id = itemId.toString()
+
+    // Update preferencesData first
+    setPreferencesData((prev) => {
+      let updatedPrefs = { ...prev }
+
+      if (categoryTitle === 'Hotels') {
+        const exists = prev.like_hotel.includes(id)
+        updatedPrefs.like_hotel = exists
+          ? prev.like_hotel.filter((x) => x !== id)
+          : [...prev.like_hotel, id]
+        // Remove from dislike if adding to like
+        if (!exists) {
+          updatedPrefs.dislike_hotel = prev.dislike_hotel.filter((x) => x !== id)
+        }
+      } else if (categoryTitle === 'Restaurants') {
+        const exists = prev.like_restaurant.includes(id)
+        updatedPrefs.like_restaurant = exists
+          ? prev.like_restaurant.filter((x) => x !== id)
+          : [...prev.like_restaurant, id]
+        // Remove from dislike if adding to like
+        if (!exists) {
+          updatedPrefs.dislike_restaurant = prev.dislike_restaurant.filter((x) => x !== id)
+        }
+      } else if (categoryTitle === 'Recreation Places') {
+        const exists = prev.like_attraction.includes(id)
+        updatedPrefs.like_attraction = exists
+          ? prev.like_attraction.filter((x) => x !== id)
+          : [...prev.like_attraction, id]
+        // Remove from dislike if adding to like
+        if (!exists) {
+          updatedPrefs.dislike_attraction = prev.dislike_attraction.filter((x) => x !== id)
+        }
+      }
+      return updatedPrefs
+    })
+
+    // Update categories UI
     setCategories((prev) =>
       prev.map((cat) => {
         if (cat.title === categoryTitle) {
@@ -237,6 +528,44 @@ function PreferencesContent() {
   }
 
   const handleSkip = (categoryTitle: string, itemId: string | number) => {
+    const id = itemId.toString()
+
+    // Update preferencesData first
+    setPreferencesData((prev) => {
+      let updatedPrefs = { ...prev }
+
+      if (categoryTitle === 'Hotels') {
+        const exists = prev.dislike_hotel.includes(id)
+        updatedPrefs.dislike_hotel = exists
+          ? prev.dislike_hotel.filter((x) => x !== id)
+          : [...prev.dislike_hotel, id]
+        // Remove from like if adding to dislike
+        if (!exists) {
+          updatedPrefs.like_hotel = prev.like_hotel.filter((x) => x !== id)
+        }
+      } else if (categoryTitle === 'Restaurants') {
+        const exists = prev.dislike_restaurant.includes(id)
+        updatedPrefs.dislike_restaurant = exists
+          ? prev.dislike_restaurant.filter((x) => x !== id)
+          : [...prev.dislike_restaurant, id]
+        // Remove from like if adding to dislike
+        if (!exists) {
+          updatedPrefs.like_restaurant = prev.like_restaurant.filter((x) => x !== id)
+        }
+      } else if (categoryTitle === 'Recreation Places') {
+        const exists = prev.dislike_attraction.includes(id)
+        updatedPrefs.dislike_attraction = exists
+          ? prev.dislike_attraction.filter((x) => x !== id)
+          : [...prev.dislike_attraction, id]
+        // Remove from like if adding to dislike
+        if (!exists) {
+          updatedPrefs.like_attraction = prev.like_attraction.filter((x) => x !== id)
+        }
+      }
+      return updatedPrefs
+    })
+
+    // Update categories UI
     setCategories((prev) =>
       prev.map((cat) => {
         if (cat.title === categoryTitle) {
@@ -259,11 +588,83 @@ function PreferencesContent() {
     )
   }
 
-  const handleContinue = () => {
-    console.log('Continue to next step', {
-      likedCount,
-      skippedCount,
+  const handleContinue = async () => {
+    // Validate user and itinerary
+    if (!user?.id) {
+      setError('User not logged in')
+      return
+    }
+
+    if (!itineraryId) {
+      setError('No itinerary created. Please wait...')
+      return
+    }
+
+    if (!tripData?.destination_city_id) {
+      setError('No destination city selected')
+      return
+    }
+
+    // Calculate preferences from current categories state
+    const calculatedPrefs: PreferencesData = {
+      like_hotel: [],
+      like_restaurant: [],
+      like_attraction: [],
+      like_local_transport: [],
+      dislike_hotel: [],
+      dislike_restaurant: [],
+      dislike_attraction: [],
+      dislike_local_transport: [],
+    }
+
+    categories.forEach((category) => {
+      category.items.forEach((item) => {
+        const id = item.id.toString()
+
+        if (category.title === 'Hotels') {
+          if (item.liked) calculatedPrefs.like_hotel.push(id)
+          if (item.skipped) calculatedPrefs.dislike_hotel.push(id)
+        } else if (category.title === 'Restaurants') {
+          if (item.liked) calculatedPrefs.like_restaurant.push(id)
+          if (item.skipped) calculatedPrefs.dislike_restaurant.push(id)
+        } else if (category.title === 'Recreation Places') {
+          if (item.liked) calculatedPrefs.like_attraction.push(id)
+          if (item.skipped) calculatedPrefs.dislike_attraction.push(id)
+        }
+      })
     })
+
+    try {
+      setError(null)
+      setIsLoading(true)
+
+      // Save preferences
+      await PlacesService.set_Preferences(
+        user.id,
+        tripData.destination_city_id,
+        calculatedPrefs
+      )
+
+      console.log('Preferences saved successfully')
+
+      // Check if we're in edit mode (editing a specific day)
+      const editDay = searchParams.get('editDay')
+      
+      if (editDay) {
+        // Redirect back to itinerary with regenerateDay param
+        console.log(`Edit mode: redirecting to regenerate day ${editDay}`)
+        router.push(`/itinerary?itineraryId=${itineraryId}&regenerateDay=${editDay}`)
+      } else {
+        // Normal flow: redirect to itinerary page
+        router.push(`/itinerary?itineraryId=${itineraryId}`)
+      }
+
+
+    } catch (error: any) {
+      console.error('Error setting preferences:', error)
+      setError(error.message || 'Failed to set preferences')
+      setIsLoading(false)
+    }
   }
 
   const handleBack = () => {
@@ -439,12 +840,34 @@ function PreferencesContent() {
           <div className="dashboard-preferences__inner">
             <header className="dashboard-preferences__header">
               <div className="dashboard-preferences__chip">
-                <span>Refine preferences</span>
+                <span>
+                  {searchParams.get('editDay') 
+                    ? (isEditingExistingDay 
+                        ? `Editing Day ${searchParams.get('editDay')}` 
+                        : `Planning Day ${searchParams.get('editDay')}`
+                      )
+                    : 'Refine preferences'
+                  }
+                </span>
               </div>
               <div className="dashboard-preferences__titles">
-                <h2>Curate the experiences that fit your travel style</h2>
+                <h2>
+                  {searchParams.get('editDay') 
+                    ? (isEditingExistingDay
+                        ? `Update preferences for Day ${searchParams.get('editDay')}`
+                        : `Plan your Day ${searchParams.get('editDay')} itinerary`
+                      )
+                    : 'Curate the experiences that fit your travel style'
+                  }
+                </h2>
                 <p>
-                  Evaluate restaurants, hotels, activities and transfers so the system can tailor the itinerary around your preferences.
+                  {searchParams.get('editDay')
+                    ? (isEditingExistingDay
+                        ? 'Change your selections below, then click Continue to regenerate this day with your new preferences.'
+                        : 'Select your preferred places below, then click Continue to generate this day with your selections.'
+                      )
+                    : 'Evaluate restaurants, hotels, activities and transfers so the system can tailor the itinerary around your preferences.'
+                  }
                 </p>
               </div>
             </header>
@@ -599,19 +1022,22 @@ function PreferencesContent() {
                       })}
                     </div>
 
-                    <footer className="dashboard-preferences__footer">
-                      <p>
-                        {likedCount + skippedCount === 0
-                          ? 'Start selecting your preferences to personalize your itinerary'
-                          : `You've selected ${likedCount} likes and ${skippedCount} skipped`}
-                      </p>
+                    <footer className="dashboard-preferences__footer flex justify-end gap-4">
                       <button
                         type="button"
                         onClick={handleContinue}
                         className="dashboard-preferences__continue"
                         disabled={isLoading}
                       >
-                        <span>Continue</span>
+                        <span>
+                          {searchParams.get('editDay') 
+                            ? (isEditingExistingDay
+                                ? `Regenerate Day ${searchParams.get('editDay')}`
+                                : `Generate Day ${searchParams.get('editDay')}`
+                              )
+                            : 'Continue'
+                          }
+                        </span>
                         <Check className="w-4 h-4" />
                       </button>
                     </footer>

@@ -82,3 +82,102 @@ class Users:
         from ..extensions import mongo
         token = mongo.db.token_blacklist.find_one({"jti": jti})
         return token is not None
+    
+    # ========== DATABASE FUNCTIONS ==========
+    
+    @staticmethod
+    def find_user_by_email(mongo, email):
+        """Tìm user theo email"""
+        return mongo.db.users.find_one({"email": email})
+    
+    @staticmethod
+    def find_user_by_email_with_timeout(mongo, email, timeout_ms=2000):
+        """Tìm user theo email với timeout"""
+        return mongo.db.users.find_one({"email": email}, max_time_ms=timeout_ms)
+    
+    @staticmethod
+    def find_user_by_id(mongo, user_id):
+        """Tìm user theo id (trả về tất cả fields)"""
+        return mongo.db.users.find_one({"id": user_id})
+    
+    @staticmethod
+    def find_user_by_id_safe(mongo, user_id):
+        """Tìm user theo id (không trả về password và _id)"""
+        return mongo.db.users.find_one(
+            {"id": user_id}, 
+            {"password": 0, "_id": 0}
+        )
+    
+    @staticmethod
+    def get_all_users(mongo):
+        """Lấy danh sách tất cả users (không bao gồm password và _id)"""
+        return list(mongo.db.users.find({}, {"password": 0, "_id": 0}))
+    
+    @staticmethod
+    def update_user_by_id(mongo, user_id, data):
+        """Cập nhật user theo id"""
+        return mongo.db.users.update_one(
+            {"id": user_id},
+            {"$set": data}
+        )
+    
+    @staticmethod
+    def update_user_password(mongo, user_id, new_password_hash):
+        """Cập nhật password của user"""
+        from datetime import datetime
+        return mongo.db.users.update_one(
+            {"id": user_id},
+            {"$set": {
+                "password": new_password_hash,
+                "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }}
+        )
+    
+    @staticmethod
+    def update_user_role(mongo, user_id, new_role):
+        """Cập nhật role của user"""
+        return mongo.db.users.update_one(
+            {"id": user_id},
+            {"$set": {"role": new_role}}
+        )
+    
+    @staticmethod
+    def delete_user_by_id(mongo, user_id):
+        """Xóa user theo id"""
+        return mongo.db.users.delete_one({"id": user_id})
+    
+    @staticmethod
+    def soft_delete_user(mongo, user_id):
+        """Soft delete user (đặt status = 'delete')"""
+        from datetime import datetime
+        return mongo.db.users.update_one(
+            {"id": user_id},
+            {"$set": {
+                "status": "delete",
+                "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }}
+        )
+    
+    @staticmethod
+    def count_all_users(mongo):
+        """Đếm tổng số users"""
+        return mongo.db.users.count_documents({})
+    
+    @staticmethod
+    def count_users_by_status(mongo, status):
+        """Đếm số users theo status"""
+        return mongo.db.users.count_documents({"status": status})
+    
+    @staticmethod
+    def count_users_by_role(mongo, role):
+        """Đếm số users theo role"""
+        return mongo.db.users.count_documents({"role": role})
+    
+    @staticmethod
+    def add_token_to_blacklist(mongo, jti):
+        """Thêm token vào blacklist"""
+        from datetime import datetime
+        return mongo.db.token_blacklist.insert_one({
+            "jti": jti,
+            "created_at": datetime.now()
+        })

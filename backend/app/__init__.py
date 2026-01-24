@@ -41,11 +41,13 @@ def create_app():
     from .routes.citys import citys_bp
     from .routes.flight import flight_bp
     from .routes.places import places_bp
+    from .routes.itinerary import itinerary_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(users_bp, url_prefix="/api/users")
     app.register_blueprint(citys_bp, url_prefix="/api/citys")
     app.register_blueprint(flight_bp, url_prefix="/api/flights")
     app.register_blueprint(places_bp, url_prefix="/api/places")
+    app.register_blueprint(itinerary_bp, url_prefix="/api/itinerary")
 
     return app

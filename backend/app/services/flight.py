@@ -22,8 +22,8 @@ LOCAL_TZ = ZoneInfo('Asia/Bangkok')  # Múi giờ địa phương
 
 # Khởi tạo Amadeus API client
 AMADEUS = Client(
-    client_id='iKYAAVETn9wlZKVev55sZtUtG5zKcWiw',
-    client_secret='YSXq6EV7lWHItB9D'
+    client_id='3hHX59I5wuNZG76Tfem1TWZ1JEgFhsFT',
+    client_secret='EfGAtl9svAyiS8ax'
 )
 
 # Tải dữ liệu sân bay

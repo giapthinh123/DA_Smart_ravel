@@ -26,7 +26,7 @@ def register():
         return jsonify({"msg": "Email and password are required"}), 400
     
     # Check if email exists
-    if mongo.db.users.find_one({"email": data["email"]}):
+    if Users.find_user_by_email(mongo, data["email"]):
         return jsonify({"msg": "Email already exists"}), 400
     
     # Password strength check (basic)
@@ -50,7 +50,7 @@ def login():
         return jsonify({"msg": "Email and password are required", "status": "error", "code": 400}), 400
     
     try:
-        user = mongo.db.users.find_one({"email": data["email"]}, max_time_ms=2000)
+        user = Users.find_user_by_email_with_timeout(mongo, data["email"], timeout_ms=2000)
     except Exception as e:
         return jsonify({"msg": "Request timed out", "status": "error", "code": 504}), 504
     
@@ -104,10 +104,7 @@ def logout():
     jti = get_jwt()["jti"]
     
     # Add token to blacklist
-    mongo.db.token_blacklist.insert_one({
-        "jti": jti,
-        "created_at": datetime.now()
-    })
+    Users.add_token_to_blacklist(mongo, jti)
     
     return jsonify({"msg": "Successfully logged out"}), 200
 
@@ -121,10 +118,7 @@ def get_current_user():
     identity = get_jwt_identity()
     
     # Get fresh user data from database
-    user = mongo.db.users.find_one(
-        {"id": identity["id"]}, 
-        {"password": 0, "_id": 0}  # Exclude sensitive fields
-    )
+    user = Users.find_user_by_id_safe(mongo, identity["id"])
     
     if not user:
         return jsonify({"msg": "User not found"}), 404
@@ -145,7 +139,7 @@ def change_password():
         return jsonify({"msg": "Current password and new password are required"}), 400
     
     # Get user from database
-    user = mongo.db.users.find_one({"id": identity["id"]})
+    user = Users.find_user_by_id(mongo, identity["id"])
     
     if not user:
         return jsonify({"msg": "User not found"}), 404
@@ -160,13 +154,7 @@ def change_password():
     
     # Update password
     from werkzeug.security import generate_password_hash
-    result = mongo.db.users.update_one(
-        {"id": identity["id"]},
-        {"$set": {
-            "password": generate_password_hash(data["newPassword"]),
-            "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }}
-    )
+    result = Users.update_user_password(mongo, identity["id"], generate_password_hash(data["newPassword"]))
     
     if result.modified_count == 0:
         return jsonify({"msg": "Failed to update password"}), 500

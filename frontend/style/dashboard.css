@@ -1864,8 +1864,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 1.25rem;
+  padding-right: 1.75rem;
   padding-top: 1.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }

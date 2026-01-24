@@ -323,12 +323,12 @@ function ProfileContent() {
                 <div className="mb-6 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
                   <Avatar className="h-20 w-20 border-2 border-[#FFE5B4]/30">
                     <AvatarFallback className="text-xl bg-[#FFE5B4]/20 text-[#FFE5B4]">
-                      {(user.fullname || user.name || user.email || "U")
+                      {(user?.fullname || user?.name || user?.email || "U")
                         .split(" ")
                         .map((n: string) => n[0])
                         .join("")
                         .toUpperCase()
-                        .slice(0, 2)}
+                        .slice(0, 2)} 
                     </AvatarFallback>
                   </Avatar>
                   <div>
@@ -365,9 +365,9 @@ function ProfileContent() {
                       <input
                         id="email"
                         type="email"
-                        value={user.email}
+                        value={user?.email }
                         disabled
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-[#7D837A] placeholder:text-[#B6C2C6] cursor-not-allowed"
+                        className="h-12 w-full r  ounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-[#7D837A] placeholder:text-[#B6C2C6] cursor-not-allowed"
                       />
                     </div>
                     <p className="text-xs text-[#7D837A]">Email cannot be changed</p>
@@ -408,23 +408,6 @@ function ProfileContent() {
                       />
                     </div>
                   </div>
-
-                  <div className="grid gap-2">
-                    <label htmlFor="role" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
-                      Role
-                    </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="role"
-                        type="text"
-                        value={user.role}
-                        disabled
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-[#7D837A] placeholder:text-[#B6C2C6] cursor-not-allowed"
-                      />
-                    </div>
-                  </div>
-
                   {message && (
                     <div
                       className={`rounded-2xl border p-4 text-sm ${

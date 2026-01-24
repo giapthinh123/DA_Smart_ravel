@@ -1,6 +1,6 @@
 from typing import Any
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from ..extensions import mongo
 from ..models.users import Users
 
@@ -14,7 +14,7 @@ def get_users():
     Get all users - ADMIN ONLY
     OWASP: Role-based access control, no password exposure
     """
-    users = list(mongo.db.users.find({}, {"password": 0, "_id": 0}))
+    users = Users.get_all_users(mongo)
     return jsonify({"users": users, "count": len(users)}), 200
 
 @users_bp.route("/", methods=["POST"])
@@ -32,7 +32,7 @@ def create_user():
         return jsonify({"msg": "Email and password are required"}), 400
     
     # Check if email exists
-    if mongo.db.users.find_one({"email": data["email"]}):
+    if Users.find_user_by_email(mongo, data["email"]):
         return jsonify({"msg": "Email already exists"}), 400
     
     # Password strength check
@@ -63,10 +63,7 @@ def update_user(user_id):
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     # Update user
-    result = mongo.db.users.update_one(
-        {"id": user_id},
-        {"$set": data}
-    )
+    result = Users.update_user_by_id(mongo, user_id, data)
     
     if result.matched_count == 0:
         return jsonify({"msg": "User not found"}), 404
@@ -75,10 +72,7 @@ def update_user(user_id):
         return jsonify({"msg": "No changes made"}), 200
     
     # Get updated user data
-    updated_user = mongo.db.users.find_one(
-        {"id": user_id},
-        {"password": 0, "_id": 0}
-    )
+    updated_user = Users.find_user_by_id_safe(mongo, user_id)
     
     return jsonify({
         "msg": "User updated successfully",
@@ -94,10 +88,7 @@ def get_profile():
     OWASP: User can only access their own data
     """
     identity = get_jwt_identity()
-    user = mongo.db.users.find_one(
-        {"id": identity["id"]}, 
-        {"password": 0, "_id": 0}
-    )
+    user = Users.find_user_by_id_safe(mongo, identity["id"])
     
     if not user:
         return jsonify({"msg": "User not found"}), 404
@@ -126,19 +117,13 @@ def update_profile():
     data["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     # Update user
-    result = mongo.db.users.update_one(
-        {"id": identity["id"]},
-        {"$set": data}
-    )
+    result = Users.update_user_by_id(mongo, identity["id"], data)
     
     if result.modified_count == 0:
         return jsonify({"msg": "No changes made"}), 200
     
     # Get updated user data
-    updated_user = mongo.db.users.find_one(
-        {"id": identity["id"]},
-        {"password": 0, "_id": 0}
-    )
+    updated_user = Users.find_user_by_id_safe(mongo, identity["id"])
     
     return jsonify({
         "msg": "Profile updated successfully",
@@ -159,7 +144,7 @@ def delete_user(user_id):
     if identity["id"] == user_id:
         return jsonify({"msg": "Cannot delete your own account"}), 400
     
-    result = mongo.db.users.delete_one({"id": user_id})
+    result = Users.delete_user_by_id(mongo, user_id)
     
     if result.deleted_count == 0:
         return jsonify({"msg": "User not found"}), 404
@@ -191,10 +176,7 @@ def update_user_role(user_id):
     if identity["id"] == user_id:
         return jsonify({"msg": "Cannot change your own role"}), 400
     
-    result = mongo.db.users.update_one(
-        {"id": user_id},
-        {"$set": {"role": new_role}}
-    )
+    result = Users.update_user_role(mongo, user_id, new_role)
     
     if result.modified_count == 0:
         return jsonify({"msg": "User not found or role unchanged"}), 404
@@ -215,7 +197,7 @@ def delete_own_account():
         return jsonify({"msg": "Password is required to delete account"}), 400
     
     # Get user from database
-    user = mongo.db.users.find_one({"id": identity["id"]})
+    user = Users.find_user_by_id(mongo, identity["id"])
     
     if not user:
         return jsonify({"msg": "User not found"}), 404
@@ -225,25 +207,14 @@ def delete_own_account():
         return jsonify({"msg": "Password is incorrect"}), 401
     
     # Soft delete: set status to 'delete'
-    from datetime import datetime
-    result = mongo.db.users.update_one(
-        {"id": identity["id"]},
-        {"$set": {
-            "status": "delete",
-            "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }}
-    )
+    result = Users.soft_delete_user(mongo, identity["id"])
     
     if result.modified_count == 0:
         return jsonify({"msg": "Failed to delete account"}), 500
     
     # Add token to blacklist to force logout
-    from flask_jwt_extended import get_jwt
     jti = get_jwt()["jti"]
-    mongo.db.token_blacklist.insert_one({
-        "jti": jti,
-        "created_at": datetime.now()
-    })
+    Users.add_token_to_blacklist(mongo, jti)
     
     return jsonify({"msg": "Account deleted successfully"}), 200
 
@@ -255,12 +226,12 @@ def get_user_stats():
     Get user statistics - ADMIN ONLY
     OWASP: Role-based access control
     """
-    total_users = mongo.db.users.count_documents({})
-    active_users = mongo.db.users.count_documents({"status": "active"})
+    total_users = Users.count_all_users(mongo)
+    active_users = Users.count_users_by_status(mongo, "active")
     
     # Count by role
-    admin_count = mongo.db.users.count_documents({"role": "admin"})
-    user_count = mongo.db.users.count_documents({"role": "user"})
+    admin_count = Users.count_users_by_role(mongo, "admin")
+    user_count = Users.count_users_by_role(mongo, "user")
     
     return jsonify({
         "total_users": total_users,

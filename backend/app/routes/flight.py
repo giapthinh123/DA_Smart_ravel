@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..models.flight import information_flight
+from ..services.flight import information_flight
 
 flight_bp = Blueprint("flight", __name__)
 
