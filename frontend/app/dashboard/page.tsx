@@ -34,30 +34,7 @@ export default function DashboardPage() {
     departure_city_id: "",
     destination_city_id: "",
   })
-  // Recent tours data
-  const recentTours = [
-    {
-      status: "Saved",
-      name: "Emerald Da Lat Escape",
-      dates: "12 - 16 Nov 2025",
-      travelers: "2 adults · 1 child",
-      budget: "$3,200",
-    },
-    {
-      status: "Fresh Draft",
-      name: "Ha Long Cruise Reverie",
-      dates: "02 - 09 Dec 2025",
-      travelers: "4 adults",
-      budget: "$5,400",
-    },
-    {
-      status: "Completed",
-      name: "Timeless Hue Retreat",
-      dates: "25 - 31 Oct 2025",
-      travelers: "2 adults",
-      budget: "$4,100",
-    },
-  ]
+
   const quickAccessItems = [
     { title: "Personal tours", subtitle: "Craft bespoke travel stories with personal imprints" },
     { title: "Hotels", subtitle: "Find curated and budget-aligned accommodation" },

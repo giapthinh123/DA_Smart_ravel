@@ -1,5 +1,5 @@
 import api from '@/lib/axios'
-import { TravelSearchParams, HotelSearchParams, AirlineSearchParams, Tour, SiteConfig, City } from '@/types/domain'
+import { TravelSearchParams, HotelSearchParams, AirlineSearchParams, Tour, FlightsByAirline } from '@/types/domain'
 import { ApiResponse } from '@/types/api'
 
 export class TravelService {
@@ -32,16 +32,27 @@ export class TravelService {
   }
 
   /**
-   * Search airline tickets
+   * Search airline tickets.
+   * POST /api/flights/ with { departure_city, arrival_city, departure_date }.
+   * Returns flights grouped by airline name.
    */
-  static async searchFlights(params: AirlineSearchParams): Promise<any> {
-    const response = await api.post<ApiResponse>('/api/flights/search', params)
-    
-    if (response.data.success) {
+  static async searchFlights(params: AirlineSearchParams): Promise<FlightsByAirline> {
+    const body = {
+      departure_city: String(params.departure_city ?? '').trim(),
+      arrival_city: String(params.arrival_city ?? '').trim(),
+      departure_date: String(params.departure_date ?? '').trim(),
+    }
+    const response = await api.post<ApiResponse<FlightsByAirline>>('/api/flights/', body, {
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    if (response.data.success && response.data.data != null) {
       return response.data.data
     }
-    
-    throw new Error(response.data.message || 'Flight search failed')
+
+    throw new Error(
+      (response.data as { message?: string })?.message || 'Flight search failed'
+    )
   }
   /**
    * Get tour details

@@ -34,6 +34,35 @@ export interface ItinerarySummary {
     cost_per_person: number
     budget_utilized_percent: number
     avg_cost_per_day: number
+    /** Tổng giá vé máy bay (khi book_flight = true) */
+    flight_total?: number
+}
+
+/** Stopover at an intermediate airport (for itinerary flight) */
+export interface ItineraryFlightStop {
+    iata: string
+    name: string
+    arrival: string
+    departure: string
+}
+
+/** Single flight in itinerary (from flights page) */
+export interface ItineraryFlight {
+    airline: string
+    airlineCode: string
+    departTime: string
+    arriveTime: string
+    departCode: string
+    arriveCode: string
+    duration: string
+    stop_count: number
+    price: number
+    stops?: ItineraryFlightStop[]
+}
+
+export interface ItineraryFlightsPayload {
+    selectedDepartureFlight: ItineraryFlight
+    selectedReturnFlight: ItineraryFlight
 }
 
 export interface Itinerary {
@@ -50,6 +79,10 @@ export interface Itinerary {
     generated_at?: string
     created_at?: string
     updated_at?: string
+    /** When true, itinerary includes booked flights */
+    book_flight?: boolean
+    /** Flight data from flights page when book_flight is true */
+    flights?: ItineraryFlightsPayload
 }
 
 export interface CreateItineraryRequest {
@@ -88,6 +121,27 @@ export interface GenerateDayResponse {
 export interface UserItinerariesResponse {
     count: number
     itineraries: Itinerary[]
+}
+
+export interface TourHistoryItem {
+    id: string
+    status: string
+    name: string
+    destination: string
+    dates: string
+    travelers: string
+    budget: string
+    image: string
+    activities: number
+    rating?: number
+    created_at?: string
+    city_id?: string
+}
+
+export interface TourHistoryResponse {
+    count: number
+    total: number
+    history: TourHistoryItem[]
 }
 
 export class ItineraryService {
@@ -147,6 +201,41 @@ export class ItineraryService {
         } catch (error: any) {
             console.error('Error getting user itineraries:', error)
             throw new Error(error.response?.data?.error || error.message || 'Failed to get itineraries')
+        }
+    }
+
+    /**
+     * Get user's tour history with optional filtering
+     */
+    static async getTourHistory(options?: {
+        status?: string
+        search?: string
+        limit?: number
+        skip?: number
+    }): Promise<TourHistoryResponse> {
+        try {
+            const params = new URLSearchParams()
+            if (options?.status && options.status !== 'All') {
+                params.append('status', options.status)
+            }
+            if (options?.search) {
+                params.append('search', options.search)
+            }
+            if (options?.limit) {
+                params.append('limit', options.limit.toString())
+            }
+            if (options?.skip) {
+                params.append('skip', options.skip.toString())
+            }
+
+            const queryString = params.toString()
+            const url = `/api/itinerary/history${queryString ? `?${queryString}` : ''}`
+            
+            const response = await api.get<TourHistoryResponse>(url)
+            return response.data
+        } catch (error: any) {
+            console.error('Error getting tour history:', error)
+            throw new Error(error.response?.data?.error || error.message || 'Failed to get tour history')
         }
     }
 

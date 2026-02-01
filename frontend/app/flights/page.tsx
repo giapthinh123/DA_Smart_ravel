@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Plane, Clock, ShieldCheck, ArrowRight, CheckCircle2 } from "lucide-react"
-import { data_build_tour, data_flight, data_flight_search } from "@/types/domain"
+import { data_build_tour, data_flight, data_flight_search, SelectedFlightForItinerary, FlightsSelectionPayload } from "@/types/domain"
 import { AuthGuard } from "@/components/auth-guard"
 import { AdminOnly } from "@/components/role-gate"
 import { useAuthStore } from "@/store/useAuthStore"
@@ -19,74 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
 import api from "@/lib/axios"
-const outboundFlights = [
-  {
-    id: 1,
-    airline: "Vietnam Airlines",
-    departureTime: "06:00 AM",
-    arrivalTime: "08:15 AM",
-    duration: "2h 15m",
-    price: 1250000,
-    class: "Phổ thông",
-    isDirect: true,
-  },
-  {
-    id: 2,
-    airline: "Vietjet Air",
-    departureTime: "09:30 AM",
-    arrivalTime: "11:45 AM",
-    duration: "2h 15m",
-    price: 850000,
-    class: "Phổ thông",
-    isDirect: false,
-    stopover: "Đà Nẵng (1h 30m)",
-  },
-  {
-    id: 3,
-    airline: "Bamboo Airways",
-    departureTime: "01:15 PM",
-    arrivalTime: "03:30 PM",
-    duration: "2h 15m",
-    price: 1100000,
-    class: "Thương gia",
-    isDirect: true,
-  },
-]
-
-const returnFlights = [
-  {
-    id: 101,
-    airline: "Vietnam Airlines",
-    departureTime: "02:00 PM",
-    arrivalTime: "04:15 PM",
-    duration: "2h 15m",
-    price: 1350000,
-    class: "Phổ thông",
-    isDirect: true,
-  },
-  {
-    id: 102,
-    airline: "Bamboo Airways",
-    departureTime: "05:30 PM",
-    arrivalTime: "07:45 PM",
-    duration: "2h 15m",
-    price: 1050000,
-    class: "Phổ thông",
-    isDirect: true,
-  },
-  {
-    id: 103,
-    airline: "Vietjet Air",
-    departureTime: "09:00 PM",
-    arrivalTime: "11:15 PM",
-    duration: "2h 15m",
-    price: 750000,
-    class: "Phổ thông",
-    isDirect: false,
-    stopover: "Hải Phòng (1h)",
-  },
-]
-
+import { TravelService } from "@/services/travel.service"
 function FlightsContent() {
   const router = useRouter()
   const { user, logout } = useAuthStore()
@@ -138,20 +71,31 @@ function FlightsContent() {
       stopoverText = firstStop.iata ? `${firstStop.iata}` : firstStop.name
     }
 
+    // Preserve stops for itinerary payload (quá cảnh): iata, name, arrival, departure
+    const stopsForItinerary = (flight.stops && Array.isArray(flight.stops))
+      ? flight.stops.map((s: { iata?: string; name?: string; arrival?: string; departure?: string }) => ({
+          iata: s.iata ?? '',
+          name: s.name ?? '',
+          arrival: s.arrival ?? '',
+          departure: s.departure ?? '',
+        }))
+      : []
+
     return {
       id: index + 1,
       airline: flight.airline,
       departureTime: formatTime(depTime),
       arrivalTime: formatTime(arrTime),
       duration: duration,
-      price: parseFloat(flight.price) * 25000, // Convert EUR to VND (approximate)
+      price: parseFloat(flight.price), // Convert EUR to VND (approximate)
       class: "Phổ thông",
       isDirect: stopsCount === 0,
       stops: stopsCount,
       stopover: stopoverText,
       airlineCode: flight.flight_code?.substring(0, 2) || '',
       departureCode: flight.dep_iata,
-      arrivalCode: flight.arr_iata
+      arrivalCode: flight.arr_iata,
+      stopsForItinerary,
     }
   }
 
@@ -172,10 +116,10 @@ function FlightsContent() {
   const baseFlights = step === 1
     ? (flightDeparture && Object.keys(flightDeparture).length > 0)
       ? flattenFlights(flightDeparture).map(mapFlightToUI)
-      : outboundFlights
+      : []
     : (flightReturn && Object.keys(flightReturn).length > 0)
       ? flattenFlights(flightReturn).map(mapFlightToUI)
-      : returnFlights
+      : []
 
   // Apply sorting
   const allCurrentFlights = [...baseFlights].sort((a, b) => {
@@ -254,45 +198,60 @@ function FlightsContent() {
   // Gọi API lấy danh sách chuyến bay
   useEffect(() => {
     const fetchFlights = async () => {
-      if (dataBuildTour && dataBuildTour.flight_departure_date && dataBuildTour.flight_return_date) {
-        setIsLoading(true)
-        setError(null)
-        try {
-          // Gọi API cho chuyến đi
-          const responseDeparture = await api.post<{ success: boolean; data: any }>("/api/flights/", {
-            departure_city: dataBuildTour.departure,
-            arrival_city: dataBuildTour.destination,
-            departure_date: dataBuildTour.flight_departure_date
-          })
+      if (!dataBuildTour?.flight_departure_date || !dataBuildTour?.flight_return_date) return
+      const depCity = String(dataBuildTour.departure ?? '').trim()
+      const arrCity = String(dataBuildTour.destination ?? '').trim()
+      const depDate = String(dataBuildTour.flight_departure_date).trim()
+      const retDate = String(dataBuildTour.flight_return_date).trim()
 
-          if (responseDeparture.data.success && responseDeparture.data.data) {
-            console.log("Chuyến đi:", responseDeparture.data.data)
-            setFlightDeparture(responseDeparture.data.data)
-          }
+      if (!depCity || !arrCity || !depDate || !retDate) {
+        setError('Thiếu thông tin điểm đi, điểm đến hoặc ngày bay.')
+        return
+      }
 
-          // Gọi API cho chuyến về
-          const responseReturn = await api.post<{ success: boolean; data: any }>("/api/flights/", {
-            departure_city: dataBuildTour.destination,
-            arrival_city: dataBuildTour.departure,
-            departure_date: dataBuildTour.flight_return_date
-          })
-
-          if (responseReturn.data.success && responseReturn.data.data) {
-            console.log("Chuyến về:", responseReturn.data.data)
-            setFlightReturn(responseReturn.data.data)
-          }
-        } catch (error: any) {
-          console.error("Lỗi khi lấy dữ liệu chuyến bay:", error)
-          if (error.code === 'ECONNABORTED') {
-            setError("Hết thời gian chờ. Vui lòng thử lại sau.")
-          } else if (error.response?.status === 500) {
-            setError("Lỗi server. Vui lòng thử lại sau.")
-          } else {
-            setError("Không thể tải dữ liệu chuyến bay. Vui lòng thử lại.")
-          }
-        } finally {
-          setIsLoading(false)
+      // Chuẩn hóa ngày về YYYY-MM-DD (backend chỉ nhận format này)
+      const toYYYYMMDD = (s: string) => {
+        if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s
+        const d = new Date(s)
+        if (Number.isNaN(d.getTime())) return s
+        const y = d.getFullYear()
+        const m = String(d.getMonth() + 1).padStart(2, '0')
+        const day = String(d.getDate()).padStart(2, '0')
+        return `${y}-${m}-${day}`
+      }
+      const departure_date = toYYYYMMDD(depDate)
+      const return_date = toYYYYMMDD(retDate)
+      console.log("departure_date", departure_date)
+      console.log("return_date", return_date)
+      console.log("depCity", depCity)
+      console.log("arrCity", arrCity)
+      setIsLoading(true)
+      setError(null)
+      try {
+        const responseDeparture = await TravelService.searchFlights({
+          departure_city: depCity,
+          arrival_city: arrCity,
+          departure_date,
+        })
+        setFlightDeparture(responseDeparture)
+        
+        const responseReturn = await TravelService.searchFlights({
+          departure_city: arrCity,
+          arrival_city: depCity,
+          departure_date: return_date,
+        })
+        setFlightReturn(responseReturn)
+      } catch (error: any) {
+        console.error("Lỗi khi lấy dữ liệu chuyến bay:", error)
+        if (error.code === 'ECONNABORTED') {
+          setError("Hết thời gian chờ. Vui lòng thử lại sau.")
+        } else if (error.response?.status === 500) {
+          setError("Lỗi server. Vui lòng thử lại sau.")
+        } else {
+          setError("Không thể tải dữ liệu chuyến bay. Vui lòng thử lại.")
         }
+      } finally {
+        setIsLoading(false)
       }
     }
     fetchFlights()
@@ -318,13 +277,79 @@ function FlightsContent() {
     }
   }
 
-  const handleSelect = (flight: (typeof outboundFlights)[0]) => {
+  const handleSelect = (flight: any) => {
     if (step === 1) {
       setSelectedOutbound(flight)
       setStep(2)
     } else {
       setSelectedReturn(flight)
     }
+  }
+
+  /** Map flight card object to itinerary payload (selectedDepartureFlight / selectedReturnFlight) */
+  const mapFlightToItineraryPayload = (flight: any): SelectedFlightForItinerary => {
+
+    const base = {
+      airline: flight.airline ?? "",
+      airlineCode: flight.airlineCode ?? "",
+      departTime: flight.departureTime ?? "",
+      arriveTime: flight.arrivalTime ?? "",
+      departCode: flight.departureCode ?? "",
+      arriveCode: flight.arrivalCode ?? "",
+      duration: flight.duration ?? "",
+      price: flight.price ?? 0,
+      stop_count: flight.stops ?? 0,
+    }
+    if (flight.stopsForItinerary?.length) {
+      return { ...base, stops: flight.stopsForItinerary }
+    }
+    return base
+  }
+
+  /** Calculate days from dataBuildTour dates (dd/mm/yyyy or YYYY-MM-DD) */
+  const calculateDaysFromBuildTour = (): number => {
+    if (!dataBuildTour?.departureDate || !dataBuildTour?.returnDate) return 0
+    const parseDate = (s: string): Date | null => {
+      if (!s) return null
+      if (s.includes("/")) {
+        const [d, m, y] = s.split("/").map(Number)
+        return new Date(y, m - 1, d)
+      }
+      const d = new Date(s)
+      return isNaN(d.getTime()) ? null : d
+    }
+    const start = parseDate(dataBuildTour.departureDate)
+    const end = parseDate(dataBuildTour.returnDate)
+    if (!start || !end) return 0
+    return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
+  }
+
+  const handleConfirmBooking = () => {
+    if (!selectedOutbound || !selectedReturn || !dataBuildTour) return
+    const days = dataBuildTour.days && dataBuildTour.days > 0 ? dataBuildTour.days : calculateDaysFromBuildTour()
+    const flightsPayload: FlightsSelectionPayload = {
+      selectedDepartureFlight: mapFlightToItineraryPayload(selectedOutbound),
+      selectedReturnFlight: mapFlightToItineraryPayload(selectedReturn),
+    }
+    // Đảm bảo departureDate/returnDate có giá trị (fallback từ ngày bay nếu còn trống)
+    const departureDate = (dataBuildTour.departureDate && dataBuildTour.departureDate.trim() !== "")
+      ? dataBuildTour.departureDate
+      : (dataBuildTour.flight_departure_date ?? "")
+    const returnDate = (dataBuildTour.returnDate && dataBuildTour.returnDate.trim() !== "")
+      ? dataBuildTour.returnDate
+      : (dataBuildTour.flight_return_date ?? "")
+    const currentTripData = {
+      ...dataBuildTour,
+      departureDate,
+      returnDate,
+      days,
+      book_flight: true,
+      flights: flightsPayload,
+    }
+    if (typeof window !== "undefined") {
+      localStorage.setItem("currentTripData", JSON.stringify(currentTripData))
+    }
+    router.push(`/preferences?cityId=${dataBuildTour.destination_city_id}`)
   }
 
   const totalPrice = (selectedOutbound?.price || 0) + (selectedReturn?.price || 0)
@@ -678,7 +703,7 @@ function FlightsContent() {
                           {/* Price & Action */}
                           <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4 w-full md:w-48 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-white/10 md:pl-8">
                             <div className="text-right">
-                              <div className="text-2xl font-bold text-[#FFE5B4]">{formatPrice(flight.price)}đ</div>
+                              <div className="text-2xl font-bold text-[#FFE5B4]">{flight.price}$</div>
                               <div className="text-[10px] text-[#A5ABA3] uppercase tracking-tighter">
                                 Giá đã bao gồm thuế
                               </div>
@@ -801,14 +826,14 @@ function FlightsContent() {
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-[#D0D7D8]">Departure flight</span>
                       <span className="text-white font-semibold">
-                        {selectedOutbound ? `${formatPrice(selectedOutbound.price)}đ` : '-'}
+                      {selectedOutbound ? `${(selectedOutbound.price)}$` : '-'}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-[#D0D7D8]">Return flight</span>
                       <span className="text-white font-semibold">
-                        {selectedReturn ? `${formatPrice(selectedReturn.price)}đ` : '-'}
+                        {selectedReturn ? `${(selectedReturn.price)}$` : '-'}
                       </span>
                     </div>
 
@@ -816,7 +841,7 @@ function FlightsContent() {
                     <div className="pt-4 border-t border-white/10">
                       <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-[#FFE5B4]/10 to-[#FFB56D]/10 border border-[#FFE5B4]/20">
                         <span className="text-lg font-bold text-white">Total</span>
-                        <span className="text-2xl font-bold text-[#FFE5B4]">{formatPrice(totalPrice)}đ</span>
+                        <span className="text-2xl font-bold text-[#FFE5B4]">{(totalPrice)}$</span>
                       </div>
                     </div>
                   </div>
@@ -826,17 +851,14 @@ function FlightsContent() {
               {/* Footer */}
               <div className="px-8 pb-8">
                 <button
-                  onClick={() => {
-                    // Handle booking confirmation
-                    console.log("Booking confirmed", { selectedOutbound, selectedReturn })
-                  }}
+                  onClick={handleConfirmBooking}
                   disabled={!selectedOutbound || !selectedReturn}
                   className={`w-full py-4 rounded-2xl font-bold text-lg transition-all ${selectedOutbound && selectedReturn
                       ? 'bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] hover:shadow-xl hover:shadow-[#FFB56D]/40 text-[#2B1200] hover:scale-[1.02] cursor-pointer'
                       : 'bg-white/10 text-[#7D837A] cursor-not-allowed opacity-50'
                     }`}
                 >
-                  Confirm Booking
+                  Confirm Booking & Continue to Tour
                 </button>
               </div>
             </div>

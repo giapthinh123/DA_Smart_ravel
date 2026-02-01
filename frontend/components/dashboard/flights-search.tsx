@@ -60,6 +60,14 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
       dataBuildTour.destination = destination || ""
     }
 
+    // Đồng bộ ngày chuyến đi với ngày bay (để currentTripData có departureDate/returnDate)
+    if (!dataBuildTour.departureDate || dataBuildTour.departureDate === "") {
+      dataBuildTour.departureDate = formattedFlightDepartureDate
+    }
+    if (!dataBuildTour.returnDate || dataBuildTour.returnDate === "") {
+      dataBuildTour.returnDate = formattedFlightReturnDate
+    }
+
     // Lưu dữ liệu vào sessionStorage thay vì truyền qua URL
     sessionStorage.setItem('flightSearchData', JSON.stringify(dataBuildTour))
 

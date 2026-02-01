@@ -37,11 +37,36 @@ export interface HotelSearchParams {
 }
 
 export interface AirlineSearchParams {
-  departure: string
-  destination: string
-  time: string
-  date: string
+  departure_city: string
+  arrival_city: string
+  departure_date: string
 }
+
+/** Stopover at an intermediate airport */
+export interface FlightStop {
+  iata: string
+  name: string
+  arrival: string
+  departure: string
+}
+
+/** Single flight option from flights API */
+export interface FlightOption {
+  airline: string
+  flight_code: string
+  dep_iata: string
+  arr_iata: string
+  dep_airport: string
+  arr_airport: string
+  dep_time: string
+  arr_time: string
+  price: string
+  currency: string
+  stops: FlightStop[]
+}
+
+/** Flights API response: airline name -> list of flights */
+export type FlightsByAirline = Record<string, FlightOption[]>
 
 export interface Tour {
   id: string
@@ -112,6 +137,35 @@ export interface data_flight {
   price: number
 }
 
+/** Stopover at an intermediate airport (for itinerary flight payload) */
+export interface FlightStopForItinerary {
+  iata: string
+  name: string
+  arrival: string
+  departure: string
+}
+
+/** Selected flight from flights page (for itinerary / book_flight) */
+export interface SelectedFlightForItinerary {
+  airline: string
+  airlineCode: string
+  departTime: string
+  arriveTime: string
+  departCode: string
+  arriveCode: string
+  duration: string
+  stop_count: number
+  price: number
+  /** When flight has stopover(s) */
+  stops?: FlightStopForItinerary[]
+}
+
+export interface FlightsSelectionPayload {
+  selectedDepartureFlight: SelectedFlightForItinerary
+  selectedReturnFlight: SelectedFlightForItinerary
+}
+
+/** Trip data extended with book_flight and flights (from flights page → preferences) */
 export interface data_build_tour {
 
   departure_city_id: string
@@ -135,6 +189,10 @@ export interface data_build_tour {
   flight_departure: data_flight | null
   flight_return: data_flight | null
 
+  /** When true, itinerary includes booked flights from flights page */
+  book_flight?: boolean
+  /** Flight data from flights page when book_flight is true */
+  flights?: FlightsSelectionPayload
 }
 
 // Places API types

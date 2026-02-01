@@ -1,9 +1,13 @@
 import axios from 'axios'
 import { env } from './env'
 
+// Trong browser dùng '' để request qua Next rewrite (same-origin), tránh CORS và mất body
+const getBaseURL = () =>
+  typeof window !== 'undefined' ? '' : (env.API_BASE_URL || 'http://localhost:5000')
+
 // Create axios instance
 export const api = axios.create({
-  baseURL: env.API_BASE_URL,
+  baseURL: getBaseURL(),
   timeout: 60000, // 60 seconds for flight API calls
   headers: {
     'Content-Type': 'application/json',

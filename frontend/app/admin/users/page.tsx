@@ -408,9 +408,7 @@ function UserManagementPage() {
                                                             <div className="text-sm font-medium text-gray-900 dark:text-white">
                                                                 {user.fullname || 'N/A'}
                                                             </div>
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                                {user.id.substring(0, 8)}...
-                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </td>

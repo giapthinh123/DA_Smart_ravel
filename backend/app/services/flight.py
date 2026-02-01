@@ -125,21 +125,17 @@ def fetch_flights(dep_iata: str, arr_iata: str, departure_date: str, adults: int
     Fetch flight offers và truy vấn thêm trạng thái cho từng segment.
     """
     try:
-    #     # 1) Lấy flight offers
-    #     response = AMADEUS.shopping.flight_offers_search.get(
-    #         originLocationCode=dep_iata,
-    #         destinationLocationCode=arr_iata,
-    #         departureDate=departure_date,
-    #         adults=adults,
-    #         max=max_results
-    #     )
-    #     offers = response.data
-    #     return offers
+        # 1) Lấy flight offers
+        response = AMADEUS.shopping.flight_offers_search.get(
+            originLocationCode=dep_iata,
+            destinationLocationCode=arr_iata,
+            departureDate=departure_date,
+            adults=adults,
+            max=max_results
+        )
+        offers = response.data
+        return offers
 
-    # except ResponseError as error:
-        # Trả về mock data khi API lỗi 400, 500 hoặc bất kỳ lỗi nào
-        return _generate_mock_flight_data(dep_iata, arr_iata, departure_date, adults)
-    
     except Exception as e:
         return _generate_mock_flight_data(dep_iata, arr_iata, departure_date, adults)
 

@@ -45,9 +45,15 @@ class ItineraryController:
         trip_duration_days: int,
         start_date: str,
         guest_count: int = 2,
-        budget: float = 1000.0
+        budget: float = 1000.0,
+        name: str = "",
+        city_name: str = "",
+        book_flight: bool = False,
+        flights: Optional[Dict] = None
     ) -> Dict:
-        """Create a new empty itinerary with pending status"""
+        """Create a new empty itinerary with pending status.
+        If book_flight is True and flights is provided, store flight data (selectedDepartureFlight, selectedReturnFlight).
+        """
         now = datetime.utcnow()
         itinerary_id = f"itin_{user_id}_{city_id}_{int(now.timestamp())}"
         
@@ -55,6 +61,8 @@ class ItineraryController:
             "itinerary_id": itinerary_id,
             "user_id": user_id,
             "city_id": city_id,
+            "city_name": city_name,
+            "name": name,
             "trip_duration_days": trip_duration_days,
             "start_date": start_date,
             "guest_count": guest_count,
@@ -62,11 +70,12 @@ class ItineraryController:
             "status": "pending",
             "daily_itinerary": [],
             "summary": None,
-            "generated_by": "tfidf_planner",
-            "generated_at": now.isoformat(),
             "created_at": now,
             "updated_at": now
         }
+        if book_flight and flights:
+            doc["book_flight"] = True
+            doc["flights"] = flights
         
         self.mongo.db.itineraries.insert_one(doc)
         logger.info(f"Created itinerary: {itinerary_id}")
@@ -312,6 +321,18 @@ class ItineraryController:
         total_cost = sum(d.get("day_cost", 0) for d in all_days)
         guest_count = itinerary.get("guest_count", 2)
         budget = itinerary.get("budget", 1000)
+
+        # Tổng giá vé máy bay (nếu có book_flight)
+        flight_total = None
+        if itinerary.get("book_flight") and itinerary.get("flights"):
+            flights = itinerary["flights"]
+            dep = flights.get("selectedDepartureFlight") or {}
+            ret = flights.get("selectedReturnFlight") or {}
+            try:
+                flight_total = float(dep.get("price", 0) or 0) + float(ret.get("price", 0) or 0)
+                flight_total = round(flight_total, 2)
+            except (TypeError, ValueError):
+                flight_total = None
         
         summary = {
             "total_places": total_places,
@@ -320,6 +341,8 @@ class ItineraryController:
             "budget_utilized_percent": round((total_cost / budget * 100), 1) if budget else 0,
             "avg_cost_per_day": round(total_cost / len(all_days), 2) if all_days else 0
         }
+        if flight_total is not None:
+            summary["flight_total"] = flight_total
         
         self.mongo.db.itineraries.update_one(
             {"itinerary_id": itinerary_id},

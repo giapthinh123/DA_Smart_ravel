@@ -198,7 +198,7 @@ class ScheduledPlace:
         
         return result
 
-tạo 
+
 @dataclass
 class DayItinerary:
     """Itinerary for a single day"""
