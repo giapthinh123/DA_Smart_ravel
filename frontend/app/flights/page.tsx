@@ -20,6 +20,7 @@ import {
 import { useRouter } from "next/navigation"
 import api from "@/lib/axios"
 import { TravelService } from "@/services/travel.service"
+import { UserMenu } from "@/components/user-menu"
 function FlightsContent() {
   const router = useRouter()
   const { user, logout } = useAuthStore()
@@ -74,11 +75,11 @@ function FlightsContent() {
     // Preserve stops for itinerary payload (quá cảnh): iata, name, arrival, departure
     const stopsForItinerary = (flight.stops && Array.isArray(flight.stops))
       ? flight.stops.map((s: { iata?: string; name?: string; arrival?: string; departure?: string }) => ({
-          iata: s.iata ?? '',
-          name: s.name ?? '',
-          arrival: s.arrival ?? '',
-          departure: s.departure ?? '',
-        }))
+        iata: s.iata ?? '',
+        name: s.name ?? '',
+        arrival: s.arrival ?? '',
+        departure: s.departure ?? '',
+      }))
       : []
 
     return {
@@ -234,7 +235,7 @@ function FlightsContent() {
           departure_date,
         })
         setFlightDeparture(responseDeparture)
-        
+
         const responseReturn = await TravelService.searchFlights({
           departure_city: arrCity,
           arrival_city: depCity,
@@ -395,7 +396,7 @@ function FlightsContent() {
             <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
               Home
             </Link>
-            <Link href="/dashboard" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+            <Link href="/planner" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
               Dashboard
             </Link>
             <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
@@ -405,65 +406,9 @@ function FlightsContent() {
               Contact
             </Link>
             <span className="mx-2 h-4 w-px bg-white/20"></span>
-            
+
             {/* User Menu Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="rounded-full bg-white/10 px-4 py-2 text-[#F3F0E9] transition hover:bg-white/20 flex items-center gap-2">
-                  <span>{user?.role === 'admin' ? 'ADMIN' : user?.fullname || user?.email || 'USER'}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-[#1A1D1C]/95 backdrop-blur-lg border-white/10">
-                <DropdownMenuLabel className="text-[#F3F0E9]">
-                  <div className="flex flex-col">
-                    <span className="font-medium">{user?.fullname || 'User'}</span>
-                    <span className="text-xs text-[#A5ABA3]">{user?.email}</span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-white/10" />
-                
-                <DropdownMenuItem 
-                  onClick={() => router.push('/profile')}
-                  className="text-[#F3F0E9] hover:bg-white/10 cursor-pointer"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  Profile
-                </DropdownMenuItem>
-                
-                <AdminOnly>
-                  <DropdownMenuItem 
-                    onClick={() => router.push('/admin')}
-                    className="text-[#FFE5B4] hover:bg-white/10 cursor-pointer"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Admin Panel
-                  </DropdownMenuItem>
-                </AdminOnly>
-                
-                <DropdownMenuSeparator className="bg-white/10" />
-                
-                <DropdownMenuItem 
-                  onClick={async () => {
-                    await logout()
-                    router.push('/login')
-                  }}
-                  className="text-red-400 hover:bg-red-500/10 cursor-pointer"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserMenu />
           </nav>
         </div>
       </header>
@@ -484,8 +429,8 @@ function FlightsContent() {
             <div
               onClick={() => setStep(1)}
               className={`flex items-center gap-3 px-6 py-3 rounded-2xl cursor-pointer transition-all border backdrop-blur ${step === 1
-                  ? "bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-[#2B1200] border-[#FFE5B4] shadow-lg shadow-[#FFE5B4]/30"
-                  : "bg-white/5 text-[#D0D7D8] border-white/10 hover:bg-white/10 hover:border-[#FFE5B4]/40"
+                ? "bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-[#2B1200] border-[#FFE5B4] shadow-lg shadow-[#FFE5B4]/30"
+                : "bg-white/5 text-[#D0D7D8] border-white/10 hover:bg-white/10 hover:border-[#FFE5B4]/40"
                 }`}
             >
               <div
@@ -531,8 +476,8 @@ function FlightsContent() {
                       setPriceSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${timeSort === 'default'
-                        ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                        : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
+                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
                       }`}
                   >
                     Mặc định
@@ -543,8 +488,8 @@ function FlightsContent() {
                       setPriceSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${timeSort === 'lowest'
-                        ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                        : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
+                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
                       }`}
                   >
                     Sớm nhất
@@ -555,8 +500,8 @@ function FlightsContent() {
                       setPriceSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${timeSort === 'highest'
-                        ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                        : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
+                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
                       }`}
                   >
                     Muộn nhất
@@ -574,8 +519,8 @@ function FlightsContent() {
                       setTimeSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${priceSort === 'default'
-                        ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                        : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
+                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
                       }`}
                   >
                     Mặc định
@@ -586,8 +531,8 @@ function FlightsContent() {
                       setTimeSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${priceSort === 'lowest'
-                        ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                        : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
+                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
                       }`}
                   >
                     Thấp nhất
@@ -598,8 +543,8 @@ function FlightsContent() {
                       setTimeSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${priceSort === 'highest'
-                        ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                        : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
+                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
                       }`}
                   >
                     Cao nhất
@@ -641,8 +586,8 @@ function FlightsContent() {
                     <Card
                       key={flight.id}
                       className={`overflow-hidden transition-all duration-300 border backdrop-blur ${selectedCurrentId === flight.id
-                          ? "border-[#FFE5B4] bg-white/10 shadow-[0_20px_60px_-20px_rgba(255,229,180,0.4)]"
-                          : "border-white/10 bg-white/5 hover:border-[#FFE5B4]/50 hover:bg-white/8"
+                        ? "border-[#FFE5B4] bg-white/10 shadow-[0_20px_60px_-20px_rgba(255,229,180,0.4)]"
+                        : "border-white/10 bg-white/5 hover:border-[#FFE5B4]/50 hover:bg-white/8"
                         }`}
                     >
                       <CardContent className="p-0">
@@ -711,8 +656,8 @@ function FlightsContent() {
                             <Button
                               onClick={() => handleSelect(flight)}
                               className={`rounded-xl px-8 h-12 font-semibold transition-all border ${selectedCurrentId === flight.id
-                                  ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 scale-105 shadow-lg shadow-emerald-500/30"
-                                  : "bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] hover:shadow-lg hover:shadow-[#FFB56D]/30 text-[#2B1200] border-[#FFE5B4]"
+                                ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 scale-105 shadow-lg shadow-emerald-500/30"
+                                : "bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] hover:shadow-lg hover:shadow-[#FFB56D]/30 text-[#2B1200] border-[#FFE5B4]"
                                 }`}
                             >
                               {selectedCurrentId === flight.id ? (
@@ -826,7 +771,7 @@ function FlightsContent() {
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-[#D0D7D8]">Departure flight</span>
                       <span className="text-white font-semibold">
-                      {selectedOutbound ? `${(selectedOutbound.price)}$` : '-'}
+                        {selectedOutbound ? `${(selectedOutbound.price)}$` : '-'}
                       </span>
                     </div>
 
@@ -854,8 +799,8 @@ function FlightsContent() {
                   onClick={handleConfirmBooking}
                   disabled={!selectedOutbound || !selectedReturn}
                   className={`w-full py-4 rounded-2xl font-bold text-lg transition-all ${selectedOutbound && selectedReturn
-                      ? 'bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] hover:shadow-xl hover:shadow-[#FFB56D]/40 text-[#2B1200] hover:scale-[1.02] cursor-pointer'
-                      : 'bg-white/10 text-[#7D837A] cursor-not-allowed opacity-50'
+                    ? 'bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] hover:shadow-xl hover:shadow-[#FFB56D]/40 text-[#2B1200] hover:scale-[1.02] cursor-pointer'
+                    : 'bg-white/10 text-[#7D837A] cursor-not-allowed opacity-50'
                     }`}
                 >
                   Confirm Booking & Continue to Tour

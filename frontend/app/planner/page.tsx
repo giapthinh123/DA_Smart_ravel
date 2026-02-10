@@ -7,8 +7,8 @@ import "@/style/dashboard.css"
 import JourneyBuilder from "@/components/dashboard/journey-builder"
 import HotelsSearch from "@/components/dashboard/hotels-search"
 import FlightsSearch from "@/components/dashboard/flights-search"
-import PackagesComingSoon from "@/components/dashboard/packages-coming-soon"
-import FoodServicesComingSoon from "@/components/dashboard/food-services-coming-soon"
+import ActivitiesSearch from "@/components/dashboard/activities_search"
+import FoodSearch from "@/components/dashboard/food-search"
 import { data_build_tour } from "@/types/domain"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
@@ -37,10 +37,11 @@ export default function DashboardPage() {
 
   const quickAccessItems = [
     { title: "Personal tours", subtitle: "Craft bespoke travel stories with personal imprints" },
-    { title: "Hotels", subtitle: "Find curated and budget-aligned accommodation" },
     { title: "Flights", subtitle: "Search flights for the departure and destination" },
-    { title: "Packages", subtitle: "Pre-designed bundles ready to book" },
-    { title: "Food & services", subtitle: "Dining, transport and extra experiences" },
+    { title: "Hotels", subtitle: "Find curated and budget-aligned accommodation" },
+    { title: "Food", subtitle: "Find restaurants and cafes" },
+    { title: "Activities", subtitle: "Find curated and budget-aligned activities" },
+
   ]
 
   useEffect(() => {
@@ -59,10 +60,10 @@ export default function DashboardPage() {
         return <HotelsSearch />
       case "Flights":
         return <FlightsSearch data_build_tour={dataBuildTour} />
-      case "Packages":
-        return <PackagesComingSoon />
-      case "Food & services":
-        return <FoodServicesComingSoon />
+      case "Food":
+        return <FoodSearch />
+      case "Activities":
+        return <ActivitiesSearch />
       default:
         return <JourneyBuilder />
     }
@@ -94,12 +95,9 @@ export default function DashboardPage() {
                 Home
               </Link>
               <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Personalities
+                Tours
               </Link>
-              <Link href="#" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Highlights
-              </Link>
-              <Link href="#" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+              <Link href="/contact" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
                 Contact
               </Link>
               <span className="mx-2 h-4 w-px bg-white/20"></span>
@@ -114,35 +112,30 @@ export default function DashboardPage() {
         <main className="mx-auto max-w-7xl px-6 pb-8">
           {/* Quick Access Cards */}
           <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {[
-              ...quickAccessItems
-            ].map((item, index) => (
-              <div
-                key={index}
-                className={`group cursor-pointer 
-              rounded-2xl border 
-              p-5 
-              backdrop-blur 
-              transition-all duration-300
-              ${selectedItem === item.title
-                    ? 'border-[#FFE5B4] bg-gradient-to-br from-[#FFE5B4]/20 to-[#FFB56D]/10 shadow-[0_8px_32px_rgba(255,229,180,0.3)]'
-                    : 'border-white/10 bg-white/5 hover:border-[#FFE5B4]/40 hover:bg-white/8'
+            {quickAccessItems.map((item, index) => (
+              <button
+                key={item.title}
+                type="button"
+                aria-pressed={selectedItem === item.title}
+                className={`group text-left rounded-2xl border p-5 backdrop-blur transition-[background-color,border-color,box-shadow] duration-300 motion-reduce:transition-none touch-action-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFE5B4] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1820] ${selectedItem === item.title
+                  ? 'border-[#FFE5B4] bg-gradient-to-br from-[#FFE5B4]/20 to-[#FFB56D]/10 shadow-[0_8px_32px_rgba(255,229,180,0.3)]'
+                  : 'border-white/10 bg-white/5 hover:border-[#FFE5B4]/40 hover:bg-white/[0.08]'
                   }`}
                 onClick={() => handleItemClick(index)}
               >
-                <h3 className={`mb-2 font-semibold transition-colors ${selectedItem === item.title
+                <span className={`mb-2 block font-semibold transition-colors motion-reduce:transition-none ${selectedItem === item.title
                   ? 'text-[#FFE5B4]'
                   : 'text-white group-hover:text-[#FFE5B4]'
                   }`}>
                   {item.title}
-                </h3>
-                <p className={`text-xs leading-relaxed transition-colors ${selectedItem === item.title
+                </span>
+                <p className={`text-xs leading-relaxed transition-colors motion-reduce:transition-none ${selectedItem === item.title
                   ? 'text-[#F3F0E9]'
                   : 'text-[#D0D7D8]'
                   }`}>
                   {item.subtitle}
                 </p>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -294,12 +287,14 @@ export default function DashboardPage() {
                   Receive curated travel moments straight to your inbox
                 </p>
                 <div className="flex gap-2">
+                  <label htmlFor="subscribe-email" className="sr-only">Email address</label>
                   <input
+                    id="subscribe-email"
                     type="email"
-                    placeholder="Your email..."
-                    className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none"
+                    placeholder="Your email…"
+                    className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none"
                   />
-                  <button className="rounded-lg bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] px-4 text-sm font-semibold text-[#2B1200] transition hover:scale-105">
+                  <button className="rounded-lg bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] px-4 text-sm font-semibold text-[#2B1200] transition-transform hover:scale-105">
                     Subscribe
                   </button>
                 </div>

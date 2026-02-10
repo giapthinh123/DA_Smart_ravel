@@ -10,7 +10,7 @@ export function DashboardNav() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href="/planner" className="flex items-center gap-2">
             <Globe className="h-7 w-7 text-cyan-400" />
             <span className="text-2xl font-bold text-white">SMART TRAVEL</span>
           </Link>

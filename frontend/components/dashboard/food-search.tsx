@@ -9,11 +9,13 @@ function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
 }
 
-export default function HotelsSearch() {
+export default function FoodSearch() {
   const [locations, setLocations] = useState<City[]>([])
+  const [selectedLocation, setSelectedLocation] = useState<number | null>(null)
+  const [cuisineType, setCuisineType] = useState<string | null>(null)
+  const [mealType, setMealType] = useState<string | null>(null)
   const [budgetRange, setBudgetRange] = useState<[number, number]>([50, 300])
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedLocation, setSelectedLocation] = useState<number | null>(null)
 
   useEffect(() => {
     const city_data = localStorage.getItem('cities_data')
@@ -23,16 +25,16 @@ export default function HotelsSearch() {
   }, [])
 
   const handleSubmit = () => {
-    if (!location) {
+    if (!selectedLocation || !cuisineType) {
       alert("Please fill all required fields")
       return
     }
 
     setIsLoading(true)
     setTimeout(() => {
-      console.log("Hotels search:", { location })
+      console.log("Food search:", { selectedLocation, cuisineType, mealType, budgetRange })
       setIsLoading(false)
-      alert("Hotel search completed!")
+      alert("Food search completed!")
     }, 1500)
   }
 
@@ -40,18 +42,18 @@ export default function HotelsSearch() {
     <div className="rounded-3xl border border-white/10 bg-white/3 p-8 backdrop-blur">
       <div className="mb-6">
         <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#FFE5B4]">
-          Accommodation Finder
+          Culinary Explorer
         </p>
         <h3 className="text-2xl font-semibold text-white">
-          Find curated and budget-aligned accommodation
+          Discover local flavors and dining experiences
         </h3>
         <p className="mt-2 text-sm text-[#D0D7D8]">
-          Search for hotels and stays that match your preferences and budget range.
+          Search for restaurants, street food, and culinary experiences that match your taste.
         </p>
       </div>
 
       <div className="space-y-5">
-        <div className="mb-12 grid gap-4 sm:grid-cols-2">
+        <div className="mb-6 grid gap-4 sm:grid-cols-2">
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
               Location <span className="text-red-400">*</span>
@@ -72,36 +74,33 @@ export default function HotelsSearch() {
               panelClassName="dashboard-form__prime-panel"
             />
           </div>
-          <div>
-            <div className="dashboard-form__field">
-              <label htmlFor="hotel-budget" className="dashboard-form__label">
-                Budget Range (per night)
-              </label>
-              <div className="mt-4 px-2">
-                <Slider
-                  value={budgetRange}
-                  onChange={(e) => {
-                    const newValue = e.value as [number, number]
-                    if (newValue[0] <= newValue[1] - 100) {
-                      setBudgetRange(newValue)
-                    }
-                  }}
-                  range
-                  min={0}
-                  max={1000}
-                  step={10}
-                  className="dashboard-form__slider"
-                />
-                <div className="flex justify-between mt-3 text-sm text-[#D0D7D8]">
-                  <span className="font-medium text-[#FFE5B4]">${budgetRange[0]}</span>
-                  <span className="text-[#A5ABA3]">to</span>
-                  <span className="font-medium text-[#FFE5B4]">${budgetRange[1]}</span>
-                </div>
+          <div className="dashboard-form__field">
+            <label htmlFor="hotel-budget" className="dashboard-form__label">
+              Budget Range (per night)
+            </label>
+            <div className="mt-4 px-2">
+              <Slider
+                value={budgetRange}
+                onChange={(e) => {
+                  const newValue = e.value as [number, number]
+                  if (newValue[0] <= newValue[1] - 100) {
+                    setBudgetRange(newValue)
+                  }
+                }}
+                range
+                min={0}
+                max={1000}
+                step={10}
+                className="dashboard-form__slider"
+              />
+              <div className="flex justify-between mt-3 text-sm text-[#D0D7D8]">
+                <span className="font-medium text-[#FFE5B4]">${budgetRange[0]}</span>
+                <span className="text-[#A5ABA3]">to</span>
+                <span className="font-medium text-[#FFE5B4]">${budgetRange[1]}</span>
               </div>
             </div>
           </div>
         </div>
-
         <button
           onClick={handleSubmit}
           disabled={isLoading}
@@ -119,11 +118,10 @@ export default function HotelsSearch() {
               Processing...
             </span>
           ) : (
-            "Search hotels"
+            "Search restaurants"
           )}
         </button>
       </div>
-    </div>
+    </div >
   )
 }
-

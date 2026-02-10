@@ -228,7 +228,8 @@ def get_tour_history():
                 if city_id:
                     city = mongo.db.citys.find_one({"id": str(city_id)})
                 
-                destination = city.get("name", "Unknown") if city else "Unknown"
+                # Use city collection name, fallback to city_name field in document, then "Unknown"
+                destination = (city.get("name") if city else None) or itin.get("city_name") or "Unknown"
                 
                 # Calculate stats from summary or daily_itinerary
                 summary = itin.get("summary", {})
@@ -295,7 +296,7 @@ def get_tour_history():
                     "pending": "Pending",
                     "cancelled": "Cancelled",
                     "canceled": "Cancelled",
-                    "saved": "Saved"
+                    "payed": "Payed"
                 }
                 frontend_status = status_map.get(backend_status, "Pending")
                 
@@ -303,7 +304,7 @@ def get_tour_history():
                 history_item = {
                     "id": itin.get("itinerary_id") or str(itin.get("_id", "")),
                     "status": frontend_status,
-                    "name": f"{destination} Adventure",
+                    "name": itin.get("name") or f"{destination} Adventure",
                     "destination": destination,
                     "dates": dates,
                     "travelers": f"{itin.get('guest_count', 1)} guests",

@@ -78,6 +78,7 @@ def create_app():
     from .routes.flight import flight_bp
     from .routes.places import places_bp
     from .routes.itinerary import itinerary_bp
+    from .routes.payments import payments_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(users_bp, url_prefix="/api/users")
@@ -85,5 +86,6 @@ def create_app():
     app.register_blueprint(flight_bp, url_prefix="/api/flights")
     app.register_blueprint(places_bp, url_prefix="/api/places")
     app.register_blueprint(itinerary_bp, url_prefix="/api/itinerary")
+    app.register_blueprint(payments_bp, url_prefix="/api/payments")
 
     return app

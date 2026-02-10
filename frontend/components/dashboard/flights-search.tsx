@@ -98,7 +98,10 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
             <Dropdown
               value={departure || ""}
               onChange={(e) => setDeparture(e.value)}
-              options={cities.map((city) => ({ label: city.city, value: city.city }))}
+              options={cities.map((city) => ({
+                label: city.city + ", " + city.country,
+                value: city.id
+              }))}
               optionLabel="label"
               optionValue="value"
               placeholder="Search departure..."
@@ -116,8 +119,10 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
             <Dropdown
               value={destination || ""}
               onChange={(e) => setDestination(e.value)}
-              options={cities.map((city) => ({ label: city.city, value: city.city }))}
-              optionLabel="label"
+              options={cities.map((city) => ({
+                label: city.city + ", " + city.country,
+                value: city.id
+              }))}              optionLabel="label"
               optionValue="value"
               placeholder="Search destination..."
               filter

@@ -99,8 +99,56 @@ function PreferencesContent() {
     dislike_local_transport: [],
   })
 
+  // Define transport modes matching backend configuration
+  const TRANSPORT_MODES = [
+    {
+      id: 'walking',
+      name: 'Walking',
+      icon: '🚶',
+      maxKm: 1.5,
+      speedKmh: 5,
+      costPerKm: 0,
+      description: 'Up to 1.5km, Free'
+    },
+    {
+      id: 'motorbike',
+      name: 'Motorbike',
+      icon: '🏍️',
+      maxKm: 30,
+      speedKmh: 35,
+      costPerKm: 0.4,
+      description: 'Up to 30km, $0.4/km'
+    },
+    {
+      id: 'taxi',
+      name: 'Taxi',
+      icon: '🚕',
+      maxKm: 100,
+      speedKmh: 30,
+      costPerKm: 0.75,
+      description: 'Up to 100km, $0.75/km'
+    }
+  ]
+
+  const API_BASE = 'http://localhost:5000/api'
+
+  // API helper
+  const apiCall = async (endpoint: string, options: RequestInit = {}) => {
+    const res = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...options.headers
+      }
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'API Error')
+    return data
+  }
   // Load trip data from localStorage
   useEffect(() => {
+
     if (typeof window !== 'undefined') {
       const savedTripData = localStorage.getItem('currentTripData')
       if (savedTripData) {
@@ -348,6 +396,26 @@ function PreferencesContent() {
           })
         }
 
+        // Add Local Transport section with 3 transport modes
+        transformedCategories.push({
+          title: 'Local Transport',
+          description: 'Select your preferred transportation methods for getting around.',
+          icon: <Bus className="w-5 h-5" />,
+          bgColor: 'bg-yellow-50',
+          items: TRANSPORT_MODES.map((transport) => ({
+            id: transport.id,
+            place_id: transport.id,
+            name: transport.name,
+            category: 'Transport',
+            rating: 0, // Not applicable for transport
+            reviews: 0, // Not applicable for transport
+            price: transport.description,
+            info: `${transport.icon} Speed: ${transport.speedKmh}km/h`,
+            liked: false,
+            skipped: false,
+          }))
+        })
+
         setCategories(transformedCategories)
       } catch (err: any) {
         console.error('Failed to fetch places:', err)
@@ -359,8 +427,6 @@ function PreferencesContent() {
 
     fetchPlaces()
   }, [searchParams])
-
-
 
   // Load saved preferences when categories are loaded
   useEffect(() => {
@@ -420,6 +486,15 @@ function PreferencesContent() {
                   ...item,
                   liked: savedPrefs.like_attraction.includes(item.id.toString()),
                   skipped: savedPrefs.dislike_attraction.includes(item.id.toString()),
+                })),
+              }
+            } else if (category.title === 'Local Transport') {
+              return {
+                ...category,
+                items: category.items.map((item) => ({
+                  ...item,
+                  liked: savedPrefs.like_local_transport.includes(item.id.toString()),
+                  skipped: savedPrefs.dislike_local_transport.includes(item.id.toString()),
                 })),
               }
             }
@@ -493,6 +568,15 @@ function PreferencesContent() {
         if (!exists) {
           updatedPrefs.dislike_attraction = prev.dislike_attraction.filter((x) => x !== id)
         }
+      } else if (categoryTitle === 'Local Transport') {
+        const exists = prev.like_local_transport.includes(id)
+        updatedPrefs.like_local_transport = exists
+          ? prev.like_local_transport.filter((x) => x !== id)
+          : [...prev.like_local_transport, id]
+        // Remove from dislike if adding to like
+        if (!exists) {
+          updatedPrefs.dislike_local_transport = prev.dislike_local_transport.filter((x) => x !== id)
+        }
       }
       return updatedPrefs
     })
@@ -553,6 +637,15 @@ function PreferencesContent() {
         // Remove from like if adding to dislike
         if (!exists) {
           updatedPrefs.like_attraction = prev.like_attraction.filter((x) => x !== id)
+        }
+      } else if (categoryTitle === 'Local Transport') {
+        const exists = prev.dislike_local_transport.includes(id)
+        updatedPrefs.dislike_local_transport = exists
+          ? prev.dislike_local_transport.filter((x) => x !== id)
+          : [...prev.dislike_local_transport, id]
+        // Remove from like if adding to dislike
+        if (!exists) {
+          updatedPrefs.like_local_transport = prev.like_local_transport.filter((x) => x !== id)
         }
       }
       return updatedPrefs
@@ -623,6 +716,10 @@ function PreferencesContent() {
         } else if (category.title === 'Recreation Places') {
           if (item.liked) calculatedPrefs.like_attraction.push(id)
           if (item.skipped) calculatedPrefs.dislike_attraction.push(id)
+        } else if (category.title === 'Local Transport') {
+          // Collect transport preferences for backend use (not saved to DB)
+          if (item.liked) calculatedPrefs.like_local_transport.push(id)
+          if (item.skipped) calculatedPrefs.dislike_local_transport.push(id)
         }
       })
     })
@@ -631,14 +728,30 @@ function PreferencesContent() {
       setError(null)
       setIsLoading(true)
 
-      // Save preferences
+      // Save only hotel/restaurant/attraction preferences to database
+      // Transport preferences are NOT persisted
+      const prefsToSave: PreferencesData = {
+        like_hotel: calculatedPrefs.like_hotel,
+        like_restaurant: calculatedPrefs.like_restaurant,
+        like_attraction: calculatedPrefs.like_attraction,
+        like_local_transport: [], // Don't save transport preferences
+        dislike_hotel: calculatedPrefs.dislike_hotel,
+        dislike_restaurant: calculatedPrefs.dislike_restaurant,
+        dislike_attraction: calculatedPrefs.dislike_attraction,
+        dislike_local_transport: [], // Don't save transport preferences
+      }
+
       await PlacesService.set_Preferences(
         user.id,
         tripData.destination_city_id,
-        calculatedPrefs
+        prefsToSave
       )
 
-      console.log('Preferences saved successfully')
+      console.log('Preferences saved successfully (excluding transport)')
+      console.log('Transport preferences collected but not saved:', {
+        liked: calculatedPrefs.like_local_transport,
+        disliked: calculatedPrefs.dislike_local_transport
+      })
 
       // Check if we're in edit mode (editing a specific day)
       const editDay = searchParams.get('editDay')
@@ -753,7 +866,7 @@ function PreferencesContent() {
             <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
               Home
             </Link>
-            <Link href="/dashboard" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+            <Link href="/planner" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
               Dashboard
             </Link>
             <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">

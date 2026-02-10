@@ -32,7 +32,8 @@ import {
     Navigation,
     Home,
     Download,
-    Share2
+    Share2,
+    CreditCard
 } from "lucide-react"
 
 // Types for place details
@@ -420,7 +421,7 @@ function ItineraryContent() {
                 <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
-                            href="/dashboard"
+                            href="/planner"
                             className="flex items-center gap-2 text-[#A5ABA3] hover:text-white transition"
                         >
                             <ChevronLeft className="w-5 h-5" />
@@ -433,14 +434,6 @@ function ItineraryContent() {
                         </div>
                     </div>
                     <nav className="flex items-center gap-3">
-                        <button className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2 text-xs text-[#A5ABA3] hover:bg-white/10 hover:text-white transition">
-                            <Share2 className="w-4 h-4" />
-                            Share
-                        </button>
-                        <button className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2 text-xs text-[#A5ABA3] hover:bg-white/10 hover:text-white transition">
-                            <Download className="w-4 h-4" />
-                            Export
-                        </button>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <button className="rounded-full bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/20 transition">
@@ -451,7 +444,7 @@ function ItineraryContent() {
                                 <DropdownMenuItem onClick={() => router.push("/profile")} className="text-white hover:bg-white/10 cursor-pointer">
                                     Profile
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push("/dashboard")} className="text-white hover:bg-white/10 cursor-pointer">
+                                <DropdownMenuItem onClick={() => router.push("/planner")} className="text-white hover:bg-white/10 cursor-pointer">
                                     Dashboard
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => { logout(); router.push("/login") }} className="text-red-400 hover:bg-red-500/10 cursor-pointer">
@@ -484,11 +477,11 @@ function ItineraryContent() {
                             Start planning your trip by selecting a destination and your preferences.
                         </p>
                         <Link
-                            href="/dashboard"
+                            href="/planner"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D] text-[#2B1200] font-bold rounded-xl hover:scale-105 transition"
                         >
                             <Home className="w-5 h-5" />
-                            Go to Dashboard
+                            Go to Planner
                         </Link>
                     </div>
                 )}
@@ -966,12 +959,30 @@ function ItineraryContent() {
 
                                             {/* Complete message */}
                                             {itinerary.status === 'complete' && (
-                                                <div className="flex-1 py-4 px-6 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-semibold flex items-center justify-center gap-2">
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                    Itinerary Complete
-                                                </div>
+                                                <button
+                                                    onClick={() => {
+                                                        // Store itinerary data for payment page
+                                                        const paymentData = {
+                                                            itinerary_id: itinerary.itinerary_id,
+                                                            user_id: itinerary.user_id,
+                                                            city_id: itinerary.city_id,
+                                                            trip_duration_days: itinerary.trip_duration_days,
+                                                            start_date: itinerary.start_date,
+                                                            guest_count: itinerary.guest_count,
+                                                            budget: itinerary.budget,
+                                                            summary: itinerary.summary,
+                                                            daily_itinerary: itinerary.daily_itinerary,
+                                                            book_flight: itinerary.book_flight,
+                                                            flights: itinerary.flights,
+                                                        }
+                                                        localStorage.setItem('payment_itinerary_data', JSON.stringify(paymentData))
+                                                        router.push(`/payments?itineraryId=${itinerary.itinerary_id}`)
+                                                    }}
+                                                    className="flex-1 py-4 px-6 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-semibold flex items-center justify-center gap-2 hover:bg-emerald-500/30 transition"
+                                                >
+                                                    <CreditCard className="w-5 h-5" />
+                                                    Proceed to Payment
+                                                </button>
                                             )}
                                         </div>
                                     </div>

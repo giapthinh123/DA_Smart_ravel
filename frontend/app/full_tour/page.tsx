@@ -262,11 +262,11 @@ function FullTourContent() {
                             Please provide a valid itinerary ID.
                         </p>
                         <Link
-                            href="/dashboard"
+                            href="/history_tour"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D] text-[#2B1200] font-bold rounded-xl hover:scale-105 transition"
                         >
                             <Home className="w-5 h-5" />
-                            Go to Dashboard
+                            Go to History Tour
                         </Link>
                     </div>
                 )}
