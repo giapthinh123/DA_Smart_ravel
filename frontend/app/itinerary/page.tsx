@@ -105,8 +105,6 @@ const formatShortDate = (dateString: string): string => {
     })
 }
 
-const API_BASE = "http://localhost:5000/api"
-
 function ItineraryContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -371,8 +369,7 @@ function ItineraryContent() {
 
         setLoadingDetails(prev => new Set(prev).add(placeId))
         try {
-            const res = await fetch(`${API_BASE}/places/place/${placeId}`)
-            const data = await res.json()
+            const data = await PlacesService.getPlaceById(placeId)
             setPlaceDetails(prev => ({ ...prev, [placeId]: data }))
         } catch (err) {
             console.error("Failed to fetch place details:", err)

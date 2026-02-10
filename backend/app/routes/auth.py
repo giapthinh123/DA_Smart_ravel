@@ -3,11 +3,10 @@ from flask_jwt_extended import (
     create_access_token, 
     create_refresh_token,
     jwt_required, 
-    get_jwt_identity,
     get_jwt
 )
 from datetime import datetime
-from ..extensions import mongo, limiter
+from ..extensions import mongo, limiter, parse_jwt_identity
 from ..models.users import Users
 
 auth_bp = Blueprint("auth", __name__)
@@ -90,7 +89,7 @@ def refresh():
     Refresh access token using refresh token
     OWASP: Separate refresh token mechanism
     """
-    identity = get_jwt_identity()
+    identity = parse_jwt_identity()
     access_token = create_access_token(identity=identity)
     return jsonify({"auth_token": access_token}), 200
 
@@ -115,7 +114,7 @@ def get_current_user():
     Get current user info from JWT
     OWASP: JWT validation, no sensitive data exposure
     """
-    identity = get_jwt_identity()
+    identity = parse_jwt_identity()
     
     # Get fresh user data from database
     user = Users.find_user_by_id_safe(mongo, identity["id"])
@@ -132,7 +131,7 @@ def change_password():
     Change user password
     OWASP: Verify current password, password strength check
     """
-    identity = get_jwt_identity()
+    identity = parse_jwt_identity()
     data = request.json
     
     if not data or not data.get("currentPassword") or not data.get("newPassword"):

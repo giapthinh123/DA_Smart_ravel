@@ -1,3 +1,4 @@
+
 # Django Framework
 Django>=5.0.0
 djangorestframework>=3.14.0
@@ -36,3 +37,6 @@ sentence-transformers>=2.2.0  # BERT multilingual embeddings
 scipy>=1.11.0  # SVD matrix factorization
 numpy>=1.24.0  # Vector operations
 scikit-learn>=1.3.0  # ML utilities
+
+amadeus
+airportsdata

@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { PlacesService } from "@/services/places.service"
+import { ItineraryService } from "@/services/itinerary.service"
 import { Place, PreferencesData } from "@/types/domain"
 import { UserMenu } from "@/components/user-menu"
 interface PlaceItem {
@@ -145,7 +146,6 @@ function PreferencesContent() {
     if (!res.ok) throw new Error(data.error || 'API Error')
     return data
   }
-
   // Load trip data from localStorage
   useEffect(() => {
 
@@ -250,25 +250,17 @@ function PreferencesContent() {
           }
         }
 
-        // Build create payload; include book_flight and flights when coming from flights page
-        const createBody: Record<string, unknown> = {
-          name: tripData.departure + " to " + tripData.destination,
-          city_name: tripData.destination,
-          city_id: tripData.destination_city_id,
+        // Create base tour using ItineraryService
+        const result = await ItineraryService.createItinerary({
+          city_id: tripData.destination_city_id || tripData.cityId,
           trip_duration_days: durationDays,
           start_date: startDateStr,
           guest_count: (tripData.adults || 2) + (tripData.children || 0),
-          budget: tripData.budget || 1000
-        }
-        if (tripData.book_flight === true && tripData.flights) {
-          createBody.book_flight = true
-          createBody.flights = tripData.flights
-        }
-
-        // Create base tour
-        const result = await apiCall('/itinerary/create', {
-          method: 'POST',
-          body: JSON.stringify(createBody)
+          budget: tripData.budget || 1000,
+          ...(tripData.book_flight === true && tripData.flights ? {
+            book_flight: true,
+            flights: tripData.flights
+          } : {})
         })
 
         console.log('Itinerary created:', result)
@@ -307,7 +299,7 @@ function PreferencesContent() {
       }
 
       try {
-        const response = await apiCall(`/itinerary/${urlItineraryId}`)
+        const response = await ItineraryService.getItinerary(urlItineraryId)
         const dayNumber = parseInt(editDay)
         const dayExists = response.daily_itinerary?.some((d: any) => d.day_number === dayNumber) || false
         setIsEditingExistingDay(dayExists)

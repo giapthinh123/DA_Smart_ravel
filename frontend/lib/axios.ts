@@ -2,8 +2,17 @@ import axios from 'axios'
 import { env } from './env'
 
 // Trong browser dùng '' để request qua Next rewrite (same-origin), tránh CORS và mất body
-const getBaseURL = () =>
-  typeof window !== 'undefined' ? '' : (env.API_BASE_URL || 'http://localhost:5000')
+// Trên server (Next.js SSR trong Docker), dùng Docker internal DNS
+const getBaseURL = () => {
+  if (typeof window !== 'undefined') {
+    // Browser: always use relative URL to go through Next.js rewrite
+    return ''
+  }
+  
+  // Server-side: use internal Docker DNS or localhost for development
+  // INTERNAL_API_URL is set via Docker Compose for server-side calls
+  return process.env.INTERNAL_API_URL || 'http://backend:5000'
+}
 
 // Create axios instance
 export const api = axios.create({
@@ -12,9 +21,13 @@ export const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // CRITICAL: Prevent axios from following redirects to absolute URLs
+  // This ensures we always use relative paths in browser
+  maxRedirects: 0,
   // Ngăn axios tự động log lỗi ra console
   validateStatus: function (status) {
-    return status < 600 // Chấp nhận mọi status code < 600
+    // Accept 3xx redirects as valid responses (Next.js will handle them)
+    return status < 400
   }
 })
 

@@ -15,8 +15,9 @@ import {
     Itinerary,
     DayItinerary,
     Block,
+    ItineraryService
 } from "@/services/itinerary.service"
-import api from "@/lib/axios"
+import { PlacesService } from "@/services/places.service"
 import {
     Loader2,
     MapPin,
@@ -103,14 +104,11 @@ const formatShortDate = (dateString: string): string => {
     })
 }
 
-/** Hiển thị số điểm dừng: stop_count (number) hoặc type (string) cũ */
 const formatFlightStopLabel = (flight: { stop_count?: number; type?: string }): string => {
     const c = flight.stop_count
     if (typeof c === "number") return c === 0 ? "Direct" : c === 1 ? "1 stop" : `${c} stops`
     return flight.type ?? "—"
 }
-
-const API_BASE = "http://localhost:5000/api"
 
 function FullTourContent() {
     const router = useRouter()
@@ -149,10 +147,10 @@ function FullTourContent() {
 
                 console.log('Loading full tour:', itineraryId)
 
-                // Call the API endpoint directly
-                const response = await api.get<Itinerary>(`/api/itinerary/${itineraryId}`)
-                console.log('Loaded full tour:', response.data)
-                setItinerary(response.data)
+                // Use ItineraryService to fetch itinerary
+                const data = await ItineraryService.getItinerary(itineraryId)
+                console.log('Loaded full tour:', data)
+                setItinerary(data)
             } catch (err: any) {
                 console.error('Error loading full tour:', err)
                 setError(err.response?.data?.error || err.message || 'Failed to load full tour')
@@ -181,8 +179,7 @@ function FullTourContent() {
 
         setLoadingDetails(prev => new Set(prev).add(placeId))
         try {
-            const res = await fetch(`${API_BASE}/places/place/${placeId}`)
-            const data = await res.json()
+            const data = await PlacesService.getPlaceById(placeId)
             setPlaceDetails(prev => ({ ...prev, [placeId]: data }))
         } catch (err) {
             console.error("Failed to fetch place details:", err)

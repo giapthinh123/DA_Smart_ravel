@@ -19,6 +19,11 @@ function ProfileContent() {
   const { user, logout, updateUser } = useAuthStore()
   const router = useRouter()
 
+  // In practice this page is wrapped by AuthGuard, but add a runtime/type guard
+  // so TypeScript knows user is not null for the rest of the component.
+  if (!user) {
+    return null
+  }
   const [formData, setFormData] = useState({
     fullName: user?.fullname || user?.name || "",
     phoneNumber: user?.phone || "",

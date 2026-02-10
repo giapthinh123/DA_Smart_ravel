@@ -24,6 +24,8 @@ function InputError({
   ) : null
 }
 
+type ErrorMap = Record<string, string | undefined>
+
 export default function RegisterPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
@@ -33,14 +35,14 @@ export default function RegisterPage() {
     confirmPassword: "",
     phone: "",
   })
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<ErrorMap>({})
   const [isLoading, setIsLoading] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: ErrorMap = {}
 
     if (!formData.fullName) {
       newErrors.fullName = "Full name is required"

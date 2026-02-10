@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
+import { ItineraryService, TourHistoryItem } from "@/services/itinerary.service"
 
 interface TourHistory {
     id: string
@@ -29,52 +30,21 @@ export default function HistoryTourPage() {
     const [currentPage, setCurrentPage] = useState<number>(1)
     const itemsPerPage = 9
 
-    // Fetch tour history from API
+    // Fetch tour history from API using ItineraryService
     useEffect(() => {
         const fetchTourHistory = async () => {
             try {
                 setLoading(true)
                 setError("")
 
-                // Get token from localStorage
-                const token = localStorage.getItem("token") || localStorage.getItem("auth_token")
 
-                if (!token) {
-                    router.push("/login")
-                    return
-                }
+                // Use ItineraryService to fetch tour history
+                const data = await ItineraryService.getTourHistory({
+                    status: filter !== "All" ? filter : undefined,
+                    limit: 100
 
-                // Build query params - only send status filter to backend, search is done client-side
-                const params = new URLSearchParams()
-                if (filter && filter !== "All") {
-                    params.append("status", filter)
-                }
-                params.append("limit", "100")
-
-                const queryString = params.toString()
-                const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/itinerary/history${queryString ? `?${queryString}` : ''}`
-
-                const response = await fetch(url, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
                 })
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}))
-                    if (response.status === 401) {
-                        // Unauthorized - redirect to login
-                        localStorage.removeItem("token")
-                        localStorage.removeItem("auth_token")
-                        router.push("/login")
-                        return
-                    }
-                    throw new Error(errorData.error || `Failed to fetch tour history: ${response.status}`)
-                }
-
-                const data = await response.json()
                 // Check if data has history array
                 if (!data || !Array.isArray(data.history)) {
                     console.warn("Invalid response format:", data)
@@ -83,7 +53,7 @@ export default function HistoryTourPage() {
                 }
 
                 // Transform API data to match TourHistory interface
-                const transformedHistory: TourHistory[] = data.history.map((item: any) => {
+                const transformedHistory: TourHistory[] = data.history.map((item: TourHistoryItem) => {
                     // Map status to proper format (backend already sends capitalized status)
                     let status: TourHistory["status"] = "Pending"
                     const itemStatus = (item.status || "").toLowerCase()
@@ -110,6 +80,11 @@ export default function HistoryTourPage() {
                 setTourHistory(transformedHistory)
             } catch (err: any) {
                 console.error("Error fetching tour history:", err)
+                // Check if error is auth-related
+                if (err.message?.includes("401") || err.message?.includes("unauthorized")) {
+                    router.push("/login")
+                    return
+                }
                 setError(err.message || "Failed to load tour history. Please try again.")
                 setTourHistory([])
             } finally {
