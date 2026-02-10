@@ -11,6 +11,7 @@ import { TravelService } from "@/services/travel.service"
 import FlightsSearch from "@/components/dashboard/flights-search"
 import { CityService } from "@/services/city.service"
 import { useRouter } from "next/navigation"
+import { Checkbox } from 'primereact/checkbox';
 
 function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
@@ -214,7 +215,10 @@ export default function JourneyBuilder() {
                         departure_city_id: selectedCity?.id || ""
                       })
                     }}
-                    options={cities.map((city) => ({ label: city.city, value: city.city }))}
+                    options={cities.map((city) => ({
+                      label: city.city + ", " + city.country,
+                      value: city.id
+                    }))}
                     optionLabel="label"
                     optionValue="value"
                     placeholder={'Search departure...'}
@@ -238,7 +242,10 @@ export default function JourneyBuilder() {
                         destination_city_id: selectedCity?.id || ""
                       })
                     }}
-                    options={cities.map((city) => ({ label: city.city, value: city.city }))}
+                    options={cities.map((city) => ({
+                      label: city.city + ", " + city.country,
+                      value: city.id
+                    }))}
                     optionLabel="label"
                     optionValue="value"
                     placeholder={'Search destination...'}
@@ -287,7 +294,7 @@ export default function JourneyBuilder() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <input type="checkbox" name="checkbox_flight" id="checkbox_flight" checked={isIncludeFlight} onChange={() => setIsIncludeFlight(!isIncludeFlight)} />
+                <Checkbox inputId="checkbox_flight" checked={isIncludeFlight} onChange={() => setIsIncludeFlight(!isIncludeFlight)} />
                 <label htmlFor="checkbox_flight">You want to include flights in your journey?</label>
               </div>
             </div>

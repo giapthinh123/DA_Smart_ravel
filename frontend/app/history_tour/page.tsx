@@ -8,7 +8,7 @@ import { UserMenu } from "@/components/user-menu"
 
 interface TourHistory {
     id: string
-    status: "Completed" | "In Progress" | "Cancelled" | "Saved" | "Pending"
+    status: "Completed" | "In Progress" | "Payed" | "Pending"
     name: string
     destination: string
     dates: string
@@ -26,6 +26,8 @@ export default function HistoryTourPage() {
     const [tourHistory, setTourHistory] = useState<TourHistory[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string>("")
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const itemsPerPage = 9
 
     // Fetch tour history from API
     useEffect(() => {
@@ -33,7 +35,7 @@ export default function HistoryTourPage() {
             try {
                 setLoading(true)
                 setError("")
-                
+
                 // Get token from localStorage
                 const token = localStorage.getItem("token") || localStorage.getItem("auth_token")
 
@@ -48,7 +50,7 @@ export default function HistoryTourPage() {
                     params.append("status", filter)
                 }
                 params.append("limit", "100")
-                
+
                 const queryString = params.toString()
                 const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/itinerary/history${queryString ? `?${queryString}` : ''}`
 
@@ -85,11 +87,10 @@ export default function HistoryTourPage() {
                     // Map status to proper format (backend already sends capitalized status)
                     let status: TourHistory["status"] = "Pending"
                     const itemStatus = (item.status || "").toLowerCase()
-                    
+
                     if (itemStatus.includes("complete")) status = "Completed"
                     else if (itemStatus.includes("progress") || itemStatus === "pending") status = "In Progress"
-                    else if (itemStatus.includes("cancel")) status = "Cancelled"
-                    else if (itemStatus === "saved") status = "Saved"
+                    else if (itemStatus === "payed") status = "Payed"
                     else status = "Pending"
 
                     return {
@@ -128,7 +129,7 @@ export default function HistoryTourPage() {
                 return "bg-blue-500/20 text-blue-400 border-blue-500/30"
             case "Cancelled":
                 return "bg-red-500/20 text-red-400 border-red-500/30"
-            case "Saved":
+            case "Payed":
                 return "bg-amber-500/20 text-amber-400 border-amber-500/30"
             default:
                 return "bg-gray-500/20 text-gray-400 border-gray-500/30"
@@ -143,12 +144,23 @@ export default function HistoryTourPage() {
             tour.destination.toLowerCase().includes(query)
     })
 
-    const filterOptions = ["All", "Completed", "In Progress", "Saved", "Cancelled"]
+    // Pagination logic
+    const totalPages = Math.ceil(filteredTours.length / itemsPerPage)
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const currentTours = filteredTours.slice(startIndex, endIndex)
+
+    // Reset to page 1 when filters change
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [filter, searchQuery])
+
+    const filterOptions = ["All", "Completed", "In Progress", "Payed"]
     const stats = {
         total: tourHistory.length,
         completed: tourHistory.filter(t => t.status === "Completed").length,
         inProgress: tourHistory.filter(t => t.status === "In Progress" || t.status === "Pending").length,
-        saved: tourHistory.filter(t => t.status === "Saved").length,
+        saved: tourHistory.filter(t => t.status === "Payed").length,
     }
 
     return (
@@ -176,8 +188,8 @@ export default function HistoryTourPage() {
                             <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
                                 Home
                             </Link>
-                            <Link href="/dashboard" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                                Dashboard
+                            <Link href="/history_tour" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+                                History Tour
                             </Link>
                             <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
                                 Personalities
@@ -216,7 +228,7 @@ export default function HistoryTourPage() {
                         </div>
                         <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 backdrop-blur p-6 transition hover:bg-amber-500/15">
                             <div className="text-3xl font-bold text-amber-400 mb-2">{stats.saved}</div>
-                            <div className="text-sm text-amber-300">Saved</div>
+                            <div className="text-sm text-amber-300">Payed</div>
                         </div>
                     </div>
 
@@ -229,8 +241,8 @@ export default function HistoryTourPage() {
                                     key={option}
                                     onClick={() => setFilter(option)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === option
-                                            ? "bg-[#FFE5B4] text-[#2B1200] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
-                                            : "bg-white/10 text-[#F3F0E9] hover:bg-white/15"
+                                        ? "bg-[#FFE5B4] text-[#2B1200] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
+                                        : "bg-white/10 text-[#F3F0E9] hover:bg-white/15"
                                         }`}
                                 >
                                     {option}
@@ -288,7 +300,7 @@ export default function HistoryTourPage() {
                             <h3 className="text-xl font-semibold text-white mb-2">No tours found</h3>
                             <p className="text-[#A5ABA3] mb-4">Try adjusting your filters or search query</p>
                             <Link
-                                href="/dashboard"
+                                href="/tours"
                                 className="inline-block px-6 py-2 rounded-lg bg-[#FFE5B4] text-[#2B1200] font-semibold hover:bg-[#FFD79E] transition"
                             >
                                 Create New Tour
@@ -297,76 +309,163 @@ export default function HistoryTourPage() {
                     )}
 
                     {!loading && !error && filteredTours.length > 0 && (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredTours.map((tour) => (
-                                <div
-                                    key={tour.id}
-                                    className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden transition-all hover:border-[#FFE5B4]/40 hover:shadow-[0_8px_32px_rgba(255,229,180,0.2)] cursor-pointer"
-                                    onClick={() => router.push(`/full_tour?itineraryId=${tour.id}`)}
-                                >
-                                    {/* Image */}
-                                    <div className="relative h-48 overflow-hidden">
-                                        <img
-                                            src={tour.image}
-                                            alt={tour.name}
-                                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {currentTours.map((tour) => (
+                                    <div
+                                        key={tour.id}
+                                        className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden transition-all hover:border-[#FFE5B4]/40 hover:shadow-[0_8px_32px_rgba(255,229,180,0.2)] cursor-pointer"
+                                        onClick={() => router.push(`/full_tour?itineraryId=${tour.id}`)}
+                                    >
+                                        {/* Image */}
+                                        <div className="relative h-48 overflow-hidden">
+                                            <img
+                                                src={tour.image}
+                                                alt={tour.name}
+                                                width={400}
+                                                height={192}
+                                                className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-                                        {/* Status Badge */}
-                                        <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur ${getStatusColor(tour.status)}`}>
-                                            {tour.status}
+                                            {/* Status Badge */}
+                                            <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold border backdrop-blur ${getStatusColor(tour.status)}`}>
+                                                {tour.status}
+                                            </div>
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="p-6">
+                                            <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#FFE5B4] transition">
+                                                {tour.name}
+                                            </h3>
+
+                                            <div className="space-y-2 mb-4">
+                                                <div className="flex items-center text-sm text-[#A5ABA3]">
+                                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                    {tour.destination}
+                                                </div>
+                                                <div className="flex items-center text-sm text-[#A5ABA3]">
+                                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </svg>
+                                                    {tour.dates}
+                                                </div>
+                                                <div className="flex items-center text-sm text-[#A5ABA3]">
+                                                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                    </svg>
+                                                    {tour.travelers}
+                                                </div>
+                                            </div>
+
+                                            {/* Footer */}
+                                            <div className="flex items-center justify-between pt-4 border-t border-white/10">
+                                                <div className="flex items-center gap-4">
+                                                    <span className="text-lg font-bold text-[#FFE5B4]">{tour.budget}</span>
+                                                    <span className="text-xs text-[#7D837A]">·</span>
+                                                    <span className="text-sm text-[#A5ABA3]">{tour.activities} activities</span>
+                                                </div>
+                                                {tour.rating && (
+                                                    <div className="flex items-center gap-1">
+                                                        <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                        </svg>
+                                                        <span className="text-sm font-semibold text-amber-400">{tour.rating}</span>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
 
-                                    {/* Content */}
-                                    <div className="p-6">
-                                        <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#FFE5B4] transition">
-                                            {tour.name}
-                                        </h3>
+                            {/* Pagination Controls */}
+                            {totalPages > 1 && (
+                                <div className="mt-12 flex flex-col items-center gap-6">
+                                    {/* Page Info */}
+                                    <p className="text-sm text-[#A5ABA3]">
+                                        Showing {startIndex + 1}-{Math.min(endIndex, filteredTours.length)} of {filteredTours.length} tours
+                                    </p>
 
-                                        <div className="space-y-2 mb-4">
-                                            <div className="flex items-center text-sm text-[#A5ABA3]">
-                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                                {tour.destination}
-                                            </div>
-                                            <div className="flex items-center text-sm text-[#A5ABA3]">
-                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                {tour.dates}
-                                            </div>
-                                            <div className="flex items-center text-sm text-[#A5ABA3]">
-                                                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                </svg>
-                                                {tour.travelers}
-                                            </div>
+                                    {/* Pagination Buttons */}
+                                    <div className="flex items-center gap-2">
+                                        {/* Previous Button */}
+                                        <button
+                                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                            disabled={currentPage === 1}
+                                            className={`px-4 py-2 rounded-lg font-medium transition-all ${currentPage === 1
+                                                ? "bg-white/5 text-[#7D837A] cursor-not-allowed"
+                                                : "bg-white/10 text-[#F3F0E9] hover:bg-white/15 hover:text-[#FFE5B4]"
+                                                }`}
+                                            aria-label="Previous page"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                            </svg>
+                                        </button>
+
+                                        {/* Page Numbers */}
+                                        <div className="flex items-center gap-2">
+                                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                                                // Show first page, last page, current page, and pages around current
+                                                const showPage =
+                                                    page === 1 ||
+                                                    page === totalPages ||
+                                                    Math.abs(page - currentPage) <= 1
+
+                                                // Show ellipsis
+                                                const showEllipsisBefore = page === currentPage - 2 && currentPage > 3
+                                                const showEllipsisAfter = page === currentPage + 2 && currentPage < totalPages - 2
+
+                                                if (showEllipsisBefore || showEllipsisAfter) {
+                                                    return (
+                                                        <span key={page} className="px-2 text-[#7D837A]">
+                                                            ...
+                                                        </span>
+                                                    )
+                                                }
+
+                                                if (!showPage) return null
+
+                                                return (
+                                                    <button
+                                                        key={page}
+                                                        onClick={() => setCurrentPage(page)}
+                                                        className={`min-w-[40px] h-10 rounded-lg font-medium transition-all ${currentPage === page
+                                                            ? "bg-[#FFE5B4] text-[#2B1200] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
+                                                            : "bg-white/10 text-[#F3F0E9] hover:bg-white/15 hover:text-[#FFE5B4]"
+                                                            }`}
+                                                        aria-label={`Go to page ${page}`}
+                                                        aria-current={currentPage === page ? "page" : undefined}
+                                                    >
+                                                        {page}
+                                                    </button>
+                                                )
+                                            })}
                                         </div>
 
-                                        {/* Footer */}
-                                        <div className="flex items-center justify-between pt-4 border-t border-white/10">
-                                            <div className="flex items-center gap-4">
-                                                <span className="text-lg font-bold text-[#FFE5B4]">{tour.budget}</span>
-                                                <span className="text-xs text-[#7D837A]">·</span>
-                                                <span className="text-sm text-[#A5ABA3]">{tour.activities} activities</span>
-                                            </div>
-                                            {tour.rating && (
-                                                <div className="flex items-center gap-1">
-                                                    <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                    </svg>
-                                                    <span className="text-sm font-semibold text-amber-400">{tour.rating}</span>
-                                                </div>
-                                            )}
-                                        </div>
+                                        {/* Next Button */}
+                                        <button
+                                            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                            disabled={currentPage === totalPages}
+                                            className={`px-4 py-2 rounded-lg font-medium transition-all ${currentPage === totalPages
+                                                ? "bg-white/5 text-[#7D837A] cursor-not-allowed"
+                                                : "bg-white/10 text-[#F3F0E9] hover:bg-white/15 hover:text-[#FFE5B4]"
+                                                }`}
+                                            aria-label="Next page"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
+                            )}
+                        </>
                     )}
                 </main>
 

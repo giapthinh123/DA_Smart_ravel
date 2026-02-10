@@ -18,7 +18,7 @@ export function Header() {
           <Link href="/tours" className="text-sm font-medium transition-colors hover:text-primary">
             Tours
           </Link>
-          <Link href="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
+          <Link href="/planner" className="text-sm font-medium transition-colors hover:text-primary">
             Dashboard
           </Link>
           <Link href="#about" className="text-sm font-medium transition-colors hover:text-primary">

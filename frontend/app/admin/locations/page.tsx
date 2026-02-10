@@ -598,7 +598,7 @@ function LocationManagementPage() {
                                     onClick={handleCreateLocation}
                                     disabled={actionLoading}
                                 >
-                                    {actionLoading ? 'Đang tạo...' : 'Tạo địa điểm'}
+                                    {actionLoading ? 'Đang tạo…' : 'Tạo địa điểm'}
                                 </Button>
                             </div>
                         </CardContent>

@@ -49,8 +49,8 @@ export default function UnauthorizedPage() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button onClick={() => router.push('/dashboard')} className="w-full">
-              Go to Dashboard
+            <Button onClick={() => router.push('/planner')} className="w-full">
+              Go to Planner
             </Button>
             <Button onClick={() => router.back()} variant="outline" className="w-full">
               Go Back

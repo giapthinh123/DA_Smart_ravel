@@ -100,7 +100,8 @@ export default function RegisterPage() {
   const handleInputChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value })
     if (errors[field]) {
-      setErrors({ ...errors, [field]: undefined })
+      const { [field]: _, ...remainingErrors } = errors
+      setErrors(remainingErrors)
     }
   }
 
@@ -178,8 +179,8 @@ export default function RegisterPage() {
               <div className="grid gap-5">
                 {/* Full Name Field */}
                 <div className="grid gap-2">
-                  <label 
-                    htmlFor="fullName" 
+                  <label
+                    htmlFor="fullName"
                     className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
                   >
                     Full Name
@@ -192,10 +193,9 @@ export default function RegisterPage() {
                       value={formData.fullName}
                       onChange={(e) => handleInputChange("fullName", e.target.value)}
                       required
-                      autoFocus
                       autoComplete="name"
-                      placeholder="Enter your full name"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                      placeholder="Enter your full name…"
+                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                     />
                   </div>
                   <InputError message={errors.fullName} />
@@ -203,8 +203,8 @@ export default function RegisterPage() {
 
                 {/* Email Field */}
                 <div className="grid gap-2">
-                  <label 
-                    htmlFor="email" 
+                  <label
+                    htmlFor="email"
                     className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
                   >
                     Email
@@ -218,8 +218,8 @@ export default function RegisterPage() {
                       onChange={(e) => handleInputChange("email", e.target.value)}
                       required
                       autoComplete="email"
-                      placeholder="info@example.com"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                      placeholder="info@example.com…"
+                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                     />
                   </div>
                   <InputError message={errors.email} />
@@ -227,8 +227,8 @@ export default function RegisterPage() {
 
                 {/* Phone Number Field */}
                 <div className="grid gap-2">
-                  <label 
-                    htmlFor="phone" 
+                  <label
+                    htmlFor="phone"
                     className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
                   >
                     Phone Number
@@ -242,8 +242,8 @@ export default function RegisterPage() {
                       onChange={(e) => handleInputChange("phone", e.target.value)}
                       required
                       autoComplete="tel"
-                      placeholder="+1 (555) 000-0000"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                      placeholder="+1 (555) 000-0000…"
+                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                     />
                   </div>
                   <InputError message={errors.phone} />
@@ -251,8 +251,8 @@ export default function RegisterPage() {
 
                 {/* Password Field */}
                 <div className="grid gap-2">
-                  <label 
-                    htmlFor="password" 
+                  <label
+                    htmlFor="password"
                     className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
                   >
                     Password
@@ -266,8 +266,8 @@ export default function RegisterPage() {
                       onChange={(e) => handleInputChange("password", e.target.value)}
                       required
                       autoComplete="new-password"
-                      placeholder="••••••••"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                      placeholder="Create a strong password…"
+                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                     />
                     <button
                       type="button"
@@ -288,8 +288,8 @@ export default function RegisterPage() {
 
                 {/* Confirm Password Field */}
                 <div className="grid gap-2">
-                  <label 
-                    htmlFor="confirmPassword" 
+                  <label
+                    htmlFor="confirmPassword"
                     className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
                   >
                     Confirm Password
@@ -303,8 +303,8 @@ export default function RegisterPage() {
                       onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
                       required
                       autoComplete="new-password"
-                      placeholder="••••••••"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                      placeholder="Confirm your password…"
+                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                     />
                     <button
                       type="button"

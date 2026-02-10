@@ -11,13 +11,14 @@ import { AdminOnly } from "@/components/role-gate"
 import { LoaderCircle } from "lucide-react"
 import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useAuthStore } from "@/store/useAuthStore"
-import {Switch} from '@/components/ui/switch'
+import { Switch } from '@/components/ui/switch'
 import { AuthService } from "@/services/auth.service"
+import { UserMenu } from "@/components/user-menu"
 
 function ProfileContent() {
   const { user, logout, updateUser } = useAuthStore()
   const router = useRouter()
-  
+
   const [formData, setFormData] = useState({
     fullName: user?.fullname || user?.name || "",
     phoneNumber: user?.phone || "",
@@ -38,7 +39,7 @@ function ProfileContent() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [passwordMessage, setPasswordMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [deleteMessage, setDeleteMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
-  
+
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isDeletingAccount, setIsDeletingAccount] = useState(false)
@@ -91,18 +92,18 @@ function ProfileContent() {
         phone: formData.phoneNumber,
         address: formData.address,
       })
-      
+
       // Update user in store
       updateUser(updatedUser)
-      
+
       setMessage({ type: "success", text: "Profile updated successfully!" })
 
       // Clear message after 3 seconds
       setTimeout(() => setMessage(null), 3000)
     } catch (error: any) {
-      setMessage({ 
-        type: "error", 
-        text: error.message || "Failed to update profile" 
+      setMessage({
+        type: "error",
+        text: error.message || "Failed to update profile"
       })
     } finally {
       setIsUpdatingProfile(false)
@@ -149,9 +150,9 @@ function ProfileContent() {
       // Clear message after 3 seconds
       setTimeout(() => setPasswordMessage(null), 3000)
     } catch (error: any) {
-      setPasswordMessage({ 
-        type: "error", 
-        text: error.message || "Failed to change password" 
+      setPasswordMessage({
+        type: "error",
+        text: error.message || "Failed to change password"
       })
     } finally {
       setIsChangingPassword(false)
@@ -176,7 +177,7 @@ function ProfileContent() {
 
     try {
       await AuthService.deleteAccount(deleteAccountData.confirmPassword)
-      
+
       setDeleteMessage({ type: "success", text: "Account deleted successfully" })
 
       // Clear form
@@ -191,9 +192,9 @@ function ProfileContent() {
         router.push("/")
       }, 2000)
     } catch (error: any) {
-      setDeleteMessage({ 
-        type: "error", 
-        text: error.message || "Failed to delete account" 
+      setDeleteMessage({
+        type: "error",
+        text: error.message || "Failed to delete account"
       })
       setIsDeletingAccount(false)
     }
@@ -219,91 +220,35 @@ function ProfileContent() {
         </div>
 
         <header className="mx-auto max-w-7xl px-6 py-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-[#7D837A]">
-              VietJourney
-            </p>
-            <p className="text-xl font-semibold text-[#F3F0E9]">
-              Mapping Vietnam experiences
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-[#7D837A]">
+                VietJourney
+              </p>
+              <p className="text-xl font-semibold text-[#F3F0E9]">
+                Mapping Vietnam experiences
+              </p>
+            </div>
+            <nav className="flex items-center gap-2 text-sm font-medium">
+              <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+                Home
+              </Link>
+              <Link href="/planner" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+                Planner
+              </Link>
+              <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+                Personalities
+              </Link>
+              <Link href="#" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+                Contact
+              </Link>
+              <span className="mx-2 h-4 w-px bg-white/20"></span>
+
+              {/* User Menu Dropdown */}
+              <UserMenu />
+            </nav>
           </div>
-          <nav className="flex items-center gap-2 text-sm font-medium">
-            <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-              Home
-            </Link>
-            <Link href="/dashboard" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-              Dashboard
-            </Link>
-            <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-              Personalities
-            </Link>
-            <Link href="#" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-              Contact
-            </Link>
-            <span className="mx-2 h-4 w-px bg-white/20"></span>
-            
-            {/* User Menu Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="rounded-full bg-white/10 px-4 py-2 text-[#F3F0E9] transition hover:bg-white/20 flex items-center gap-2">
-                  <span>{user?.role === 'admin' ? 'ADMIN' : user?.fullname || user?.email || 'USER'}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-[#1A1D1C]/95 backdrop-blur-lg border-white/10">
-                <DropdownMenuLabel className="text-[#F3F0E9]">
-                  <div className="flex flex-col">
-                    <span className="font-medium">{user?.fullname || 'User'}</span>
-                    <span className="text-xs text-[#A5ABA3]">{user?.email}</span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-white/10" />
-                
-                <DropdownMenuItem 
-                  onClick={() => router.push('/profile')}
-                  className="text-[#F3F0E9] hover:bg-white/10 cursor-pointer"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  Profile
-                </DropdownMenuItem>
-                
-                <AdminOnly>
-                  <DropdownMenuItem 
-                    onClick={() => router.push('/admin')}
-                    className="text-[#FFE5B4] hover:bg-white/10 cursor-pointer"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    Admin Panel
-                  </DropdownMenuItem>
-                </AdminOnly>
-                
-                <DropdownMenuSeparator className="bg-white/10" />
-                
-                <DropdownMenuItem 
-                  onClick={async () => {
-                    await logout()
-                    router.push('/login')
-                  }}
-                  className="text-red-400 hover:bg-red-500/10 cursor-pointer"
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </nav>
-        </div>
-      </header>
+        </header>
 
         <div className="container mx-auto px-4 py-2 md:py-1">
           <div className="grid gap-6 md:gap-8 lg:grid-cols-3">
@@ -328,12 +273,12 @@ function ProfileContent() {
                         .map((n: string) => n[0])
                         .join("")
                         .toUpperCase()
-                        .slice(0, 2)} 
+                        .slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold text-white text-lg">{user.fullname || user.name || user.email}</h3>
-                    <p className="text-sm text-[#FFE5B4]">{user.role}</p>
+                    <h3 className="font-semibold text-white text-lg">{user?.fullname || user?.name || user?.email}</h3>
+                    <p className="text-sm text-[#FFE5B4]">{user?.role}</p>
                   </div>
                 </div>
 
@@ -350,8 +295,8 @@ function ProfileContent() {
                         type="text"
                         value={formData.fullName}
                         onChange={handleInputChange}
-                        placeholder="Enter your full name"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                        placeholder="Enter your full name…"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -365,7 +310,7 @@ function ProfileContent() {
                       <input
                         id="email"
                         type="email"
-                        value={user?.email }
+                        value={user?.email}
                         disabled
                         className="h-12 w-full r  ounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-[#7D837A] placeholder:text-[#B6C2C6] cursor-not-allowed"
                       />
@@ -385,8 +330,8 @@ function ProfileContent() {
                         type="tel"
                         value={formData.phoneNumber}
                         onChange={handleInputChange}
-                        placeholder="Enter your phone number"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                        placeholder="Enter your phone number…"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -403,18 +348,17 @@ function ProfileContent() {
                         type="text"
                         value={formData.address}
                         onChange={handleInputChange}
-                        placeholder="Enter your address"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                        placeholder="Enter your address…"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
                   {message && (
                     <div
-                      className={`rounded-2xl border p-4 text-sm ${
-                        message.type === "success"
-                          ? "border-green-400/30 bg-green-400/10 text-green-300"
-                          : "border-red-400/30 bg-red-400/10 text-red-300"
-                      }`}
+                      className={`rounded-2xl border p-4 text-sm ${message.type === "success"
+                        ? "border-green-400/30 bg-green-400/10 text-green-300"
+                        : "border-red-400/30 bg-red-400/10 text-red-300"
+                        }`}
                     >
                       {message.text}
                     </div>
@@ -470,8 +414,8 @@ function ProfileContent() {
                         type="password"
                         value={passwordData.currentPassword}
                         onChange={handlePasswordChange}
-                        placeholder="Enter current password"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                        placeholder="Enter current password…"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -488,8 +432,8 @@ function ProfileContent() {
                         type="password"
                         value={passwordData.newPassword}
                         onChange={handlePasswordChange}
-                        placeholder="Enter new password (min. 8 characters)"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                        placeholder="Enter new password (min. 8 characters)…"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -501,24 +445,23 @@ function ProfileContent() {
                     <div className="relative">
                       <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                       <input
-                        id="confirmPassword"
+                        id="confirmNewPassword"
                         name="confirmPassword"
                         type="password"
                         value={passwordData.confirmPassword}
                         onChange={handlePasswordChange}
-                        placeholder="Confirm new password"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none focus:ring-0 transition-colors"
+                        placeholder="Confirm new password…"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
 
                   {passwordMessage && (
                     <div
-                      className={`rounded-2xl border p-4 text-sm ${
-                        passwordMessage.type === "success"
-                          ? "border-green-400/30 bg-green-400/10 text-green-300"
-                          : "border-red-400/30 bg-red-400/10 text-red-300"
-                      }`}
+                      className={`rounded-2xl border p-4 text-sm ${passwordMessage.type === "success"
+                        ? "border-green-400/30 bg-green-400/10 text-green-300"
+                        : "border-red-400/30 bg-red-400/10 text-red-300"
+                        }`}
                     >
                       {passwordMessage.text}
                     </div>
@@ -569,7 +512,7 @@ function ProfileContent() {
                       Account Created
                     </p>
                     <p className="text-base text-white">
-                      {user.created_at ? new Date(user.created_at).toLocaleDateString("en-US", {
+                      {user?.created_at ? new Date(user?.created_at).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
@@ -581,7 +524,7 @@ function ProfileContent() {
                     <p className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4] mb-2">
                       User Role
                     </p>
-                    <p className="text-base text-white">{user.role}</p>
+                    <p className="text-base text-white">{user?.role}</p>
                   </div>
                 </div>
               </div>
@@ -648,11 +591,10 @@ function ProfileContent() {
 
                   {deleteMessage && (
                     <div
-                      className={`rounded-2xl border p-4 text-sm ${
-                        deleteMessage.type === "success"
-                          ? "border-green-400/30 bg-green-400/10 text-green-300"
-                          : "border-red-400/30 bg-red-400/10 text-red-300"
-                      }`}
+                      className={`rounded-2xl border p-4 text-sm ${deleteMessage.type === "success"
+                        ? "border-green-400/30 bg-green-400/10 text-green-300"
+                        : "border-red-400/30 bg-red-400/10 text-red-300"
+                        }`}
                     >
                       {deleteMessage.text}
                     </div>

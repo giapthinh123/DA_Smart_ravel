@@ -98,6 +98,37 @@ function PreferencesContent() {
     dislike_local_transport: [],
   })
 
+  // Define transport modes matching backend configuration
+  const TRANSPORT_MODES = [
+    {
+      id: 'walking',
+      name: 'Walking',
+      icon: '🚶',
+      maxKm: 1.5,
+      speedKmh: 5,
+      costPerKm: 0,
+      description: 'Up to 1.5km, Free'
+    },
+    {
+      id: 'motorbike',
+      name: 'Motorbike',
+      icon: '🏍️',
+      maxKm: 30,
+      speedKmh: 35,
+      costPerKm: 0.4,
+      description: 'Up to 30km, $0.4/km'
+    },
+    {
+      id: 'taxi',
+      name: 'Taxi',
+      icon: '🚕',
+      maxKm: 100,
+      speedKmh: 30,
+      costPerKm: 0.75,
+      description: 'Up to 100km, $0.75/km'
+    }
+  ]
+
   const API_BASE = 'http://localhost:5000/api'
 
   // API helper
@@ -117,6 +148,7 @@ function PreferencesContent() {
 
   // Load trip data from localStorage
   useEffect(() => {
+
     if (typeof window !== 'undefined') {
       const savedTripData = localStorage.getItem('currentTripData')
       if (savedTripData) {
@@ -156,11 +188,11 @@ function PreferencesContent() {
 
         // Calculate trip duration - handle various date formats
         let durationDays = 3 // default
-        
+
         // Helper to parse date string (handles DD/MM/YYYY or YYYY-MM-DD)
         const parseDate = (dateStr: string): Date | null => {
           if (!dateStr) return null
-          
+
           // Try DD/MM/YYYY format
           if (dateStr.includes('/')) {
             const parts = dateStr.split('/')
@@ -169,7 +201,7 @@ function PreferencesContent() {
               return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
             }
           }
-          
+
           // Try standard format (YYYY-MM-DD or ISO)
           const date = new Date(dateStr)
           return isNaN(date.getTime()) ? null : date
@@ -178,14 +210,14 @@ function PreferencesContent() {
         if (tripData.departureDate && tripData.returnDate) {
           const start = parseDate(tripData.departureDate)
           const end = parseDate(tripData.returnDate)
-          
+
           console.log('Parsing dates:', {
             departureDate: tripData.departureDate,
             returnDate: tripData.returnDate,
             parsedStart: start,
             parsedEnd: end
           })
-          
+
           if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
             const diffTime = Math.abs(end.getTime() - start.getTime())
             durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
@@ -193,7 +225,7 @@ function PreferencesContent() {
             if (durationDays < 1) durationDays = 1
           }
         }
-        
+
         // Also check tripData.days if available
         if (tripData.days && typeof tripData.days === 'number' && tripData.days > 0) {
           durationDays = tripData.days
@@ -238,7 +270,7 @@ function PreferencesContent() {
           method: 'POST',
           body: JSON.stringify(createBody)
         })
-        
+
         console.log('Itinerary created:', result)
 
         const newItineraryId = result.itinerary_id
@@ -372,6 +404,26 @@ function PreferencesContent() {
           })
         }
 
+        // Add Local Transport section with 3 transport modes
+        transformedCategories.push({
+          title: 'Local Transport',
+          description: 'Select your preferred transportation methods for getting around.',
+          icon: <Bus className="w-5 h-5" />,
+          bgColor: 'bg-yellow-50',
+          items: TRANSPORT_MODES.map((transport) => ({
+            id: transport.id,
+            place_id: transport.id,
+            name: transport.name,
+            category: 'Transport',
+            rating: 0, // Not applicable for transport
+            reviews: 0, // Not applicable for transport
+            price: transport.description,
+            info: `${transport.icon} Speed: ${transport.speedKmh}km/h`,
+            liked: false,
+            skipped: false,
+          }))
+        })
+
         setCategories(transformedCategories)
       } catch (err: any) {
         console.error('Failed to fetch places:', err)
@@ -383,8 +435,6 @@ function PreferencesContent() {
 
     fetchPlaces()
   }, [searchParams])
-
-
 
   // Load saved preferences when categories are loaded
   useEffect(() => {
@@ -444,6 +494,15 @@ function PreferencesContent() {
                   ...item,
                   liked: savedPrefs.like_attraction.includes(item.id.toString()),
                   skipped: savedPrefs.dislike_attraction.includes(item.id.toString()),
+                })),
+              }
+            } else if (category.title === 'Local Transport') {
+              return {
+                ...category,
+                items: category.items.map((item) => ({
+                  ...item,
+                  liked: savedPrefs.like_local_transport.includes(item.id.toString()),
+                  skipped: savedPrefs.dislike_local_transport.includes(item.id.toString()),
                 })),
               }
             }
@@ -517,6 +576,15 @@ function PreferencesContent() {
         if (!exists) {
           updatedPrefs.dislike_attraction = prev.dislike_attraction.filter((x) => x !== id)
         }
+      } else if (categoryTitle === 'Local Transport') {
+        const exists = prev.like_local_transport.includes(id)
+        updatedPrefs.like_local_transport = exists
+          ? prev.like_local_transport.filter((x) => x !== id)
+          : [...prev.like_local_transport, id]
+        // Remove from dislike if adding to like
+        if (!exists) {
+          updatedPrefs.dislike_local_transport = prev.dislike_local_transport.filter((x) => x !== id)
+        }
       }
       return updatedPrefs
     })
@@ -577,6 +645,15 @@ function PreferencesContent() {
         // Remove from like if adding to dislike
         if (!exists) {
           updatedPrefs.like_attraction = prev.like_attraction.filter((x) => x !== id)
+        }
+      } else if (categoryTitle === 'Local Transport') {
+        const exists = prev.dislike_local_transport.includes(id)
+        updatedPrefs.dislike_local_transport = exists
+          ? prev.dislike_local_transport.filter((x) => x !== id)
+          : [...prev.dislike_local_transport, id]
+        // Remove from like if adding to dislike
+        if (!exists) {
+          updatedPrefs.like_local_transport = prev.like_local_transport.filter((x) => x !== id)
         }
       }
       return updatedPrefs
@@ -647,6 +724,10 @@ function PreferencesContent() {
         } else if (category.title === 'Recreation Places') {
           if (item.liked) calculatedPrefs.like_attraction.push(id)
           if (item.skipped) calculatedPrefs.dislike_attraction.push(id)
+        } else if (category.title === 'Local Transport') {
+          // Collect transport preferences for backend use (not saved to DB)
+          if (item.liked) calculatedPrefs.like_local_transport.push(id)
+          if (item.skipped) calculatedPrefs.dislike_local_transport.push(id)
         }
       })
     })
@@ -655,18 +736,34 @@ function PreferencesContent() {
       setError(null)
       setIsLoading(true)
 
-      // Save preferences
+      // Save only hotel/restaurant/attraction preferences to database
+      // Transport preferences are NOT persisted
+      const prefsToSave: PreferencesData = {
+        like_hotel: calculatedPrefs.like_hotel,
+        like_restaurant: calculatedPrefs.like_restaurant,
+        like_attraction: calculatedPrefs.like_attraction,
+        like_local_transport: [], // Don't save transport preferences
+        dislike_hotel: calculatedPrefs.dislike_hotel,
+        dislike_restaurant: calculatedPrefs.dislike_restaurant,
+        dislike_attraction: calculatedPrefs.dislike_attraction,
+        dislike_local_transport: [], // Don't save transport preferences
+      }
+
       await PlacesService.set_Preferences(
         user.id,
         tripData.destination_city_id,
-        calculatedPrefs
+        prefsToSave
       )
 
-      console.log('Preferences saved successfully')
+      console.log('Preferences saved successfully (excluding transport)')
+      console.log('Transport preferences collected but not saved:', {
+        liked: calculatedPrefs.like_local_transport,
+        disliked: calculatedPrefs.dislike_local_transport
+      })
 
       // Check if we're in edit mode (editing a specific day)
       const editDay = searchParams.get('editDay')
-      
+
       if (editDay) {
         // Redirect back to itinerary with regenerateDay param
         console.log(`Edit mode: redirecting to regenerate day ${editDay}`)
@@ -777,7 +874,7 @@ function PreferencesContent() {
             <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
               Home
             </Link>
-            <Link href="/dashboard" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+            <Link href="/planner" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
               Dashboard
             </Link>
             <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
@@ -790,7 +887,7 @@ function PreferencesContent() {
 
             {/* User Menu Dropdown */}
             <UserMenu />
-            </nav>
+          </nav>
         </div>
       </header>
 
@@ -802,31 +899,31 @@ function PreferencesContent() {
             <header className="dashboard-preferences__header">
               <div className="dashboard-preferences__chip">
                 <span>
-                  {searchParams.get('editDay') 
-                    ? (isEditingExistingDay 
-                        ? `Editing Day ${searchParams.get('editDay')}` 
-                        : `Planning Day ${searchParams.get('editDay')}`
-                      )
+                  {searchParams.get('editDay')
+                    ? (isEditingExistingDay
+                      ? `Editing Day ${searchParams.get('editDay')}`
+                      : `Planning Day ${searchParams.get('editDay')}`
+                    )
                     : 'Refine preferences'
                   }
                 </span>
               </div>
               <div className="dashboard-preferences__titles">
                 <h2>
-                  {searchParams.get('editDay') 
+                  {searchParams.get('editDay')
                     ? (isEditingExistingDay
-                        ? `Update preferences for Day ${searchParams.get('editDay')}`
-                        : `Plan your Day ${searchParams.get('editDay')} itinerary`
-                      )
+                      ? `Update preferences for Day ${searchParams.get('editDay')}`
+                      : `Plan your Day ${searchParams.get('editDay')} itinerary`
+                    )
                     : 'Curate the experiences that fit your travel style'
                   }
                 </h2>
                 <p>
                   {searchParams.get('editDay')
                     ? (isEditingExistingDay
-                        ? 'Change your selections below, then click Continue to regenerate this day with your new preferences.'
-                        : 'Select your preferred places below, then click Continue to generate this day with your selections.'
-                      )
+                      ? 'Change your selections below, then click Continue to regenerate this day with your new preferences.'
+                      : 'Select your preferred places below, then click Continue to generate this day with your selections.'
+                    )
                     : 'Evaluate restaurants, hotels, activities and transfers so the system can tailor the itinerary around your preferences.'
                   }
                 </p>
@@ -991,11 +1088,11 @@ function PreferencesContent() {
                         disabled={isLoading}
                       >
                         <span>
-                          {searchParams.get('editDay') 
+                          {searchParams.get('editDay')
                             ? (isEditingExistingDay
-                                ? `Regenerate Day ${searchParams.get('editDay')}`
-                                : `Generate Day ${searchParams.get('editDay')}`
-                              )
+                              ? `Regenerate Day ${searchParams.get('editDay')}`
+                              : `Generate Day ${searchParams.get('editDay')}`
+                            )
                             : 'Continue'
                           }
                         </span>

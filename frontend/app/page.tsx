@@ -33,59 +33,11 @@ export default function Home() {
     },
   ]
 
-  // Signature Experiences Data
-  const signatureExperiences = [
-    {
-      title: "Smart Flight Integration",
-      description: "Automatically sync your flight schedule with your itinerary for seamless travel planning.",
-    },
-    {
-      title: "AI-Powered Suggestions",
-      description: "Get personalized recommendations based on your preferences and travel style.",
-    },
-    {
-      title: "Detailed Itineraries",
-      description: "Every day is planned with activities, meals, and rest time perfectly balanced.",
-    },
-    {
-      title: "Budget Synchronization",
-      description: "Track expenses in real-time and stay within your budget effortlessly.",
-    },
-  ]
-
-  // Travel Stories Data
-  const travelStories = [
-    {
-      quote: "Smart Travel helped me discover the thousand-year history of Hanoi through perfectly planned routes. Every day was filled with cultural wonders!",
-      author: "Huong Nguyen · History Enthusiast",
-    },
-    {
-      quote: "The Da Nang itinerary was amazing! From the Golden Bridge to pristine beaches, everything was seamlessly organized. Highly recommend!",
-      author: "Tan Pham · Beach Lover",
-    },
-  ]
-
   // Statistics Data
   const stats = [
     { label: "Optimized Journeys", value: "1.2K+" },
     { label: "Satisfied Customers", value: "98%" },
-    { label: "Partner Countries", value: "36" },
-  ]
-
-  // Planning Steps Data
-  const planningSteps = [
-    {
-      title: "Share Your Dreams",
-      description: "Tell us your destination, budget, and travel preferences.",
-    },
-    {
-      title: "AI Creates Magic",
-      description: "Our smart algorithm designs a personalized itinerary just for you.",
-    },
-    {
-      title: "Embark & Enjoy",
-      description: "Follow your plan and make unforgettable memories.",
-    },
+    { label: "Partner Countries", value: "16" },
   ]
 
   return (
@@ -119,37 +71,15 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Center: Navigation */}
-        <nav className="flex items-center gap-2 text-sm font-medium">
-          <a
-            href="#experience"
-            className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]"
-          >
-            Experience
-          </a>
-          <a
-            href="#tours"
-            className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]"
-          >
-            Featured Tours
-          </a>
-          <a
-            href="#stories"
-            className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]"
-          >
-            Stories
-          </a>
-        </nav>
-
         {/* Right: Auth Buttons / User Menu */}
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <>
               <Link
-                href="/dashboard"
+                href="/planner"
                 className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]"
               >
-                Dashboard
+                Planner
               </Link>
               <Link
                 href="/profile"
@@ -183,13 +113,13 @@ export default function Home() {
         <section className="grid gap-10 lg:grid-cols-[1.25fr_1fr] ">
           <div className="space-y-8 pt-4">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#C4A77D]/70 bg-[#1A242C] px-4 py-2 text-xs font-medium uppercase tracking-[0.35em] text-[#C4A77D]">
-            The First Tour Recommendation Platform in Vietnam
+              The First Tour Recommendation Platform in Vietnam
             </span>
             <h1 className="text-4xl font-semibold leading-tight text-[#F3F0E9] sm:text-5xl">
-            Create a personalized travel itinerary in minutes
+              Create a personalized travel itinerary in minutes
             </h1>
             <p className="max-w-xl text-base leading-relaxed text-[#A5ABA3]">
-            Smart Travel helps you design your own journey: choose departure/arrival points, book round-trip flights, select favorite restaurants, hotels, and locations, and instantly receive an optimized daily schedule.            </p>
+              Smart Travel helps you design your own journey: choose departure/arrival points, book round-trip flights, select favorite restaurants, hotels, and locations, and instantly receive an optimized daily schedule.            </p>
 
             {/* Statistics */}
             <div className="grid gap-4 sm:grid-cols-3">
@@ -216,7 +146,7 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-3">
               <Link
-                href={isAuthenticated ? "/dashboard" : "/register"}
+                href={isAuthenticated ? "/planner" : "/register"}
                 className="inline-flex items-center gap-2 rounded-full bg-[#C4A77D] px-6 py-3 text-sm font-semibold text-[#111418] transition hover:bg-[#d6b88b]"
               >
                 {isAuthenticated ? "Go to Dashboard" : "Start Planning Now"}
@@ -237,7 +167,7 @@ export default function Home() {
             <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#15212A]/85 p-4 backdrop-blur transition duration-500 hover:border-[#FFE5B4]/40 hover:shadow-[0_32px_80px_-20px_rgba(255,201,138,0.35)]">
               <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-white/12 to-transparent" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,232,190,0.35),transparent_60%)] opacity-60" />
-              
+
               {/* Header */}
               <div className="mb-8">
                 <p className="text-xs uppercase tracking-[0.4em] text-[#7D837A]">
@@ -291,46 +221,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Signature Experiences Section */}
-        <section
-          id="experience"
-          className="space-y-8 rounded-[2.8rem] border border-white/10 bg-white/6 p-12 backdrop-blur-lg shadow-[0_55px_120px_-60px_rgba(0,0,0,0.6)]"
-        >
-          <div className="relative flex flex-wrap items-end justify-between gap-6">
-            <div className="absolute -left-16 -top-16 h-32 w-32 rounded-full bg-gradient-to-br from-[#FFEBC9]/60 via-transparent to-transparent blur-[80px]" />
-            <div className="absolute -right-12 top-2 h-28 w-28 rounded-full bg-gradient-to-br from-[#97E8FF]/55 via-transparent to-transparent blur-[70px]" />
-            <div className="relative space-y-3">
-              <h2 className="text-4xl font-semibold text-white drop-shadow-[0_12px_24px_rgba(255,199,128,0.45)]">
-                Signature Experience
-              </h2>
-              <p className="mt-3 max-w-2xl text-base text-[#A5ABA3] leading-relaxed">
-                Advanced features designed to make your travel planning effortless and enjoyable
-              </p>
-            </div>
-            <span className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs uppercase tracking-[0.4em] text-[#7D837A]">
-              Features
-            </span>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {signatureExperiences.map((item, index) => (
-              <div
-                key={item.title}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/6 p-7 backdrop-blur transition duration-500 hover:border-[#FFE5B4]/45 hover:bg-white/10 hover:shadow-[0_30px_80px_-45px_rgba(255,199,128,0.55)]"
-                style={{
-                  animation: `floatSlow ${20 + index * 1.8}s ease-in-out infinite ${index * 1.1}s`,
-                }}
-              >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.28),transparent_60%)] opacity-80 transition group-hover:opacity-100" />
-                <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-transparent to-transparent" />
-                <h3 className="relative text-xl font-semibold text-white drop-shadow-[0_12px_20px_rgba(0,0,0,0.32)] transition-colors group-hover:text-[#FFE5B4]">
-                  {item.title}
-                </h3>
-                <p className="relative mt-3 text-sm text-[#D0D7D8] leading-relaxed">{item.description}</p>
-                <div className="absolute -right-12 -bottom-12 h-32 w-32 rounded-full bg-gradient-to-br from-[#FFEDCF]/40 via-transparent to-transparent blur-[70px]" />
-              </div>
-            ))}
-          </div>
-        </section>
+
 
         {/* Featured Tours Section */}
         <section id="tours" className="space-y-10">
@@ -346,12 +237,6 @@ export default function Home() {
                 Explore curated travel experiences designed by our AI and refined by local experts
               </p>
             </div>
-            <Link
-              href={isAuthenticated ? "/dashboard" : "/register"}
-              className="rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-[#F3F0E9] transition hover:border-[#C4A77D] hover:bg-[#C4A77D]/10 hover:text-[#C4A77D]"
-            >
-              {isAuthenticated ? "My Dashboard" : "Get Personalized Tours"}
-            </Link>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {featuredTours.map((tour, index) => (
@@ -387,100 +272,6 @@ export default function Home() {
                 </div>
               </article>
             ))}
-          </div>
-        </section>
-
-        {/* Travel Stories Section */}
-        <section
-          id="stories"
-          className="grid gap-10 rounded-[2.8rem] border border-white/10 bg-white/6 p-12 backdrop-blur-lg shadow-[0_55px_140px_-65px_rgba(0,0,0,0.65)] lg:grid-cols-[1.1fr_0.9fr]"
-        >
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="h-px w-12 bg-gradient-to-r from-[#FFE5B4] to-transparent" />
-                <p className="text-xs uppercase tracking-[0.4em] text-[#7D837A]">
-                  Traveler Voices
-                </p>
-              </div>
-              <h2 className="text-4xl font-semibold text-white drop-shadow-[0_12px_24px_rgba(255,199,128,0.45)]">
-                Real Stories from Real Travelers
-              </h2>
-              <p className="text-base text-[#A5ABA3] leading-relaxed">
-                Discover how Smart Travel has transformed journeys for thousands of adventurers
-              </p>
-            </div>
-            <div className="grid gap-5">
-              {travelStories.map((story, index) => (
-                <blockquote
-                  key={story.author}
-                  className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/6 p-7 backdrop-blur transition duration-500 hover:border-[#FFE5B4]/45 hover:bg-white/10 hover:shadow-[0_32px_90px_-46px_rgba(255,199,128,0.55)]"
-                  style={{
-                    animation: `floatSlow ${24 + index * 2}s ease-in-out infinite ${index * 1.2}s`,
-                  }}
-                >
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.22),transparent_65%)] opacity-80" />
-                  <p className="relative text-base italic text-white drop-shadow-[0_14px_22px_rgba(0,0,0,0.35)] leading-relaxed">
-                    "{story.quote}"
-                  </p>
-                  <footer className="relative mt-4 text-sm font-medium text-[#FFE5B4]">
-                    — {story.author}
-                  </footer>
-                </blockquote>
-              ))}
-            </div>
-          </div>
-
-          {/* Planning Steps Card */}
-          <div className="relative flex flex-col justify-between gap-8 rounded-[2.4rem] border border-white/10 bg-white/7 p-8 backdrop-blur shadow-[0_40px_110px_-70px_rgba(0,0,0,0.65)] transition duration-500 hover:border-[#FFE5B4]/45 hover:bg-white/10">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.22),transparent_60%)] opacity-80" />
-            <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gradient-to-br from-[#FFE5B4]/40 via-transparent to-transparent blur-[95px]" />
-            <div className="absolute -left-14 bottom-8 h-36 w-36 rounded-full bg-gradient-to-tr from-[#91E3FF]/35 via-transparent to-transparent blur-[85px]" />
-            <div className="relative">
-              <h3 className="text-2xl font-semibold text-white drop-shadow-[0_16px_32px_rgba(0,0,0,0.4)]">
-                How It Works
-              </h3>
-              <ol className="mt-6 space-y-5">
-                {planningSteps.map((step, index) => (
-                  <li key={step.title} className="flex gap-4">
-                    <span className="mt-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border-2 border-[#FFE5B4]/70 text-sm font-semibold text-[#FFE5B4]">
-                      {index + 1}
-                    </span>
-                    <div className="space-y-1">
-                      <p className="text-base font-semibold text-white drop-shadow-[0_12px_20px_rgba(0,0,0,0.35)]">
-                        {step.title}
-                      </p>
-                      <p className="text-sm text-[#D0D7D8] leading-relaxed">{step.description}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-            {/* Member Perks Card */}
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/8 p-8 text-white shadow-[0_28px_80px_-45px_rgba(255,199,128,0.5)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.38),transparent_60%)] opacity-90" />
-              <div className="relative space-y-4">
-                <p className="text-sm uppercase tracking-[0.35em] text-[#FFE5B4]">
-                  Exclusive
-                </p>
-                <h4 className="text-2xl font-semibold text-white drop-shadow-[0_16px_32px_rgba(0,0,0,0.45)]">
-                  Premium Member Benefits
-                </h4>
-                <p className="text-base text-[#F4F7F8] leading-relaxed">
-                  Join today and unlock exclusive discounts, priority support, and VIP experiences
-                </p>
-                <Link
-                  href={isAuthenticated ? "/dashboard" : "/register"}
-                  className="inline-flex items-center gap-2 rounded-full bg-[#C4A77D] px-6 py-3 text-sm font-semibold text-[#111418] transition hover:bg-[#d6b88b] hover:shadow-lg"
-                >
-                  {isAuthenticated ? "Go to Dashboard" : "Join Now"}
-                  <span aria-hidden>→</span>
-                </Link>
-              </div>
-              <div className="pointer-events-none absolute -right-16 -bottom-14 h-40 w-40 rounded-full bg-gradient-to-br from-[#FFD7A0]/45 via-transparent to-transparent blur-[110px]" />
-              <div className="pointer-events-none absolute -left-14 -top-16 h-36 w-36 rounded-full bg-gradient-to-br from-[#FFE5B4]/40 via-transparent to-transparent blur-[90px]" />
-            </div>
           </div>
         </section>
       </main>
