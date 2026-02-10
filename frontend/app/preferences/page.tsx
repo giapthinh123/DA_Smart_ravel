@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { PlacesService } from "@/services/places.service"
+import { ItineraryService } from "@/services/itinerary.service"
 import { Place, PreferencesData } from "@/types/domain"
 import { UserMenu } from "@/components/user-menu"
 interface PlaceItem {
@@ -98,23 +99,6 @@ function PreferencesContent() {
     dislike_local_transport: [],
   })
 
-  const API_BASE = 'http://localhost:5000/api'
-
-  // API helper
-  const apiCall = async (endpoint: string, options: RequestInit = {}) => {
-    const res = await fetch(`${API_BASE}${endpoint}`, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        ...options.headers
-      }
-    })
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.error || 'API Error')
-    return data
-  }
-
   // Load trip data from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -156,11 +140,11 @@ function PreferencesContent() {
 
         // Calculate trip duration - handle various date formats
         let durationDays = 3 // default
-        
+
         // Helper to parse date string (handles DD/MM/YYYY or YYYY-MM-DD)
         const parseDate = (dateStr: string): Date | null => {
           if (!dateStr) return null
-          
+
           // Try DD/MM/YYYY format
           if (dateStr.includes('/')) {
             const parts = dateStr.split('/')
@@ -169,7 +153,7 @@ function PreferencesContent() {
               return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
             }
           }
-          
+
           // Try standard format (YYYY-MM-DD or ISO)
           const date = new Date(dateStr)
           return isNaN(date.getTime()) ? null : date
@@ -178,14 +162,14 @@ function PreferencesContent() {
         if (tripData.departureDate && tripData.returnDate) {
           const start = parseDate(tripData.departureDate)
           const end = parseDate(tripData.returnDate)
-          
+
           console.log('Parsing dates:', {
             departureDate: tripData.departureDate,
             returnDate: tripData.returnDate,
             parsedStart: start,
             parsedEnd: end
           })
-          
+
           if (start && end && !isNaN(start.getTime()) && !isNaN(end.getTime())) {
             const diffTime = Math.abs(end.getTime() - start.getTime())
             durationDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
@@ -193,7 +177,7 @@ function PreferencesContent() {
             if (durationDays < 1) durationDays = 1
           }
         }
-        
+
         // Also check tripData.days if available
         if (tripData.days && typeof tripData.days === 'number' && tripData.days > 0) {
           durationDays = tripData.days
@@ -218,27 +202,19 @@ function PreferencesContent() {
           }
         }
 
-        // Build create payload; include book_flight and flights when coming from flights page
-        const createBody: Record<string, unknown> = {
-          name: tripData.departure + " to " + tripData.destination,
-          city_name: tripData.destination,
-          city_id: tripData.destination_city_id,
+        // Create base tour using ItineraryService
+        const result = await ItineraryService.createItinerary({
+          city_id: tripData.destination_city_id || tripData.cityId,
           trip_duration_days: durationDays,
           start_date: startDateStr,
           guest_count: (tripData.adults || 2) + (tripData.children || 0),
-          budget: tripData.budget || 1000
-        }
-        if (tripData.book_flight === true && tripData.flights) {
-          createBody.book_flight = true
-          createBody.flights = tripData.flights
-        }
-
-        // Create base tour
-        const result = await apiCall('/itinerary/create', {
-          method: 'POST',
-          body: JSON.stringify(createBody)
+          budget: tripData.budget || 1000,
+          ...(tripData.book_flight === true && tripData.flights ? {
+            book_flight: true,
+            flights: tripData.flights
+          } : {})
         })
-        
+
         console.log('Itinerary created:', result)
 
         const newItineraryId = result.itinerary_id
@@ -275,7 +251,7 @@ function PreferencesContent() {
       }
 
       try {
-        const response = await apiCall(`/itinerary/${urlItineraryId}`)
+        const response = await ItineraryService.getItinerary(urlItineraryId)
         const dayNumber = parseInt(editDay)
         const dayExists = response.daily_itinerary?.some((d: any) => d.day_number === dayNumber) || false
         setIsEditingExistingDay(dayExists)
@@ -666,7 +642,7 @@ function PreferencesContent() {
 
       // Check if we're in edit mode (editing a specific day)
       const editDay = searchParams.get('editDay')
-      
+
       if (editDay) {
         // Redirect back to itinerary with regenerateDay param
         console.log(`Edit mode: redirecting to regenerate day ${editDay}`)
@@ -790,7 +766,7 @@ function PreferencesContent() {
 
             {/* User Menu Dropdown */}
             <UserMenu />
-            </nav>
+          </nav>
         </div>
       </header>
 
@@ -802,31 +778,31 @@ function PreferencesContent() {
             <header className="dashboard-preferences__header">
               <div className="dashboard-preferences__chip">
                 <span>
-                  {searchParams.get('editDay') 
-                    ? (isEditingExistingDay 
-                        ? `Editing Day ${searchParams.get('editDay')}` 
-                        : `Planning Day ${searchParams.get('editDay')}`
-                      )
+                  {searchParams.get('editDay')
+                    ? (isEditingExistingDay
+                      ? `Editing Day ${searchParams.get('editDay')}`
+                      : `Planning Day ${searchParams.get('editDay')}`
+                    )
                     : 'Refine preferences'
                   }
                 </span>
               </div>
               <div className="dashboard-preferences__titles">
                 <h2>
-                  {searchParams.get('editDay') 
+                  {searchParams.get('editDay')
                     ? (isEditingExistingDay
-                        ? `Update preferences for Day ${searchParams.get('editDay')}`
-                        : `Plan your Day ${searchParams.get('editDay')} itinerary`
-                      )
+                      ? `Update preferences for Day ${searchParams.get('editDay')}`
+                      : `Plan your Day ${searchParams.get('editDay')} itinerary`
+                    )
                     : 'Curate the experiences that fit your travel style'
                   }
                 </h2>
                 <p>
                   {searchParams.get('editDay')
                     ? (isEditingExistingDay
-                        ? 'Change your selections below, then click Continue to regenerate this day with your new preferences.'
-                        : 'Select your preferred places below, then click Continue to generate this day with your selections.'
-                      )
+                      ? 'Change your selections below, then click Continue to regenerate this day with your new preferences.'
+                      : 'Select your preferred places below, then click Continue to generate this day with your selections.'
+                    )
                     : 'Evaluate restaurants, hotels, activities and transfers so the system can tailor the itinerary around your preferences.'
                   }
                 </p>
@@ -991,11 +967,11 @@ function PreferencesContent() {
                         disabled={isLoading}
                       >
                         <span>
-                          {searchParams.get('editDay') 
+                          {searchParams.get('editDay')
                             ? (isEditingExistingDay
-                                ? `Regenerate Day ${searchParams.get('editDay')}`
-                                : `Generate Day ${searchParams.get('editDay')}`
-                              )
+                              ? `Regenerate Day ${searchParams.get('editDay')}`
+                              : `Generate Day ${searchParams.get('editDay')}`
+                            )
                             : 'Continue'
                           }
                         </span>

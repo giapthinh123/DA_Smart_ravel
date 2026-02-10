@@ -71,9 +71,9 @@ export class CityService {
         // However, existing services use `ApiResponse` wrapper.
 
         try {
-            // Note: User said "GET /api/citys/". 
-            // Existing services use api.post for search, but this is a GET.
-            const response = await api.get<any>('/api/citys/')
+            // Note: Remove trailing slash to avoid 308 redirect
+            // Backend expects /api/citys without trailing slash
+            const response = await api.get<any>('/api/citys')
 
             // Handle different possible response structures
             if (response.data && Array.isArray(response.data)) {

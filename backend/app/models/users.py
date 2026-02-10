@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 from datetime import datetime
 from functools import wraps
-from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity, get_jwt
+from flask_jwt_extended import verify_jwt_in_request, get_jwt
 from flask import jsonify
 
 class Users:
@@ -50,7 +50,8 @@ class Users:
                 verify_jwt_in_request()
                 
                 # 2. Get user identity from JWT (trusted source)
-                user = get_jwt_identity()
+                from ..extensions import parse_jwt_identity
+                user = parse_jwt_identity()
                 
                 # 3. Check if user has required role
                 if not user or "role" not in user:
@@ -71,7 +72,8 @@ class Users:
         Sử dụng trong các protected routes
         """
         verify_jwt_in_request()
-        return get_jwt_identity()
+        from ..extensions import parse_jwt_identity
+        return parse_jwt_identity()
     
     @staticmethod
     def is_token_blacklisted(jti):

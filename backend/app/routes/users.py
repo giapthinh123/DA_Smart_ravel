@@ -1,7 +1,7 @@
 from typing import Any
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
-from ..extensions import mongo
+from flask_jwt_extended import jwt_required, get_jwt
+from ..extensions import mongo, parse_jwt_identity
 from ..models.users import Users
 
 users_bp = Blueprint("users", __name__)
@@ -87,7 +87,7 @@ def get_profile():
     Get current user profile
     OWASP: User can only access their own data
     """
-    identity = get_jwt_identity()
+    identity = parse_jwt_identity()
     user = Users.find_user_by_id_safe(mongo, identity["id"])
     
     if not user:
@@ -102,7 +102,7 @@ def update_profile():
     Update current user profile
     OWASP: User can only update their own data, role cannot be changed
     """
-    identity = get_jwt_identity()
+    identity = parse_jwt_identity()
     data = request.json
     
     # Remove fields that shouldn't be updated by user
@@ -138,7 +138,7 @@ def delete_user(user_id):
     Delete user - ADMIN ONLY
     OWASP: Role-based access control, prevent self-deletion
     """
-    identity = get_jwt_identity()
+    identity = parse_jwt_identity()
     
     # Prevent admin from deleting themselves
     if identity["id"] == user_id:
@@ -159,7 +159,7 @@ def update_user_role(user_id):
     Update user role - ADMIN ONLY
     OWASP: Role-based access control, audit trail
     """
-    identity = get_jwt_identity()
+    identity = parse_jwt_identity()
     data = request.json
     
     if not data or "role" not in data:
@@ -190,7 +190,7 @@ def delete_own_account():
     Soft delete own account (set status to 'delete')
     OWASP: Verify password before deletion, soft delete for data recovery
     """
-    identity = get_jwt_identity()
+    identity = parse_jwt_identity()
     data = request.json
     
     if not data or not data.get("password"):

@@ -15,8 +15,9 @@ import {
     Itinerary,
     DayItinerary,
     Block,
+    ItineraryService
 } from "@/services/itinerary.service"
-import api from "@/lib/axios"
+import { PlacesService } from "@/services/places.service"
 import {
     Loader2,
     MapPin,
@@ -103,14 +104,11 @@ const formatShortDate = (dateString: string): string => {
     })
 }
 
-/** Hiển thị số điểm dừng: stop_count (number) hoặc type (string) cũ */
 const formatFlightStopLabel = (flight: { stop_count?: number; type?: string }): string => {
     const c = flight.stop_count
     if (typeof c === "number") return c === 0 ? "Direct" : c === 1 ? "1 stop" : `${c} stops`
     return flight.type ?? "—"
 }
-
-const API_BASE = "http://localhost:5000/api"
 
 function FullTourContent() {
     const router = useRouter()
@@ -149,10 +147,10 @@ function FullTourContent() {
 
                 console.log('Loading full tour:', itineraryId)
 
-                // Call the API endpoint directly
-                const response = await api.get<Itinerary>(`/api/itinerary/${itineraryId}`)
-                console.log('Loaded full tour:', response.data)
-                setItinerary(response.data)
+                // Use ItineraryService to fetch itinerary
+                const data = await ItineraryService.getItinerary(itineraryId)
+                console.log('Loaded full tour:', data)
+                setItinerary(data)
             } catch (err: any) {
                 console.error('Error loading full tour:', err)
                 setError(err.response?.data?.error || err.message || 'Failed to load full tour')
@@ -181,8 +179,7 @@ function FullTourContent() {
 
         setLoadingDetails(prev => new Set(prev).add(placeId))
         try {
-            const res = await fetch(`${API_BASE}/places/place/${placeId}`)
-            const data = await res.json()
+            const data = await PlacesService.getPlaceById(placeId)
             setPlaceDetails(prev => ({ ...prev, [placeId]: data }))
         } catch (err) {
             console.error("Failed to fetch place details:", err)
@@ -346,7 +343,7 @@ function FullTourContent() {
                                                             ? (() => {
                                                                 const total = (itinerary.flights.selectedDepartureFlight?.price ?? 0) + (itinerary.flights.selectedReturnFlight?.price ?? 0)
                                                                 return total >= 1000 ? `${new Intl.NumberFormat("vi-VN").format(total)}đ` : `$${total}`
-                                                              })()
+                                                            })()
                                                             : "—"}
                                                 </span>
                                             </div>
@@ -408,16 +405,16 @@ function FullTourContent() {
                                             </p>
                                             {itinerary.flights.selectedDepartureFlight.stops && itinerary.flights.selectedDepartureFlight.stops.length > 0 && (
                                                 <div className="mt-3 pt-3 border-t border-white/10">
-                                                <p className="text-xs text-[#7D837A] mb-1">Quá cảnh</p>
-                                                {itinerary.flights.selectedDepartureFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
-                                                <div key={i} className="text-xs text-[#A5ABA3] py-1">
-                                                    <span className="font-medium text-[#D0D7D8]">{stop.iata}</span> {stop.name}
-                                                    <br />
-                                                    <span className="text-[#7D837A]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
-                                                    <br />
-                                                    <span className="text-[#7D837A]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
-                                                </div>
-                                                ))}
+                                                    <p className="text-xs text-[#7D837A] mb-1">Quá cảnh</p>
+                                                    {itinerary.flights.selectedDepartureFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
+                                                        <div key={i} className="text-xs text-[#A5ABA3] py-1">
+                                                            <span className="font-medium text-[#D0D7D8]">{stop.iata}</span> {stop.name}
+                                                            <br />
+                                                            <span className="text-[#7D837A]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
+                                                            <br />
+                                                            <span className="text-[#7D837A]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             )}
                                             <p className="mt-2 font-bold text-[#FFE5B4]">
@@ -437,16 +434,16 @@ function FullTourContent() {
                                             </p>
                                             {itinerary.flights.selectedReturnFlight.stops && itinerary.flights.selectedReturnFlight.stops.length > 0 && (
                                                 <div className="mt-3 pt-3 border-t border-white/10">
-                                                <p className="text-xs text-[#7D837A] mb-1">Quá cảnh</p>
-                                                {itinerary.flights.selectedReturnFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
-                                                <div key={i} className="text-xs text-[#A5ABA3] py-1">
-                                                    <span className="font-medium text-[#D0D7D8]">{stop.iata}</span> {stop.name}
-                                                    <br />
-                                                    <span className="text-[#7D837A]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
-                                                    <br />
-                                                    <span className="text-[#7D837A]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
-                                                </div>
-                                                ))}
+                                                    <p className="text-xs text-[#7D837A] mb-1">Quá cảnh</p>
+                                                    {itinerary.flights.selectedReturnFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
+                                                        <div key={i} className="text-xs text-[#A5ABA3] py-1">
+                                                            <span className="font-medium text-[#D0D7D8]">{stop.iata}</span> {stop.name}
+                                                            <br />
+                                                            <span className="text-[#7D837A]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
+                                                            <br />
+                                                            <span className="text-[#7D837A]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
+                                                        </div>
+                                                    ))}
                                                 </div>
                                             )}
                                             <p className="mt-2 font-bold text-[#FFE5B4]">
@@ -591,8 +588,8 @@ function FullTourContent() {
                                                                                                                     <div
                                                                                                                         key={idx}
                                                                                                                         className={`rounded-lg overflow-hidden group cursor-pointer transition-all ${currentImageIdx === idx
-                                                                                                                                ? 'ring-2 ring-[#FFE5B4] ring-offset-2 ring-offset-[#09131A]'
-                                                                                                                                : 'opacity-70 hover:opacity-100'
+                                                                                                                            ? 'ring-2 ring-[#FFE5B4] ring-offset-2 ring-offset-[#09131A]'
+                                                                                                                            : 'opacity-70 hover:opacity-100'
                                                                                                                             }`}
                                                                                                                         onClick={(e) => {
                                                                                                                             e.stopPropagation()

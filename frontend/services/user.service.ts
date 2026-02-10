@@ -22,7 +22,7 @@ export class UserService {
      */
     static async getUsers(): Promise<GetUsersResponse> {
         try {
-            const response = await api.get<GetUsersResponse>('/api/users/')
+            const response = await api.get<GetUsersResponse>('/api/users')
             return response.data
         } catch (error: any) {
             if (error.response?.data?.msg) {
@@ -96,7 +96,7 @@ export class UserService {
         status?: 'active' | 'inactive'
     }): Promise<void> {
         try {
-            const response = await api.post('/api/users/', userData)
+            const response = await api.post('/api/users', userData)
 
             if (response.data?.msg !== 'User created successfully') {
                 throw new Error(response.data?.msg || 'Failed to create user')

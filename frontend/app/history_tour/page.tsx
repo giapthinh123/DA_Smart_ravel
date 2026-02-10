@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
+import { ItineraryService, TourHistoryItem } from "@/services/itinerary.service"
 
 interface TourHistory {
     id: string
@@ -27,52 +28,19 @@ export default function HistoryTourPage() {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string>("")
 
-    // Fetch tour history from API
+    // Fetch tour history from API using ItineraryService
     useEffect(() => {
         const fetchTourHistory = async () => {
             try {
                 setLoading(true)
                 setError("")
-                
-                // Get token from localStorage
-                const token = localStorage.getItem("token") || localStorage.getItem("auth_token")
 
-                if (!token) {
-                    router.push("/login")
-                    return
-                }
-
-                // Build query params - only send status filter to backend, search is done client-side
-                const params = new URLSearchParams()
-                if (filter && filter !== "All") {
-                    params.append("status", filter)
-                }
-                params.append("limit", "100")
-                
-                const queryString = params.toString()
-                const url = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/itinerary/history${queryString ? `?${queryString}` : ''}`
-
-                const response = await fetch(url, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${token}`,
-                        "Content-Type": "application/json"
-                    }
+                // Use ItineraryService to fetch tour history
+                const data = await ItineraryService.getTourHistory({
+                    status: filter !== "All" ? filter : undefined,
+                    limit: 100
                 })
 
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}))
-                    if (response.status === 401) {
-                        // Unauthorized - redirect to login
-                        localStorage.removeItem("token")
-                        localStorage.removeItem("auth_token")
-                        router.push("/login")
-                        return
-                    }
-                    throw new Error(errorData.error || `Failed to fetch tour history: ${response.status}`)
-                }
-
-                const data = await response.json()
                 // Check if data has history array
                 if (!data || !Array.isArray(data.history)) {
                     console.warn("Invalid response format:", data)
@@ -81,11 +49,11 @@ export default function HistoryTourPage() {
                 }
 
                 // Transform API data to match TourHistory interface
-                const transformedHistory: TourHistory[] = data.history.map((item: any) => {
+                const transformedHistory: TourHistory[] = data.history.map((item: TourHistoryItem) => {
                     // Map status to proper format (backend already sends capitalized status)
                     let status: TourHistory["status"] = "Pending"
                     const itemStatus = (item.status || "").toLowerCase()
-                    
+
                     if (itemStatus.includes("complete")) status = "Completed"
                     else if (itemStatus.includes("progress") || itemStatus === "pending") status = "In Progress"
                     else if (itemStatus.includes("cancel")) status = "Cancelled"
@@ -109,6 +77,11 @@ export default function HistoryTourPage() {
                 setTourHistory(transformedHistory)
             } catch (err: any) {
                 console.error("Error fetching tour history:", err)
+                // Check if error is auth-related
+                if (err.message?.includes("401") || err.message?.includes("unauthorized")) {
+                    router.push("/login")
+                    return
+                }
                 setError(err.message || "Failed to load tour history. Please try again.")
                 setTourHistory([])
             } finally {
@@ -229,8 +202,8 @@ export default function HistoryTourPage() {
                                     key={option}
                                     onClick={() => setFilter(option)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === option
-                                            ? "bg-[#FFE5B4] text-[#2B1200] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
-                                            : "bg-white/10 text-[#F3F0E9] hover:bg-white/15"
+                                        ? "bg-[#FFE5B4] text-[#2B1200] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
+                                        : "bg-white/10 text-[#F3F0E9] hover:bg-white/15"
                                         }`}
                                 >
                                     {option}

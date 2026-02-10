@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from "@/components/ui/card"
 import { Plane, Clock, ShieldCheck, ArrowRight, CheckCircle2 } from "lucide-react"
 import { data_build_tour, data_flight, data_flight_search, SelectedFlightForItinerary, FlightsSelectionPayload } from "@/types/domain"

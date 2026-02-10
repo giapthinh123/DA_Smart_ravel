@@ -24,9 +24,9 @@ export class PlacesService {
     static async getPreferences(user_id: string, city_id: string): Promise<PreferencesData> {
         try {
             console.log('Getting preferences for:', { user_id, city_id })
-            
+
             const response = await api.get<PreferencesData>(`/api/places/preferences/${user_id}/${city_id}`)
-            
+
             console.log('Loaded preferences:', response.data)
             return response.data
         } catch (error: any) {
@@ -52,7 +52,7 @@ export class PlacesService {
     static async set_Preferences(user_id: string, city_id: string, preferences: PreferencesData) {
         try {
             console.log('Setting preferences:', { user_id, city_id, preferences })
-            
+
             // Backend expects all fields at the root level, not nested
             const requestBody = {
                 user_id,
@@ -61,7 +61,7 @@ export class PlacesService {
             }
 
             const response = await api.post(`/api/places/preferences`, requestBody)
-            
+
             // Backend returns: { message, action, user_id, city_id }
             console.log('Preferences response:', response.data)
             return response.data
@@ -69,6 +69,32 @@ export class PlacesService {
             console.error('Error setting preferences:', error)
             const errorMessage = error.response?.data?.error || error.message || 'Failed to set preferences'
             throw new Error(errorMessage)
+        }
+    }
+
+    /**
+     * Get place details by place ID
+     */
+    static async getPlaceById(placeId: string): Promise<{
+        displayName_text: string
+        rating: number
+        userRatingCount: number
+        avg_price: number
+        editorialSummary_text?: string
+        image_url?: string[]
+        reviews?: Array<{
+            rating: number
+            text: { text: string }
+            relativePublishTimeDescription: string
+            authorAttribution: { displayName: string }
+        }>
+    }> {
+        try {
+            const response = await api.get(`/api/places/place/${placeId}`)
+            return response.data
+        } catch (error: any) {
+            console.error('Error fetching place details:', error)
+            throw new Error(error.response?.data?.error || error.message || 'Failed to fetch place details')
         }
     }
 }

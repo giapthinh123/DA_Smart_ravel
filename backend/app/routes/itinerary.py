@@ -4,11 +4,11 @@ Day-by-day itinerary generation endpoints
 """
 
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 from datetime import date
 import logging
 
-from ..extensions import mongo
+from ..extensions import mongo, get_user_id_from_jwt
 from ..controller.itinerary_controller import ItineraryController
 
 logger = logging.getLogger(__name__)
@@ -34,9 +34,7 @@ def create_itinerary():
     }
     """
     try:
-        identity = get_jwt_identity()
-        # Handle both dict and string identity formats
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        user_id = get_user_id_from_jwt()
         data = request.get_json() or {}
         
         city_id = data.get("city_id")
@@ -134,8 +132,7 @@ def get_itinerary(itinerary_id):
 def get_user_itineraries():
     """Get all itineraries for current user"""
     try:
-        identity = get_jwt_identity()
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        user_id = get_user_id_from_jwt()
         controller = ItineraryController(mongo)
         itineraries = controller.get_user_itineraries(user_id)
         
@@ -194,8 +191,7 @@ def get_tour_history():
     - skip: pagination offset (default 0)
     """
     try:
-        identity = get_jwt_identity()
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        user_id = get_user_id_from_jwt()
         
         # Get query parameters
         status = request.args.get("status")

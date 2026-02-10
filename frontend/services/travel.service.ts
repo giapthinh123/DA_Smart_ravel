@@ -33,7 +33,7 @@ export class TravelService {
 
   /**
    * Search airline tickets.
-   * POST /api/flights/ with { departure_city, arrival_city, departure_date }.
+   * POST /api/flights with { departure_city, arrival_city, departure_date }.
    * Returns flights grouped by airline name.
    */
   static async searchFlights(params: AirlineSearchParams): Promise<FlightsByAirline> {
@@ -42,7 +42,7 @@ export class TravelService {
       arrival_city: String(params.arrival_city ?? '').trim(),
       departure_date: String(params.departure_date ?? '').trim(),
     }
-    const response = await api.post<ApiResponse<FlightsByAirline>>('/api/flights/', body, {
+    const response = await api.post<ApiResponse<FlightsByAirline>>('/api/flights', body, {
       headers: { 'Content-Type': 'application/json' },
     })
 
