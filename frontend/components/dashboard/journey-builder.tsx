@@ -217,7 +217,7 @@ export default function JourneyBuilder() {
                     }}
                     options={cities.map((city) => ({
                       label: city.city + ", " + city.country,
-                      value: city.id
+                      value: city.city
                     }))}
                     optionLabel="label"
                     optionValue="value"
@@ -244,7 +244,7 @@ export default function JourneyBuilder() {
                     }}
                     options={cities.map((city) => ({
                       label: city.city + ", " + city.country,
-                      value: city.id
+                      value: city.city
                     }))}
                     optionLabel="label"
                     optionValue="value"

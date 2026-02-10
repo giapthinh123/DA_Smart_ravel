@@ -108,6 +108,45 @@ function PaymentsContent() {
     }
   }, [user])
 
+  const formatCardNumber = (value: string) => {
+    return value
+      .replace(/[^0-9]/g, "")             // chỉ cho số
+      .replace(/(.{4})/g, "$1 ")          // thêm khoảng trắng sau mỗi 4 số
+      .trim();                            // loại bỏ khoảng trắng cuối cùng
+  };
+
+  // Format expiry date as MM/DD, where MM is 01-12 and DD is 01-31
+  // Output tối đa 5 ký tự (MM/DD hoặc MM/D hoặc M/D)
+  const formatExpiryDate = (value: string) => {
+    // Giữ số và lấy tối đa 4 số cho MMDD
+    let digits = value.replace(/\D/g, "").slice(0, 4);
+
+    let month = digits.slice(0, 2);
+    let day = digits.slice(2, 4);
+
+    // Xử lý tháng MM: 01-12
+    if (month.length === 2) {
+      let m = parseInt(month, 10);
+      if (m === 0) month = "01";
+      else if (m > 12) month = "12";
+      else if (month[0] === '0' && month[1] === '0') month = '01';
+    }
+
+    // Xử lý ngày DD: 01-31
+    if (day.length === 2) {
+      let d = parseInt(day, 10);
+      if (d === 0) day = "01";
+      else if (d > 31) day = "31";
+      else if (day[0] === '0' && day[1] === '0') day = '01';
+    }
+
+    let result = month;
+    if (day.length) {
+      result += '/' + day;
+    }
+    return result.slice(0, 5);
+  };
+
   // Compute costs
   const dailyCosts: DayCost[] =
     itineraryData?.daily_itinerary?.map((day) => ({
@@ -118,7 +157,7 @@ function PaymentsContent() {
   const flightCost =
     itineraryData?.book_flight && itineraryData?.flights
       ? (itineraryData.flights.selectedDepartureFlight?.price || 0) +
-        (itineraryData.flights.selectedReturnFlight?.price || 0)
+      (itineraryData.flights.selectedReturnFlight?.price || 0)
       : 0
 
   // Calculate total: use summary if available, otherwise sum daily costs + flight
@@ -156,12 +195,12 @@ function PaymentsContent() {
         payment_details: {
           itinerary_summary: itineraryData.summary
             ? {
-                total_cost: itineraryData.summary.total_cost,
-                cost_per_person: itineraryData.summary.cost_per_person,
-                budget_utilized_percent: itineraryData.summary.budget_utilized_percent,
-                avg_cost_per_day: itineraryData.summary.avg_cost_per_day,
-                flight_total: flightCost || undefined,
-              }
+              total_cost: itineraryData.summary.total_cost,
+              cost_per_person: itineraryData.summary.cost_per_person,
+              budget_utilized_percent: itineraryData.summary.budget_utilized_percent,
+              avg_cost_per_day: itineraryData.summary.avg_cost_per_day,
+              flight_total: flightCost || undefined,
+            }
             : undefined,
           flight_cost: flightCost || undefined,
           daily_costs: dailyCosts,
@@ -231,10 +270,10 @@ function PaymentsContent() {
         <p className="text-lg font-semibold text-emerald-400">{formatCurrency(totalAmount)}</p>
         <div className="mt-4 flex gap-4">
           <button
-            onClick={() => router.push(`/itinerary?itineraryId=${itineraryId}`)}
+            onClick={() => router.push(`/full_tour?itineraryId=${itineraryId}`)}
             className="rounded-xl border border-white/20 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
           >
-            View Itinerary
+            View Full Tour
           </button>
           <button
             onClick={() => router.push("/planner")}
@@ -403,20 +442,18 @@ function PaymentsContent() {
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-[#A5ABA3]">Budget utilization</span>
                     <span
-                      className={`font-bold ${
-                        itineraryData.summary.budget_utilized_percent > 100 ? "text-red-400" : "text-emerald-400"
-                      }`}
+                      className={`font-bold ${itineraryData.summary.budget_utilized_percent > 100 ? "text-red-400" : "text-emerald-400"
+                        }`}
                     >
                       {itineraryData.summary.budget_utilized_percent}%
                     </span>
                   </div>
                   <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/10">
                     <div
-                      className={`h-full rounded-full transition-all ${
-                        itineraryData.summary.budget_utilized_percent > 100
-                          ? "bg-red-400"
-                          : "bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D]"
-                      }`}
+                      className={`h-full rounded-full transition-all ${itineraryData.summary.budget_utilized_percent > 100
+                        ? "bg-red-400"
+                        : "bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D]"
+                        }`}
                       style={{
                         width: `${Math.min(itineraryData.summary.budget_utilized_percent, 100)}%`,
                       }}
@@ -459,11 +496,10 @@ function PaymentsContent() {
                       key={method.value}
                       type="button"
                       onClick={() => setFormData((p) => ({ ...p, paymentMethod: method.value }))}
-                      className={`rounded-xl border p-3 text-center text-xs transition ${
-                        formData.paymentMethod === method.value
-                          ? "border-[#FFE5B4] bg-[#FFE5B4]/10 text-[#FFE5B4]"
-                          : "border-white/15 bg-white/5 text-[#A5ABA3] hover:border-white/30"
-                      }`}
+                      className={`rounded-xl border p-3 text-center text-xs transition ${formData.paymentMethod === method.value
+                        ? "border-[#FFE5B4] bg-[#FFE5B4]/10 text-[#FFE5B4]"
+                        : "border-white/15 bg-white/5 text-[#A5ABA3] hover:border-white/30"
+                        }`}
                     >
                       <span className="block text-lg">{method.icon}</span>
                       <span className="mt-1 block">{method.label}</span>
@@ -532,9 +568,14 @@ function PaymentsContent() {
                       <input
                         type="text"
                         name="cardNumber"
-                        value={formData.cardNumber}
-                        onChange={handleInput}
-                        inputMode="numeric"
+                        value={formatCardNumber(formData.cardNumber)}
+                        onChange={(e) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            cardNumber: e.target.value.replace(/\s/g, ""),
+                          }))
+                        }
+                        maxLength={19} inputMode="numeric"
                         placeholder="1234 5678 9012 3456"
                         className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
                       />
@@ -547,9 +588,16 @@ function PaymentsContent() {
                         <input
                           type="text"
                           name="expiryDate"
-                          value={formData.expiryDate}
-                          onChange={handleInput}
                           placeholder="MM/YY"
+                          value={formData.expiryDate}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              expiryDate: formatExpiryDate(e.target.value),
+                            }))
+                          }
+                          maxLength={5}
+                          required
                           className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
                         />
                       </div>
@@ -558,12 +606,18 @@ function PaymentsContent() {
                           CVV
                         </label>
                         <input
-                          type="password"
+                          type="text"
                           name="cvv"
                           value={formData.cvv}
-                          onChange={handleInput}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              cvv: e.target.value.replace(/\D/g, "").substring(0, 4),
+                            }))
+                          }
                           inputMode="numeric"
                           placeholder="123"
+                          maxLength={3}
                           className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
                         />
                       </div>

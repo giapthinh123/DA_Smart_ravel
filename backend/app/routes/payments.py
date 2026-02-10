@@ -6,7 +6,7 @@ Handles payment creation, status updates, and retrieval
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
-
+from datetime import datetime
 from ..extensions import mongo
 from ..models.payments import Payments
 from ..models.users import Users
@@ -118,7 +118,7 @@ def confirm_payment(payment_id):
             logger.info(f"Payment {payment_id} confirmed: {new_status}")
             mongo.db.itineraries.update_one(
                 {"itinerary_id": payment["tour_id"]},
-                {"$set": {"status": "completed", "updated_at": datetime.utcnow()}}
+                {"$set": {"status": "payed", "updated_at": datetime.now()}}
             )
             return jsonify({
                 "message": f"Payment {new_status}",
