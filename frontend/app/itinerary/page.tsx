@@ -409,7 +409,7 @@ function ItineraryContent() {
     const currentDay = itinerary?.daily_itinerary.find(d => d.day_number === selectedDay)
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+        <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
             {/* Background */}
             <div className="pointer-events-none absolute inset-0 -z-10">
                 <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
@@ -417,20 +417,20 @@ function ItineraryContent() {
             </div>
 
             {/* Header */}
-            <header className="border-b border-white/10 bg-[#09131A]/95 backdrop-blur-md sticky top-0 z-50">
+            <header className="border-b border-white/10 bg-[#E0F7FA]/95 backdrop-blur-md sticky top-0 z-50">
                 <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
                             href="/planner"
-                            className="flex items-center gap-2 text-[#A5ABA3] hover:text-white transition"
+                            className="flex items-center gap-2 text-[#64748B] hover:text-white transition"
                         >
                             <ChevronLeft className="w-5 h-5" />
                             <span className="text-sm">Back</span>
                         </Link>
                         <div className="h-6 w-px bg-white/20" />
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#7D837A]">VIETJOURNEY</p>
-                            <h1 className="text-sm font-semibold text-[#F3F0E9]">Your Itinerary</h1>
+                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#94A3B8]">VIETJOURNEY</p>
+                            <h1 className="text-sm font-semibold text-[#0F172A]">Your Itinerary</h1>
                         </div>
                     </div>
                     <nav className="flex items-center gap-3">
@@ -470,15 +470,15 @@ function ItineraryContent() {
                 {!itinerary && !isGenerating && !error && (
                     <div className="text-center py-20">
                         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
-                            <MapPin className="w-10 h-10 text-[#FFE5B4]" />
+                            <MapPin className="w-10 h-10 text-[#5FCBC4]" />
                         </div>
                         <h2 className="text-2xl font-bold mb-4">No Itinerary Found</h2>
-                        <p className="text-[#A5ABA3] mb-8 max-w-md mx-auto">
+                        <p className="text-[#64748B] mb-8 max-w-md mx-auto">
                             Start planning your trip by selecting a destination and your preferences.
                         </p>
                         <Link
                             href="/planner"
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D] text-[#2B1200] font-bold rounded-xl hover:scale-105 transition"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] text-[#FFFFFF] font-bold rounded-xl hover:scale-105 transition"
                         >
                             <Home className="w-5 h-5" />
                             Go to Planner
@@ -489,7 +489,7 @@ function ItineraryContent() {
                 {/* Loading indicator */}
                 {isGenerating && !itinerary && (
                     <div className="text-center py-20">
-                        <Loader2 className="w-12 h-12 animate-spin text-[#FFE5B4] mx-auto mb-4" />
+                        <Loader2 className="w-12 h-12 animate-spin text-[#5FCBC4] mx-auto mb-4" />
                         <p className="text-lg">Loading your itinerary...</p>
                     </div>
                 )}
@@ -501,35 +501,35 @@ function ItineraryContent() {
                         <aside className="space-y-6">
                             {/* Trip Summary Card */}
                             <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
-                                <h2 className="text-lg font-semibold mb-4 text-[#FFE5B4]">Trip Summary</h2>
+                                <h2 className="text-lg font-semibold mb-4 text-[#5FCBC4]">Trip Summary</h2>
 
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-[#FFE5B4]/10 flex items-center justify-center">
-                                            <Calendar className="w-5 h-5 text-[#FFE5B4]" />
+                                        <div className="w-10 h-10 rounded-lg bg-[#5FCBC4]/10 flex items-center justify-center">
+                                            <Calendar className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A5ABA3]">Duration</p>
+                                            <p className="text-xs text-[#64748B]">Duration</p>
                                             <p className="font-medium">{itinerary.trip_duration_days} days</p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-[#FFE5B4]/10 flex items-center justify-center">
-                                            <Users className="w-5 h-5 text-[#FFE5B4]" />
+                                        <div className="w-10 h-10 rounded-lg bg-[#5FCBC4]/10 flex items-center justify-center">
+                                            <Users className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A5ABA3]">Travelers</p>
+                                            <p className="text-xs text-[#64748B]">Travelers</p>
                                             <p className="font-medium">{itinerary.guest_count} guests</p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-[#FFE5B4]/10 flex items-center justify-center">
-                                            <DollarSign className="w-5 h-5 text-[#FFE5B4]" />
+                                        <div className="w-10 h-10 rounded-lg bg-[#5FCBC4]/10 flex items-center justify-center">
+                                            <DollarSign className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A5ABA3]">Budget</p>
+                                            <p className="text-xs text-[#64748B]">Budget</p>
                                             <p className="font-medium">${itinerary.budget}</p>
                                         </div>
                                     </div>
@@ -538,7 +538,7 @@ function ItineraryContent() {
                                 {/* Status Badge */}
                                 <div className="mt-6 pt-4 border-t border-white/10">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-[#A5ABA3]">Status</span>
+                                        <span className="text-sm text-[#64748B]">Status</span>
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${itinerary.status === "complete"
                                             ? "bg-emerald-500/20 text-emerald-400"
                                             : "bg-amber-500/20 text-amber-400"
@@ -546,14 +546,14 @@ function ItineraryContent() {
                                             {itinerary.status === "complete" ? "Complete" : "In Progress"}
                                         </span>
                                     </div>
-                                    <div className="mt-2 text-sm text-[#A5ABA3]">
+                                    <div className="mt-2 text-sm text-[#64748B]">
                                         {itinerary.daily_itinerary.length} / {itinerary.trip_duration_days || 3} days planned
                                     </div>
 
                                     {/* Progress bar */}
                                     <div className="mt-3 h-2 bg-white/10 rounded-full overflow-hidden">
                                         <div
-                                            className="h-full rounded-full bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D] transition-all"
+                                            className="h-full rounded-full bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] transition-all"
                                             style={{ width: `${((itinerary.daily_itinerary.length || 0) / (itinerary.trip_duration_days || 3)) * 100}%` }}
                                         />
                                     </div>
@@ -562,24 +562,24 @@ function ItineraryContent() {
 
                             {/* Cost Summary (if complete) */}
                             {itinerary.summary && (
-                                <div className="rounded-2xl border border-[#FFE5B4]/20 bg-gradient-to-br from-[#FFE5B4]/10 to-[#FFB56D]/5 p-6">
-                                    <h3 className="text-sm font-semibold mb-4 text-[#FFE5B4]">Cost Breakdown</h3>
+                                <div className="rounded-2xl border border-[#5FCBC4]/20 bg-gradient-to-br from-[#5FCBC4]/10 to-[#4AB8B0]/5 p-6">
+                                    <h3 className="text-sm font-semibold mb-4 text-[#5FCBC4]">Cost Breakdown</h3>
                                     <div className="space-y-3 text-sm">
                                         <div className="flex justify-between">
-                                            <span className="text-[#A5ABA3]">Total Cost</span>
+                                            <span className="text-[#64748B]">Total Cost</span>
                                             <span className="font-bold text-white">${itinerary.summary.total_cost}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#A5ABA3]">Per Person</span>
+                                            <span className="text-[#64748B]">Per Person</span>
                                             <span className="text-white">${itinerary.summary.cost_per_person}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#A5ABA3]">Per Day (avg)</span>
+                                            <span className="text-[#64748B]">Per Day (avg)</span>
                                             <span className="text-white">${itinerary.summary.avg_cost_per_day}</span>
                                         </div>
                                         <div className="pt-3 mt-3 border-t border-white/10">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-[#A5ABA3]">Budget Used</span>
+                                                <span className="text-[#64748B]">Budget Used</span>
                                                 <span className={`font-bold ${itinerary.summary.budget_utilized_percent > 100
                                                     ? 'text-red-400'
                                                     : 'text-emerald-400'
@@ -591,7 +591,7 @@ function ItineraryContent() {
                                                 <div
                                                     className={`h-full rounded-full transition-all ${itinerary.summary.budget_utilized_percent > 100
                                                         ? 'bg-red-400'
-                                                        : 'bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D]'
+                                                        : 'bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0]'
                                                         }`}
                                                     style={{ width: `${Math.min(itinerary.summary.budget_utilized_percent, 100)}%` }}
                                                 />
@@ -604,7 +604,7 @@ function ItineraryContent() {
                             {/* Day Selector */}
                             <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-sm font-semibold text-[#FFE5B4]">Select Day</h3>
+                                    <h3 className="text-sm font-semibold text-[#5FCBC4]">Select Day</h3>
                                     <div className="flex gap-1">
                                         <button
                                             onClick={goToPrevDay}
@@ -635,22 +635,22 @@ function ItineraryContent() {
                                                 onClick={() => hasData && setSelectedDay(day)}
                                                 disabled={!hasData && !isGeneratingThis}
                                                 className={`relative p-3 rounded-xl text-center transition-all ${isSelected
-                                                    ? "bg-gradient-to-br from-[#FFE5B4] to-[#FFB56D] text-[#2B1200] shadow-lg shadow-[#FFE5B4]/20"
+                                                    ? "bg-gradient-to-br from-[#5FCBC4] to-[#4AB8B0] text-[#FFFFFF] shadow-lg shadow-[#5FCBC4]/20"
                                                     : hasData
                                                         ? "bg-white/10 text-white hover:bg-white/20"
-                                                        : "bg-white/5 text-[#7D837A] cursor-not-allowed"
+                                                        : "bg-white/5 text-[#94A3B8] cursor-not-allowed"
                                                     } ${isGeneratingThis ? "animate-pulse" : ""}`}
                                             >
                                                 <span className="block text-xs opacity-70">Day</span>
                                                 <span className="block text-lg font-bold">{day}</span>
                                                 {dayData && (
-                                                    <span className={`block text-[10px] mt-1 ${isSelected ? 'opacity-80' : 'text-[#A5ABA3]'}`}>
+                                                    <span className={`block text-[10px] mt-1 ${isSelected ? 'opacity-80' : 'text-[#64748B]'}`}>
                                                         {formatShortDate(dayData.date)}
                                                     </span>
                                                 )}
                                                 {isGeneratingThis && (
                                                     <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-xl">
-                                                        <Loader2 className="w-5 h-5 animate-spin text-[#FFE5B4]" />
+                                                        <Loader2 className="w-5 h-5 animate-spin text-[#5FCBC4]" />
                                                     </div>
                                                 )}
                                             </button>
@@ -665,20 +665,20 @@ function ItineraryContent() {
                             {currentDay ? (
                                 <div>
                                     {/* Day Header */}
-                                    <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-[#FFE5B4]/20 to-[#FFB56D]/10 border border-[#FFE5B4]/30">
+                                    <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-[#5FCBC4]/20 to-[#4AB8B0]/10 border border-[#5FCBC4]/30">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="text-sm uppercase tracking-widest text-[#FFE5B4] mb-1">
+                                                <p className="text-sm uppercase tracking-widest text-[#5FCBC4] mb-1">
                                                     Day {currentDay.day_number}
                                                 </p>
                                                 <h2 className="text-2xl font-bold">{formatDate(currentDay.date)}</h2>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-sm text-[#A5ABA3]">Estimated Cost</p>
-                                                <p className="text-2xl font-bold text-[#FFE5B4]">${currentDay.day_cost}</p>
+                                                <p className="text-sm text-[#64748B]">Estimated Cost</p>
+                                                <p className="text-2xl font-bold text-[#5FCBC4]">${currentDay.day_cost}</p>
                                             </div>
                                         </div>
-                                        <div className="mt-4 flex gap-4 text-sm text-[#D0D7D8]">
+                                        <div className="mt-4 flex gap-4 text-sm text-[#475569]">
                                             <span>{currentDay.blocks.length} activities</span>
                                             <span>•</span>
                                             <span>Full day planned</span>
@@ -688,7 +688,7 @@ function ItineraryContent() {
                                     {/* Timeline */}
                                     <div className="relative">
                                         {/* Timeline Line */}
-                                        <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#FFE5B4] via-[#FFB56D] to-[#FFE5B4]/20" />
+                                        <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#5FCBC4] via-[#4AB8B0] to-[#5FCBC4]/20" />
 
                                         <div className="space-y-6">
                                             {currentDay.blocks.map((block, idx) => {
@@ -700,8 +700,8 @@ function ItineraryContent() {
                                                 return (
                                                     <div key={blockKey} className="relative pl-16">
                                                         {/* Timeline Dot */}
-                                                        <div className="absolute left-6 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-[#FFE5B4] to-[#FFB56D] flex items-center justify-center z-10 ring-4 ring-[#09131A]">
-                                                            <div className="w-2 h-2 rounded-full bg-[#2B1200]" />
+                                                        <div className="absolute left-6 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-[#5FCBC4] to-[#4AB8B0] flex items-center justify-center z-10 ring-4 ring-[#E0F7FA]">
+                                                            <div className="w-2 h-2 rounded-full bg-[#FFFFFF]" />
                                                         </div>
 
                                                         {/* Block Card */}
@@ -745,7 +745,7 @@ function ItineraryContent() {
                                                                 <div className="mt-4 pt-4 border-t border-white/20">
                                                                     {isLoading ? (
                                                                         <div className="flex items-center justify-center py-4">
-                                                                            <Loader2 className="w-6 h-6 animate-spin text-[#FFE5B4]" />
+                                                                            <Loader2 className="w-6 h-6 animate-spin text-[#5FCBC4]" />
                                                                         </div>
                                                                     ) : details ? (
                                                                         <div className="space-y-6">
@@ -778,7 +778,7 @@ function ItineraryContent() {
                                                                                                         <div
                                                                                                             key={idx}
                                                                                                             className={`rounded-lg overflow-hidden group cursor-pointer transition-all ${currentImageIdx === idx
-                                                                                                                ? 'ring-2 ring-[#FFE5B4] ring-offset-2 ring-offset-[#09131A]'
+                                                                                                                ? 'ring-2 ring-[#5FCBC4] ring-offset-2 ring-offset-[#E0F7FA]'
                                                                                                                 : 'opacity-70 hover:opacity-100'
                                                                                                                 }`}
                                                                                                             onClick={(e) => {
@@ -812,7 +812,7 @@ function ItineraryContent() {
                                                                                                 <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
                                                                                                 <span className="font-bold text-amber-400 text-lg">{details.rating}</span>
                                                                                             </div>
-                                                                                            <span className="text-sm text-[#A5ABA3]">
+                                                                                            <span className="text-sm text-[#64748B]">
                                                                                                 ({details.userRatingCount?.toLocaleString() || 0} reviews)
                                                                                             </span>
                                                                                         </div>
@@ -834,8 +834,8 @@ function ItineraryContent() {
                                                                             {/* Editorial Summary */}
                                                                             {details.editorialSummary_text && (
                                                                                 <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                                                                                    <h5 className="text-sm font-semibold text-[#FFE5B4] mb-2 uppercase tracking-wide">About</h5>
-                                                                                    <p className="text-sm text-[#D0D7D8] leading-relaxed">
+                                                                                    <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">About</h5>
+                                                                                    <p className="text-sm text-[#475569] leading-relaxed">
                                                                                         {details.editorialSummary_text}
                                                                                     </p>
                                                                                 </div>
@@ -844,7 +844,7 @@ function ItineraryContent() {
                                                                             {/* Reviews Section */}
                                                                             {details.reviews && details.reviews.length > 0 && (
                                                                                 <div className="space-y-3">
-                                                                                    <h5 className="text-sm font-semibold text-[#FFE5B4] uppercase tracking-wide">Recent Reviews</h5>
+                                                                                    <h5 className="text-sm font-semibold text-[#5FCBC4] uppercase tracking-wide">Recent Reviews</h5>
                                                                                     <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
                                                                                         {details.reviews.slice(0, 3).map((review, idx) => (
                                                                                             <div
@@ -865,7 +865,7 @@ function ItineraryContent() {
                                                                                                         )}
                                                                                                     </div>
                                                                                                     {review.relativePublishTimeDescription && (
-                                                                                                        <span className="text-xs text-[#A5ABA3]">
+                                                                                                        <span className="text-xs text-[#64748B]">
                                                                                                             {review.relativePublishTimeDescription}
                                                                                                         </span>
                                                                                                     )}
@@ -873,7 +873,7 @@ function ItineraryContent() {
 
                                                                                                 {/* Review Text */}
                                                                                                 {review.text?.text && (
-                                                                                                    <p className="text-sm text-[#D0D7D8] leading-relaxed line-clamp-4">
+                                                                                                    <p className="text-sm text-[#475569] leading-relaxed line-clamp-4">
                                                                                                         {review.text.text}
                                                                                                     </p>
                                                                                                 )}
@@ -884,7 +884,7 @@ function ItineraryContent() {
                                                                             )}
                                                                         </div>
                                                                     ) : (
-                                                                        <p className="text-sm text-[#A5ABA3]">Click to load details...</p>
+                                                                        <p className="text-sm text-[#64748B]">Click to load details...</p>
                                                                     )}
                                                                 </div>
                                                             )}
@@ -911,7 +911,7 @@ function ItineraryContent() {
                                     <div className="mt-8 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
                                         <div className="flex items-center justify-between mb-4">
                                             <div>
-                                                <p className="text-sm text-[#A5ABA3]">Day {currentDay.day_number} of {itinerary.trip_duration_days || 3}</p>
+                                                <p className="text-sm text-[#64748B]">Day {currentDay.day_number} of {itinerary.trip_duration_days || 3}</p>
                                                 <p className="text-lg font-semibold text-white">
                                                     {currentDay.day_number < (itinerary.trip_duration_days || 3)
                                                         ? "Ready to plan the next day?"
@@ -941,7 +941,7 @@ function ItineraryContent() {
                                                 <button
                                                     onClick={handleContinueGenerate}
                                                     disabled={isGenerating || generatingDay !== null}
-                                                    className="flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D] text-[#2B1200] font-bold hover:scale-[1.02] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                                    className="flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] text-[#FFFFFF] font-bold hover:scale-[1.02] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                                 >
                                                     {generatingDay !== null ? (
                                                         <>
@@ -990,16 +990,16 @@ function ItineraryContent() {
                             ) : generatingDay ? (
                                 <div className="flex flex-col items-center justify-center h-full py-20">
                                     <div className="relative">
-                                        <div className="w-20 h-20 rounded-full bg-[#FFE5B4]/10 animate-ping absolute" />
-                                        <div className="w-20 h-20 rounded-full bg-[#FFE5B4]/20 flex items-center justify-center relative">
-                                            <Loader2 className="w-10 h-10 animate-spin text-[#FFE5B4]" />
+                                        <div className="w-20 h-20 rounded-full bg-[#5FCBC4]/10 animate-ping absolute" />
+                                        <div className="w-20 h-20 rounded-full bg-[#5FCBC4]/20 flex items-center justify-center relative">
+                                            <Loader2 className="w-10 h-10 animate-spin text-[#5FCBC4]" />
                                         </div>
                                     </div>
                                     <p className="mt-6 text-lg font-semibold">Generating Day {generatingDay}...</p>
-                                    <p className="text-sm text-[#A5ABA3] mt-2">Finding the best places for you</p>
+                                    <p className="text-sm text-[#64748B] mt-2">Finding the best places for you</p>
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-full py-20 text-[#A5ABA3]">
+                                <div className="flex flex-col items-center justify-center h-full py-20 text-[#64748B]">
                                     <MapPin className="w-12 h-12 mb-4 opacity-50" />
                                     <p>Select a day to view the itinerary</p>
                                 </div>
@@ -1010,8 +1010,8 @@ function ItineraryContent() {
             </main>
 
             {/* Footer */}
-            <footer className="mt-auto border-t border-white/10 bg-[#061017]/80 backdrop-blur py-6">
-                <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#7D837A]">
+            <footer className="mt-auto border-t border-white/10 bg-[#1E293B]/80 backdrop-blur py-6">
+                <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#94A3B8]">
                     © 2025 VietJourney. All rights reserved.
                 </div>
             </footer>

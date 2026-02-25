@@ -41,13 +41,13 @@ export default function FoodSearch() {
   return (
     <div className="rounded-3xl border border-white/10 bg-white/3 p-8 backdrop-blur">
       <div className="mb-6">
-        <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#FFE5B4]">
+        <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
           Culinary Explorer
         </p>
         <h3 className="text-2xl font-semibold text-white">
           Discover local flavors and dining experiences
         </h3>
-        <p className="mt-2 text-sm text-[#D0D7D8]">
+        <p className="mt-2 text-sm text-[#475569]">
           Search for restaurants, street food, and culinary experiences that match your taste.
         </p>
       </div>
@@ -93,10 +93,10 @@ export default function FoodSearch() {
                 step={10}
                 className="dashboard-form__slider"
               />
-              <div className="flex justify-between mt-3 text-sm text-[#D0D7D8]">
-                <span className="font-medium text-[#FFE5B4]">${budgetRange[0]}</span>
-                <span className="text-[#A5ABA3]">to</span>
-                <span className="font-medium text-[#FFE5B4]">${budgetRange[1]}</span>
+              <div className="flex justify-between mt-3 text-sm text-[#475569]">
+                <span className="font-medium text-[#5FCBC4]">${budgetRange[0]}</span>
+                <span className="text-[#64748B]">to</span>
+                <span className="font-medium text-[#5FCBC4]">${budgetRange[1]}</span>
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function FoodSearch() {
           onClick={handleSubmit}
           disabled={isLoading}
           className={cn(
-            "h-12 w-full rounded-xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_20px_60px_-20px_rgba(255,186,102,0.85)] transition-all",
+            "h-12 w-full rounded-xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-sm font-semibold text-[#FFFFFF] shadow-[0_20px_60px_-20px_rgba(255,186,102,0.85)] transition-all",
             isLoading ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] hover:shadow-[0_20px_70px_-20px_rgba(255,186,102,0.95)]"
           )}
         >

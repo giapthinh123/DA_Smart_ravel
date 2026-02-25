@@ -18,7 +18,7 @@ function InputError({
   className?: string
 }) {
   return message ? (
-    <p className={`text-sm text-red-400 mt-1 ${className}`}>
+    <p className={`text-sm text-red-500 mt-1 ${className}`}>
       {message}
     </p>
   ) : null
@@ -116,26 +116,25 @@ export default function RegisterPage() {
 
   if (showSuccess) {
     return (
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7] overflow-hidden">
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B] overflow-hidden">
         {/* Background Layers */}
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(224,247,250,0.9),rgba(240,253,250,0.6)_42%,rgba(236,253,245,0.8))]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(95,203,196,0.08)_0%,rgba(255,255,255,0)_70%)]" />
         </div>
 
         <div className="w-full max-w-lg z-10">
-          <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)] text-center space-y-6">
+          <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 p-8 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10 text-center space-y-6">
             <div className="flex justify-center">
-              <div className="rounded-full bg-green-500/20 p-4">
-                <CheckCircle2 className="h-16 w-16 text-green-400" />
+              <div className="rounded-full bg-[#5FCBC4]/15 p-4">
+                <CheckCircle2 className="h-16 w-16 text-[#5FCBC4]" />
               </div>
             </div>
             <div className="space-y-3">
-              <h2 className="text-3xl font-bold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+              <h2 className="text-3xl font-bold text-[#0F172A]">
                 Registration Successful!
               </h2>
-              <p className="text-[#D0D7D8] text-base">
+              <p className="text-[#64748B] text-base">
                 Your account has been created successfully. Redirecting to login...
               </p>
             </div>
@@ -146,21 +145,21 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7] overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B] overflow-hidden">
       {/* Background Layers */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(224,247,250,0.9),rgba(240,253,250,0.6)_42%,rgba(236,253,245,0.8))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(95,203,196,0.08)_0%,rgba(255,255,255,0)_70%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-white/60 via-white/20 to-transparent" />
       </div>
 
       <div className="w-full max-w-lg z-10">
         {/* Title and Description */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+          <h1 className="text-4xl font-semibold text-[#0F172A]">
             Create Account
           </h1>
-          <p className="text-base text-[#A5ABA3] mt-2 max-w-md mx-auto">
+          <p className="text-base text-[#64748B] mt-2 max-w-md mx-auto">
             Join us to explore amazing tours and destinations
           </p>
         </div>
@@ -168,12 +167,12 @@ export default function RegisterPage() {
         {/* Register Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           <div className="grid gap-6">
-            <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-6 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
+            <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 p-6 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10">
               <div className="mb-6 space-y-2 text-center">
-                <h2 className="text-lg font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+                <h2 className="text-lg font-semibold text-[#0F172A]">
                   Sign Up
                 </h2>
-                <p className="text-sm text-[#D0D7D8]">
+                <p className="text-sm text-[#64748B]">
                   Fill in your information to get started
                 </p>
               </div>
@@ -183,12 +182,11 @@ export default function RegisterPage() {
                 <div className="grid gap-2">
                   <label
                     htmlFor="fullName"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
+                    className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium"
                   >
                     Full Name
                   </label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                     <input
                       id="fullName"
                       type="text"
@@ -197,7 +195,7 @@ export default function RegisterPage() {
                       required
                       autoComplete="name"
                       placeholder="Enter your full name…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                      className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                     />
                   </div>
                   <InputError message={errors.fullName} />
@@ -207,12 +205,11 @@ export default function RegisterPage() {
                 <div className="grid gap-2">
                   <label
                     htmlFor="email"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
+                    className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium"
                   >
                     Email
                   </label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                     <input
                       id="email"
                       type="email"
@@ -221,7 +218,7 @@ export default function RegisterPage() {
                       required
                       autoComplete="email"
                       placeholder="info@example.com…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                      className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                     />
                   </div>
                   <InputError message={errors.email} />
@@ -231,12 +228,11 @@ export default function RegisterPage() {
                 <div className="grid gap-2">
                   <label
                     htmlFor="phone"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
+                    className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium"
                   >
                     Phone Number
                   </label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                     <input
                       id="phone"
                       type="tel"
@@ -245,7 +241,7 @@ export default function RegisterPage() {
                       required
                       autoComplete="tel"
                       placeholder="+1 (555) 000-0000…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                      className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                     />
                   </div>
                   <InputError message={errors.phone} />
@@ -255,12 +251,11 @@ export default function RegisterPage() {
                 <div className="grid gap-2">
                   <label
                     htmlFor="password"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
+                    className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium"
                   >
                     Password
                   </label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                     <input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -269,14 +264,14 @@ export default function RegisterPage() {
                       required
                       autoComplete="new-password"
                       placeholder="Create a strong password…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                      className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 pr-12 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                     />
                     <button
                       type="button"
                       tabIndex={-1}
                       aria-label={showPassword ? "Hide password" : "Show password"}
                       onClick={() => setShowPassword(prev => !prev)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#B6C2C6] hover:text-[#FFE5B4] transition-colors cursor-pointer"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#5FCBC4] transition-colors cursor-pointer"
                     >
                       {showPassword ? (
                         <EyeIcon className="size-5" />
@@ -292,12 +287,11 @@ export default function RegisterPage() {
                 <div className="grid gap-2">
                   <label
                     htmlFor="confirmPassword"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
+                    className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium"
                   >
                     Confirm Password
                   </label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                     <input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
@@ -306,14 +300,14 @@ export default function RegisterPage() {
                       required
                       autoComplete="new-password"
                       placeholder="Confirm your password…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                      className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 pr-12 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                     />
                     <button
                       type="button"
                       tabIndex={-1}
                       aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                       onClick={() => setShowConfirmPassword(prev => !prev)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#B6C2C6] hover:text-[#FFE5B4] transition-colors cursor-pointer"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#5FCBC4] transition-colors cursor-pointer"
                     >
                       {showConfirmPassword ? (
                         <EyeIcon className="size-5" />
@@ -328,19 +322,12 @@ export default function RegisterPage() {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.04] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFEED0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-[#5FCBC4] text-sm font-semibold text-white shadow-lg shadow-[#5FCBC4]/30 transition-all hover:bg-[#4AB8B0] hover:shadow-xl hover:shadow-[#5FCBC4]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/80 focus-visible:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-[#5FCBC4]"
                   disabled={!isFormValid || isLoading}
                 >
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  >
-                    <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
-                    <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
-                  </span>
-                  <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#2B1200] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
+                  <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em]">
                     {isLoading && (
-                      <LoaderCircle className="h-4 w-4 animate-spin text-[#2B1200]" />
+                      <LoaderCircle className="h-4 w-4 animate-spin" />
                     )}
                     {isLoading ? "Creating account..." : "Register"}
                   </span>
@@ -349,8 +336,8 @@ export default function RegisterPage() {
             </div>
 
             {/* Login Card */}
-            <div className="rounded-3xl border border-white/15 bg-[rgba(8,23,31,0.75)] p-6 text-center text-sm text-[#D0D7D8] backdrop-blur-2xl shadow-[0_28px_90px_-55px_rgba(0,0,0,0.62)]">
-              <p className="mb-3 text-xs uppercase tracking-[0.25em] text-[#FFE5B4]">
+            <div className="rounded-3xl border border-[#5FCBC4]/15 bg-white/80 p-6 text-center text-sm text-[#64748B] backdrop-blur-2xl shadow-md">
+              <p className="mb-3 text-xs uppercase tracking-[0.25em] text-[#5FCBC4] font-medium">
                 Already Have an Account?
               </p>
               <p className="mb-4 text-sm">
@@ -358,7 +345,7 @@ export default function RegisterPage() {
               </p>
               <Link
                 href="/login"
-                className="inline-flex items-center gap-2 text-sm text-[#7EE0FF] transition hover:text-[#FFE5B4] underline decoration-[#7EE0FF]/30 underline-offset-4 hover:decoration-[#FFE5B4]/50"
+                className="inline-flex items-center gap-2 text-sm text-[#5FCBC4] transition hover:text-[#4AB8B0] underline decoration-[#5FCBC4]/30 underline-offset-4 hover:decoration-[#4AB8B0]/50"
               >
                 Sign In
                 <span aria-hidden>→</span>

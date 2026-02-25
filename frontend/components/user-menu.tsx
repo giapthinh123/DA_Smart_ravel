@@ -21,7 +21,7 @@ export function UserMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <button className="rounded-full bg-white/10 px-4 py-2 text-[#F3F0E9] transition hover:bg-white/20 flex items-center gap-2">
+                <button className="rounded-full bg-white/10 px-4 py-2 text-[#0F172A] transition hover:bg-white/20 flex items-center gap-2">
                     <span>{user?.role === 'admin' ? 'ADMIN' : user?.fullname || user?.email || 'USER'}</span>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -29,15 +29,15 @@ export function UserMenu() {
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 bg-[#1A1D1C]/95 backdrop-blur-lg border-white/10">
-                <DropdownMenuLabel className="text-[#F3F0E9]">
+                <DropdownMenuLabel className="text-[#0F172A]">
                     <div className="flex flex-col">
                         <span className="font-medium">{user?.fullname || 'User'}</span>
-                        <span className="text-xs text-[#A5ABA3]">{user?.email}</span>
+                        <span className="text-xs text-[#64748B]">{user?.email}</span>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-white/10" />
 
-                <DropdownMenuItem asChild className="text-[#F3F0E9] hover:bg-white/10 cursor-pointer">
+                <DropdownMenuItem asChild className="text-[#0F172A] hover:bg-white/10 cursor-pointer">
                     <Link href="/profile" className="flex items-center w-full">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -46,7 +46,7 @@ export function UserMenu() {
                     </Link>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem asChild className="text-[#F3F0E9] hover:bg-white/10 cursor-pointer">
+                <DropdownMenuItem asChild className="text-[#0F172A] hover:bg-white/10 cursor-pointer">
                     <Link href="/history_tour" className="flex items-center w-full">
                         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -56,7 +56,7 @@ export function UserMenu() {
                 </DropdownMenuItem>
 
                 <AdminOnly>
-                    <DropdownMenuItem asChild className="text-[#FFE5B4] hover:bg-white/10 cursor-pointer">
+                    <DropdownMenuItem asChild className="text-[#5FCBC4] hover:bg-white/10 cursor-pointer">
                         <Link href="http://a36a0a125b14.sn.mynetname.net:8111/" className="flex items-center w-full">
                         {/* <Link href="/admin" className="flex items-center w-full"> */}
                             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

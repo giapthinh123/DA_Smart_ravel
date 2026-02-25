@@ -778,14 +778,14 @@ function PreferencesContent() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
       {/* Custom Scrollbar Styles */}
       <style dangerouslySetInnerHTML={{
         __html: `
           /* Main page scrollbar */
           * {
             scrollbar-width: thin;
-            scrollbar-color: rgba(255, 229, 180, 0.4) rgba(9, 19, 26, 0.3);
+            scrollbar-color: rgba(95, 203, 196, 0.4) rgba(9, 19, 26, 0.3);
           }
           
           *::-webkit-scrollbar {
@@ -800,19 +800,19 @@ function PreferencesContent() {
           }
           
           *::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, rgba(255, 229, 180, 0.5), rgba(255, 213, 158, 0.4));
+            background: linear-gradient(180deg, rgba(95, 203, 196, 0.5), rgba(255, 213, 158, 0.4));
             border-radius: 12px;
             border: 2px solid rgba(9, 19, 26, 0.3);
             transition: all 0.3s ease;
           }
           
           *::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, rgba(255, 229, 180, 0.7), rgba(255, 213, 158, 0.6));
-            border-color: rgba(255, 229, 180, 0.2);
+            background: linear-gradient(180deg, rgba(95, 203, 196, 0.7), rgba(255, 213, 158, 0.6));
+            border-color: rgba(95, 203, 196, 0.2);
           }
           
           *::-webkit-scrollbar-thumb:active {
-            background: linear-gradient(180deg, rgba(255, 229, 180, 0.9), rgba(255, 213, 158, 0.8));
+            background: linear-gradient(180deg, rgba(95, 203, 196, 0.9), rgba(255, 213, 158, 0.8));
           }
           
           /* Items container specific scrollbar */
@@ -827,19 +827,19 @@ function PreferencesContent() {
           }
           
           .dashboard-preferences__items-container::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, rgba(255, 229, 180, 0.4), rgba(255, 213, 158, 0.3));
+            background: linear-gradient(180deg, rgba(95, 203, 196, 0.4), rgba(255, 213, 158, 0.3));
             border-radius: 10px;
             border: 2px solid rgba(12, 26, 34, 0.5);
             transition: all 0.3s ease;
           }
           
           .dashboard-preferences__items-container::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, rgba(255, 229, 180, 0.6), rgba(255, 213, 158, 0.5));
+            background: linear-gradient(180deg, rgba(95, 203, 196, 0.6), rgba(255, 213, 158, 0.5));
             transform: scaleX(1.1);
           }
           
           .dashboard-preferences__items-container::-webkit-scrollbar-thumb:active {
-            background: linear-gradient(180deg, rgba(255, 229, 180, 0.8), rgba(255, 213, 158, 0.7));
+            background: linear-gradient(180deg, rgba(95, 203, 196, 0.8), rgba(255, 213, 158, 0.7));
           }
         `
       }} />
@@ -848,31 +848,31 @@ function PreferencesContent() {
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5]/40 to-transparent" />
       </div>
 
       {/* Header */}
       <header className="mx-auto max-w-7xl px-6 py-8">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-[#7D837A]">
+            <p className="text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
               VietJourney
             </p>
-            <p className="text-xl font-semibold text-[#F3F0E9]">
+            <p className="text-xl font-semibold text-[#0F172A]">
               Mapping Vietnam experiences
             </p>
           </div>
           <nav className="flex items-center gap-2 text-sm font-medium">
-            <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+            <Link href="/" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
               Home
             </Link>
-            <Link href="/planner" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+            <Link href="/planner" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
               Dashboard
             </Link>
-            <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+            <Link href="/tours" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
               Personalities
             </Link>
-            <Link href="#" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+            <Link href="#" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
               Contact
             </Link>
             <span className="mx-2 h-4 w-px bg-white/20"></span>
@@ -1022,7 +1022,7 @@ function PreferencesContent() {
                                   maxHeight: '420px',
                                   overflowY: 'auto',
                                   scrollbarWidth: 'thin',
-                                  scrollbarColor: 'rgba(255, 229, 180, 0.3) rgba(12, 26, 34, 0.4)'
+                                  scrollbarColor: 'rgba(95, 203, 196, 0.3) rgba(12, 26, 34, 0.4)'
                                 }}
                               >
                                 {category.items.map((item) => (
@@ -1100,22 +1100,22 @@ function PreferencesContent() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-8 border-t border-white/10 bg-[#061017]/80 py-10 backdrop-blur">
+      <footer className="mt-8 border-t border-white/10 bg-[#1E293B]/80 py-10 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 lg:flex-row lg:justify-between">
           <div className="max-w-sm">
-            <p className="mb-2 text-sm uppercase tracking-[0.3em] text-[#7D837A]">
+            <p className="mb-2 text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
               VietJourney
             </p>
             <h3 className="mb-4 text-xl font-semibold text-white">
               Connect and discover experiences over land
             </h3>
-            <p className="mb-2 text-sm text-[#D0D7D8]">
+            <p className="mb-2 text-sm text-[#475569]">
               43 Building, 348 Arau They Street,
             </p>
-            <p className="mb-2 text-sm text-[#D0D7D8]">
+            <p className="mb-2 text-sm text-[#475569]">
               Can Giay District, Ha Noi, Vietnam
             </p>
-            <p className="text-sm text-[#D0D7D8]">
+            <p className="text-sm text-[#475569]">
               help@vietjourneycommander.com
             </p>
           </div>
@@ -1123,32 +1123,32 @@ function PreferencesContent() {
           <div className="grid gap-8 sm:grid-cols-3">
             <div>
               <h4 className="mb-4 text-sm font-semibold text-white">Platform</h4>
-              <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                <li><a href="#" className="hover:text-[#FFE5B4]">Tailored experiences</a></li>
-                <li><a href="#" className="hover:text-[#FFE5B4]">Signature journeys</a></li>
-                <li><a href="#" className="hover:text-[#FFE5B4]">Themed escapes</a></li>
+              <ul className="space-y-2 text-sm text-[#475569]">
+                <li><a href="#" className="hover:text-[#5FCBC4]">Tailored experiences</a></li>
+                <li><a href="#" className="hover:text-[#5FCBC4]">Signature journeys</a></li>
+                <li><a href="#" className="hover:text-[#5FCBC4]">Themed escapes</a></li>
               </ul>
             </div>
             <div>
               <h4 className="mb-4 text-sm font-semibold text-white">Support</h4>
-              <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                <li><a href="#" className="hover:text-[#FFE5B4]">Help centre</a></li>
-                <li><a href="#" className="hover:text-[#FFE5B4]">Terms of privacy</a></li>
-                <li><a href="#" className="hover:text-[#FFE5B4]">Legal</a></li>
+              <ul className="space-y-2 text-sm text-[#475569]">
+                <li><a href="#" className="hover:text-[#5FCBC4]">Help centre</a></li>
+                <li><a href="#" className="hover:text-[#5FCBC4]">Terms of privacy</a></li>
+                <li><a href="#" className="hover:text-[#5FCBC4]">Legal</a></li>
               </ul>
             </div>
             <div>
               <h4 className="mb-4 text-sm font-semibold text-white">Stay looped</h4>
-              <p className="mb-3 text-sm text-[#D0D7D8]">
+              <p className="mb-3 text-sm text-[#475569]">
                 Receive curated travel moments straight to your inbox
               </p>
               <div className="flex gap-2">
                 <input
                   type="email"
                   placeholder="Your email..."
-                  className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none"
+                  className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:outline-none"
                 />
-                <button className="rounded-lg bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] px-4 text-sm font-semibold text-[#2B1200] transition hover:scale-105">
+                <button className="rounded-lg bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] px-4 text-sm font-semibold text-[#FFFFFF] transition hover:scale-105">
                   Subscribe
                 </button>
               </div>
@@ -1156,7 +1156,7 @@ function PreferencesContent() {
           </div>
         </div>
 
-        <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-6 pt-8 text-center text-sm text-[#7D837A]">
+        <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-6 pt-8 text-center text-sm text-[#94A3B8]">
           <p>© 2025 VietJourney. All rights reserved</p>
           <p className="mt-2">Design aligned with the Welcome experiences.</p>
         </div>

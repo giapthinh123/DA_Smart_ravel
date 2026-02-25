@@ -233,8 +233,8 @@ function PaymentsContent() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B]">
-        <Loader2 className="h-10 w-10 animate-spin text-[#FFE5B4]" />
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5]">
+        <Loader2 className="h-10 w-10 animate-spin text-[#5FCBC4]" />
       </div>
     )
   }
@@ -242,13 +242,13 @@ function PaymentsContent() {
   // No data
   if (!itineraryData) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
         <AlertCircle className="h-16 w-16 text-amber-400" />
         <h2 className="text-2xl font-bold">No Itinerary Data</h2>
-        <p className="text-[#A5ABA3]">Please go back to your itinerary and proceed to payment from there.</p>
+        <p className="text-[#64748B]">Please go back to your itinerary and proceed to payment from there.</p>
         <Link
           href="/planner"
-          className="mt-4 rounded-xl bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D] px-6 py-3 font-semibold text-[#2B1200] transition hover:scale-105"
+          className="mt-4 rounded-xl bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] px-6 py-3 font-semibold text-[#FFFFFF] transition hover:scale-105"
         >
           Go to Planner
         </Link>
@@ -259,13 +259,13 @@ function PaymentsContent() {
   // Success state
   if (paymentSuccess) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
         <div className="animate-bounce">
           <CheckCircle className="h-20 w-20 text-emerald-400" />
         </div>
         <h2 className="text-3xl font-bold">Payment Successful!</h2>
-        <p className="text-[#A5ABA3]">
-          Your booking has been confirmed. Payment ID: <span className="font-mono text-[#FFE5B4]">{paymentId}</span>
+        <p className="text-[#64748B]">
+          Your booking has been confirmed. Payment ID: <span className="font-mono text-[#5FCBC4]">{paymentId}</span>
         </p>
         <p className="text-lg font-semibold text-emerald-400">{formatCurrency(totalAmount)}</p>
         <div className="mt-4 flex gap-4">
@@ -277,7 +277,7 @@ function PaymentsContent() {
           </button>
           <button
             onClick={() => router.push("/planner")}
-            className="rounded-xl bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D] px-6 py-3 font-semibold text-[#2B1200] transition hover:scale-105"
+            className="rounded-xl bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] px-6 py-3 font-semibold text-[#FFFFFF] transition hover:scale-105"
           >
             Back to Planner
           </button>
@@ -287,12 +287,12 @@ function PaymentsContent() {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+    <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
       {/* Background layers */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5]/40 to-transparent" />
       </div>
 
       {/* Header */}
@@ -301,24 +301,24 @@ function PaymentsContent() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.back()}
-              className="flex items-center gap-1 text-[#A5ABA3] transition hover:text-white"
+              className="flex items-center gap-1 text-[#64748B] transition hover:text-white"
             >
               <ChevronLeft className="h-5 w-5" />
               <span className="text-sm">Back</span>
             </button>
             <div className="h-6 w-px bg-white/20" />
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-[#7D837A] md:text-sm">VietJourney</p>
-              <p className="mt-1 text-lg font-semibold text-[#F3F0E9] md:text-xl">Checkout & Secure Payment</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-[#94A3B8] md:text-sm">VietJourney</p>
+              <p className="mt-1 text-lg font-semibold text-[#0F172A] md:text-xl">Checkout & Secure Payment</p>
             </div>
           </div>
-          <nav className="hidden items-center gap-2 text-sm font-medium text-[#A5ABA3] md:flex">
-            <Link href="/planner" className="rounded-full px-3 py-1.5 transition hover:bg-white/5 hover:text-[#F3F0E9]">
+          <nav className="hidden items-center gap-2 text-sm font-medium text-[#64748B] md:flex">
+            <Link href="/planner" className="rounded-full px-3 py-1.5 transition hover:bg-white/5 hover:text-[#0F172A]">
               Planner
             </Link>
             <Link
               href="/history_tour"
-              className="rounded-full px-3 py-1.5 transition hover:bg-white/5 hover:text-[#F3F0E9]"
+              className="rounded-full px-3 py-1.5 transition hover:bg-white/5 hover:text-[#0F172A]"
             >
               History
             </Link>
@@ -356,34 +356,34 @@ function PaymentsContent() {
             </div>
 
             {/* Details body */}
-            <div className="space-y-4 border-t border-white/10 bg-[#0D1820]/95 px-5 pb-5 pt-4 text-sm text-[#D0D7D8] md:px-6 md:pb-6">
+            <div className="space-y-4 border-t border-white/10 bg-[#0D1820]/95 px-5 pb-5 pt-4 text-sm text-[#475569] md:px-6 md:pb-6">
               {/* Meta */}
               <div className="flex flex-wrap gap-4 border-b border-white/10 pb-3 text-xs md:text-[13px]">
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[15px] text-[#FFE5B4]">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[15px] text-[#5FCBC4]">
                     📅
                   </span>
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#7D837A]">Duration</p>
-                    <p className="font-medium text-[#F3F0E9]">{itineraryData.trip_duration_days} Days</p>
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#94A3B8]">Duration</p>
+                    <p className="font-medium text-[#0F172A]">{itineraryData.trip_duration_days} Days</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[15px] text-[#FFE5B4]">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[15px] text-[#5FCBC4]">
                     👥
                   </span>
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#7D837A]">Participants</p>
-                    <p className="font-medium text-[#F3F0E9]">{itineraryData.guest_count} People</p>
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#94A3B8]">Participants</p>
+                    <p className="font-medium text-[#0F172A]">{itineraryData.guest_count} People</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[15px] text-[#FFE5B4]">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[15px] text-[#5FCBC4]">
                     📍
                   </span>
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#7D837A]">Start Date</p>
-                    <p className="font-medium text-[#F3F0E9]">
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#94A3B8]">Start Date</p>
+                    <p className="font-medium text-[#0F172A]">
                       {new Date(itineraryData.start_date).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -400,22 +400,22 @@ function PaymentsContent() {
                   <span>
                     Flight cost
                     {itineraryData.flights?.selectedDepartureFlight && (
-                      <span className="ml-1 text-[11px] text-[#7D837A]">
+                      <span className="ml-1 text-[11px] text-[#94A3B8]">
                         ({itineraryData.flights.selectedDepartureFlight.departCode} ↔{" "}
                         {itineraryData.flights.selectedDepartureFlight.arriveCode})
                       </span>
                     )}
                   </span>
-                  <span className="font-medium text-[#F3F0E9]">{formatCurrency(flightCost)}</span>
+                  <span className="font-medium text-[#0F172A]">{formatCurrency(flightCost)}</span>
                 </div>
               )}
 
               {/* Cost breakdown by day */}
-              <div className="space-y-2 text-[13px] text-[#D0D7D8]">
+              <div className="space-y-2 text-[13px] text-[#475569]">
                 {dailyCosts.map((day) => (
                   <div key={day.day_number} className="flex items-center justify-between">
                     <span>Cost of Day {day.day_number}</span>
-                    <span className="font-medium text-[#F3F0E9]">{formatCurrency(day.day_cost)}</span>
+                    <span className="font-medium text-[#0F172A]">{formatCurrency(day.day_cost)}</span>
                   </div>
                 ))}
               </div>
@@ -423,8 +423,8 @@ function PaymentsContent() {
               {/* Per person */}
               {itineraryData.summary && (
                 <div className="flex items-center justify-between border-t border-dashed border-white/15 pt-2 text-[13px]">
-                  <span className="text-[#A5ABA3]">Cost per person</span>
-                  <span className="font-medium text-[#F3F0E9]">
+                  <span className="text-[#64748B]">Cost per person</span>
+                  <span className="font-medium text-[#0F172A]">
                     {formatCurrency(itineraryData.summary.cost_per_person)}
                   </span>
                 </div>
@@ -432,15 +432,15 @@ function PaymentsContent() {
 
               {/* Total */}
               <div className="mt-1 flex items-center justify-between border-t border-dashed border-white/15 pt-3">
-                <span className="text-[13px] font-semibold tracking-wide text-[#F3F0E9]">Total Amount</span>
-                <span className="text-lg font-semibold text-[#FFE5B4] md:text-xl">{formatCurrency(totalAmount)}</span>
+                <span className="text-[13px] font-semibold tracking-wide text-[#0F172A]">Total Amount</span>
+                <span className="text-lg font-semibold text-[#5FCBC4] md:text-xl">{formatCurrency(totalAmount)}</span>
               </div>
 
               {/* Budget utilization */}
               {itineraryData.summary && (
                 <div className="rounded-xl bg-white/5 px-3 py-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-[#A5ABA3]">Budget utilization</span>
+                    <span className="text-[#64748B]">Budget utilization</span>
                     <span
                       className={`font-bold ${itineraryData.summary.budget_utilized_percent > 100 ? "text-red-400" : "text-emerald-400"
                         }`}
@@ -452,7 +452,7 @@ function PaymentsContent() {
                     <div
                       className={`h-full rounded-full transition-all ${itineraryData.summary.budget_utilized_percent > 100
                         ? "bg-red-400"
-                        : "bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D]"
+                        : "bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0]"
                         }`}
                       style={{
                         width: `${Math.min(itineraryData.summary.budget_utilized_percent, 100)}%`,
@@ -497,8 +497,8 @@ function PaymentsContent() {
                       type="button"
                       onClick={() => setFormData((p) => ({ ...p, paymentMethod: method.value }))}
                       className={`rounded-xl border p-3 text-center text-xs transition ${formData.paymentMethod === method.value
-                        ? "border-[#FFE5B4] bg-[#FFE5B4]/10 text-[#FFE5B4]"
-                        : "border-white/15 bg-white/5 text-[#A5ABA3] hover:border-white/30"
+                        ? "border-[#5FCBC4] bg-[#5FCBC4]/10 text-[#5FCBC4]"
+                        : "border-white/15 bg-white/5 text-[#64748B] hover:border-white/30"
                         }`}
                     >
                       <span className="block text-lg">{method.icon}</span>
@@ -513,7 +513,7 @@ function PaymentsContent() {
                 <h2 className="text-sm font-semibold text-white md:text-base">Personal Information</h2>
                 <div className="mt-4 space-y-4 text-sm">
                   <div>
-                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#7D837A]">
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
                       Full Name
                     </label>
                     <input
@@ -523,11 +523,11 @@ function PaymentsContent() {
                       onChange={handleInput}
                       required
                       placeholder="John Doe"
-                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
+                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#7D837A]">
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
                       Email Address
                     </label>
                     <input
@@ -537,11 +537,11 @@ function PaymentsContent() {
                       onChange={handleInput}
                       required
                       placeholder="john@example.com"
-                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
+                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#7D837A]">
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
                       Phone Number
                     </label>
                     <input
@@ -550,7 +550,7 @@ function PaymentsContent() {
                       value={formData.phone}
                       onChange={handleInput}
                       placeholder="+1 (555) 000-0000"
-                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
+                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                     />
                   </div>
                 </div>
@@ -562,7 +562,7 @@ function PaymentsContent() {
                   <h2 className="text-sm font-semibold text-white md:text-base">Card Information</h2>
                   <div className="mt-4 space-y-4 text-sm">
                     <div>
-                      <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#7D837A]">
+                      <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
                         Card Number
                       </label>
                       <input
@@ -577,12 +577,12 @@ function PaymentsContent() {
                         }
                         maxLength={19} inputMode="numeric"
                         placeholder="1234 5678 9012 3456"
-                        className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
+                        className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                       />
                     </div>
                     <div className="grid gap-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                       <div>
-                        <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#7D837A]">
+                        <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
                           Expiry Date
                         </label>
                         <input
@@ -598,11 +598,11 @@ function PaymentsContent() {
                           }
                           maxLength={5}
                           required
-                          className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
+                          className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#7D837A]">
+                        <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
                           CVV
                         </label>
                         <input
@@ -618,7 +618,7 @@ function PaymentsContent() {
                           inputMode="numeric"
                           placeholder="123"
                           maxLength={3}
-                          className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
+                          className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                         />
                       </div>
                     </div>
@@ -631,7 +631,7 @@ function PaymentsContent() {
                 <h2 className="text-sm font-semibold text-white md:text-base">Billing Address</h2>
                 <div className="mt-4 space-y-4 text-sm">
                   <div>
-                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#7D837A]">
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
                       Address
                     </label>
                     <input
@@ -640,7 +640,7 @@ function PaymentsContent() {
                       value={formData.address}
                       onChange={handleInput}
                       placeholder="123 Main Street, City, State 12345"
-                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/30"
+                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                     />
                   </div>
                 </div>
@@ -651,7 +651,7 @@ function PaymentsContent() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] px-4 py-3 text-sm font-semibold text-[#2B1200] shadow-[0_14px_35px_rgba(255,196,125,0.6)] transition-transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/60 focus:ring-offset-2 focus:ring-offset-[#0D1820] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] px-4 py-3 text-sm font-semibold text-[#FFFFFF] shadow-[0_14px_35px_rgba(255,196,125,0.6)] transition-transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/60 focus:ring-offset-2 focus:ring-offset-[#0D1820] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
                     <>
@@ -665,7 +665,7 @@ function PaymentsContent() {
                     </>
                   )}
                 </button>
-                <p className="mt-2 text-center text-[11px] text-[#7D837A]">
+                <p className="mt-2 text-center text-[11px] text-[#94A3B8]">
                   Payment is securely processed. Your booking will be confirmed immediately.
                 </p>
               </div>

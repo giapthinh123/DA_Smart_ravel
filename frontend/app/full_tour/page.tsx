@@ -205,7 +205,7 @@ function FullTourContent() {
     }
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+        <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
             {/* Background */}
             <div className="pointer-events-none absolute inset-0 -z-10">
                 <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
@@ -213,20 +213,20 @@ function FullTourContent() {
             </div>
 
             {/* Header */}
-            <header className="border-b border-white/10 bg-[#09131A]/95 backdrop-blur-md sticky top-0 z-50">
+            <header className="border-b border-white/10 bg-[#E0F7FA]/95 backdrop-blur-md sticky top-0 z-50">
                 <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
                             href="/history_tour"
-                            className="flex items-center gap-2 text-[#A5ABA3] hover:text-white transition"
+                            className="flex items-center gap-2 text-[#64748B] hover:text-white transition"
                         >
                             <ChevronLeft className="w-5 h-5" />
                             <span className="text-sm">Back</span>
                         </Link>
                         <div className="h-6 w-px bg-white/20" />
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#7D837A]">VIETJOURNEY</p>
-                            <h1 className="text-sm font-semibold text-[#F3F0E9]">Full Tour</h1>
+                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#94A3B8]">VIETJOURNEY</p>
+                            <h1 className="text-sm font-semibold text-[#0F172A]">Full Tour</h1>
                         </div>
                     </div>
                     <UserMenu />
@@ -246,7 +246,7 @@ function FullTourContent() {
                 {/* Loading indicator */}
                 {isLoading && !itinerary && (
                     <div className="text-center py-20">
-                        <Loader2 className="w-12 h-12 animate-spin text-[#FFE5B4] mx-auto mb-4" />
+                        <Loader2 className="w-12 h-12 animate-spin text-[#5FCBC4] mx-auto mb-4" />
                         <p className="text-lg">Loading your full tour...</p>
                     </div>
                 )}
@@ -255,15 +255,15 @@ function FullTourContent() {
                 {!itinerary && !isLoading && !error && (
                     <div className="text-center py-20">
                         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
-                            <MapPin className="w-10 h-10 text-[#FFE5B4]" />
+                            <MapPin className="w-10 h-10 text-[#5FCBC4]" />
                         </div>
                         <h2 className="text-2xl font-bold mb-4">No Tour Found</h2>
-                        <p className="text-[#A5ABA3] mb-8 max-w-md mx-auto">
+                        <p className="text-[#64748B] mb-8 max-w-md mx-auto">
                             Please provide a valid itinerary ID.
                         </p>
                         <Link
                             href="/history_tour"
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D] text-[#2B1200] font-bold rounded-xl hover:scale-105 transition"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] text-[#FFFFFF] font-bold rounded-xl hover:scale-105 transition"
                         >
                             <Home className="w-5 h-5" />
                             Go to History Tour
@@ -278,35 +278,35 @@ function FullTourContent() {
                         <aside className="space-y-6">
                             {/* Trip Summary Card */}
                             <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
-                                <h2 className="text-lg font-semibold mb-4 text-[#FFE5B4]">Trip Summary</h2>
+                                <h2 className="text-lg font-semibold mb-4 text-[#5FCBC4]">Trip Summary</h2>
 
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-[#FFE5B4]/10 flex items-center justify-center">
-                                            <Calendar className="w-5 h-5 text-[#FFE5B4]" />
+                                        <div className="w-10 h-10 rounded-lg bg-[#5FCBC4]/10 flex items-center justify-center">
+                                            <Calendar className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A5ABA3]">Duration</p>
+                                            <p className="text-xs text-[#64748B]">Duration</p>
                                             <p className="font-medium">{itinerary.trip_duration_days} days</p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-[#FFE5B4]/10 flex items-center justify-center">
-                                            <Users className="w-5 h-5 text-[#FFE5B4]" />
+                                        <div className="w-10 h-10 rounded-lg bg-[#5FCBC4]/10 flex items-center justify-center">
+                                            <Users className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A5ABA3]">Travelers</p>
+                                            <p className="text-xs text-[#64748B]">Travelers</p>
                                             <p className="font-medium">{itinerary.guest_count} guests</p>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-lg bg-[#FFE5B4]/10 flex items-center justify-center">
-                                            <DollarSign className="w-5 h-5 text-[#FFE5B4]" />
+                                        <div className="w-10 h-10 rounded-lg bg-[#5FCBC4]/10 flex items-center justify-center">
+                                            <DollarSign className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A5ABA3]">Budget</p>
+                                            <p className="text-xs text-[#64748B]">Budget</p>
                                             <p className="font-medium">${itinerary.budget}</p>
                                         </div>
                                     </div>
@@ -315,7 +315,7 @@ function FullTourContent() {
                                 {/* Status Badge */}
                                 <div className="mt-6 pt-4 border-t border-white/10">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-[#A5ABA3]">Status</span>
+                                        <span className="text-sm text-[#64748B]">Status</span>
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${itinerary.status === "complete"
                                             ? "bg-emerald-500/20 text-emerald-400"
                                             : "bg-amber-500/20 text-amber-400"
@@ -328,13 +328,13 @@ function FullTourContent() {
 
                             {/* Cost Summary (if complete) */}
                             {itinerary.summary && (
-                                <div className="rounded-2xl border border-[#FFE5B4]/20 bg-gradient-to-br from-[#FFE5B4]/10 to-[#FFB56D]/5 p-6">
-                                    <h3 className="text-sm font-semibold mb-4 text-[#FFE5B4]">Cost Breakdown</h3>
+                                <div className="rounded-2xl border border-[#5FCBC4]/20 bg-gradient-to-br from-[#5FCBC4]/10 to-[#4AB8B0]/5 p-6">
+                                    <h3 className="text-sm font-semibold mb-4 text-[#5FCBC4]">Cost Breakdown</h3>
                                     <div className="space-y-3 text-sm">
                                         {itinerary.summary?.flight_total != null || (itinerary.book_flight && itinerary.flights) ? (
                                             <div className="flex justify-between">
-                                                <span className="text-[#A5ABA3]">Tổng giá vé máy bay</span>
-                                                <span className="font-bold text-[#FFE5B4]">
+                                                <span className="text-[#64748B]">Tổng giá vé máy bay</span>
+                                                <span className="font-bold text-[#5FCBC4]">
                                                     {itinerary.summary?.flight_total != null
                                                         ? itinerary.summary.flight_total >= 1000
                                                             ? `${new Intl.NumberFormat("vi-VN").format(itinerary.summary.flight_total)}đ`
@@ -349,20 +349,20 @@ function FullTourContent() {
                                             </div>
                                         ) : null}
                                         <div className="flex justify-between">
-                                            <span className="text-[#A5ABA3]">Total Cost</span>
+                                            <span className="text-[#64748B]">Total Cost</span>
                                             <span className="font-bold text-white">${itinerary.summary.total_cost}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#A5ABA3]">Per Person</span>
+                                            <span className="text-[#64748B]">Per Person</span>
                                             <span className="text-white">${itinerary.summary.cost_per_person}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#A5ABA3]">Per Day (avg)</span>
+                                            <span className="text-[#64748B]">Per Day (avg)</span>
                                             <span className="text-white">${itinerary.summary.avg_cost_per_day}</span>
                                         </div>
                                         <div className="pt-3 mt-3 border-t border-white/10">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-[#A5ABA3]">Budget Used</span>
+                                                <span className="text-[#64748B]">Budget Used</span>
                                                 <span className={`font-bold ${itinerary.summary.budget_utilized_percent > 100
                                                     ? 'text-red-400'
                                                     : 'text-emerald-400'
@@ -374,7 +374,7 @@ function FullTourContent() {
                                                 <div
                                                     className={`h-full rounded-full transition-all ${itinerary.summary.budget_utilized_percent > 100
                                                         ? 'bg-red-400'
-                                                        : 'bg-gradient-to-r from-[#FFE5B4] to-[#FFB56D]'
+                                                        : 'bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0]'
                                                         }`}
                                                     style={{ width: `${Math.min(itinerary.summary.budget_utilized_percent, 100)}%` }}
                                                 />
@@ -390,63 +390,63 @@ function FullTourContent() {
                             {/* Booked Flights (from flights page) */}
                             {itinerary.book_flight && itinerary.flights && (
                                 <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden p-6">
-                                    <h3 className="text-lg font-bold text-[#FFE5B4] mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-bold text-[#5FCBC4] mb-4 flex items-center gap-2">
                                         <span>✈️</span> Booked Flights
                                     </h3>
                                     <div className="grid gap-4 sm:grid-cols-2">
                                         <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                                            <p className="text-xs uppercase tracking-wider text-[#7D837A] mb-2">Departure</p>
+                                            <p className="text-xs uppercase tracking-wider text-[#94A3B8] mb-2">Departure</p>
                                             <p className="font-semibold text-white">{itinerary.flights.selectedDepartureFlight.airline}</p>
-                                            <p className="text-sm text-[#D0D7D8] mt-1">
+                                            <p className="text-sm text-[#475569] mt-1">
                                                 {itinerary.flights.selectedDepartureFlight.departCode} → {itinerary.flights.selectedDepartureFlight.arriveCode}
                                             </p>
-                                            <p className="text-sm text-[#A5ABA3]">
+                                            <p className="text-sm text-[#64748B]">
                                                 {itinerary.flights.selectedDepartureFlight.departTime} – {itinerary.flights.selectedDepartureFlight.arriveTime} · {itinerary.flights.selectedDepartureFlight.duration} · {formatFlightStopLabel(itinerary.flights.selectedDepartureFlight)}
                                             </p>
                                             {itinerary.flights.selectedDepartureFlight.stops && itinerary.flights.selectedDepartureFlight.stops.length > 0 && (
                                                 <div className="mt-3 pt-3 border-t border-white/10">
-                                                    <p className="text-xs text-[#7D837A] mb-1">Quá cảnh</p>
+                                                    <p className="text-xs text-[#94A3B8] mb-1">Quá cảnh</p>
                                                     {itinerary.flights.selectedDepartureFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
-                                                        <div key={i} className="text-xs text-[#A5ABA3] py-1">
-                                                            <span className="font-medium text-[#D0D7D8]">{stop.iata}</span> {stop.name}
+                                                        <div key={i} className="text-xs text-[#64748B] py-1">
+                                                            <span className="font-medium text-[#475569]">{stop.iata}</span> {stop.name}
                                                             <br />
-                                                            <span className="text-[#7D837A]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
+                                                            <span className="text-[#94A3B8]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
                                                             <br />
-                                                            <span className="text-[#7D837A]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
+                                                            <span className="text-[#94A3B8]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
                                                         </div>
                                                     ))}
                                                 </div>
                                             )}
-                                            <p className="mt-2 font-bold text-[#FFE5B4]">
+                                            <p className="mt-2 font-bold text-[#5FCBC4]">
                                                 {itinerary.flights.selectedDepartureFlight.price >= 1000
                                                     ? `${new Intl.NumberFormat("vi-VN").format(itinerary.flights.selectedDepartureFlight.price)}đ`
                                                     : `$${itinerary.flights.selectedDepartureFlight.price}`}
                                             </p>
                                         </div>
                                         <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                                            <p className="text-xs uppercase tracking-wider text-[#7D837A] mb-2">Return</p>
+                                            <p className="text-xs uppercase tracking-wider text-[#94A3B8] mb-2">Return</p>
                                             <p className="font-semibold text-white">{itinerary.flights.selectedReturnFlight.airline}</p>
-                                            <p className="text-sm text-[#D0D7D8] mt-1">
+                                            <p className="text-sm text-[#475569] mt-1">
                                                 {itinerary.flights.selectedReturnFlight.departCode} → {itinerary.flights.selectedReturnFlight.arriveCode}
                                             </p>
-                                            <p className="text-sm text-[#A5ABA3]">
+                                            <p className="text-sm text-[#64748B]">
                                                 {itinerary.flights.selectedReturnFlight.departTime} – {itinerary.flights.selectedReturnFlight.arriveTime} · {itinerary.flights.selectedReturnFlight.duration} · {formatFlightStopLabel(itinerary.flights.selectedReturnFlight)}
                                             </p>
                                             {itinerary.flights.selectedReturnFlight.stops && itinerary.flights.selectedReturnFlight.stops.length > 0 && (
                                                 <div className="mt-3 pt-3 border-t border-white/10">
-                                                    <p className="text-xs text-[#7D837A] mb-1">Quá cảnh</p>
+                                                    <p className="text-xs text-[#94A3B8] mb-1">Quá cảnh</p>
                                                     {itinerary.flights.selectedReturnFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
-                                                        <div key={i} className="text-xs text-[#A5ABA3] py-1">
-                                                            <span className="font-medium text-[#D0D7D8]">{stop.iata}</span> {stop.name}
+                                                        <div key={i} className="text-xs text-[#64748B] py-1">
+                                                            <span className="font-medium text-[#475569]">{stop.iata}</span> {stop.name}
                                                             <br />
-                                                            <span className="text-[#7D837A]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
+                                                            <span className="text-[#94A3B8]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
                                                             <br />
-                                                            <span className="text-[#7D837A]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
+                                                            <span className="text-[#94A3B8]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
                                                         </div>
                                                     ))}
                                                 </div>
                                             )}
-                                            <p className="mt-2 font-bold text-[#FFE5B4]">
+                                            <p className="mt-2 font-bold text-[#5FCBC4]">
                                                 {itinerary.flights.selectedReturnFlight.price >= 1000
                                                     ? `${new Intl.NumberFormat("vi-VN").format(itinerary.flights.selectedReturnFlight.price)}đ`
                                                     : `$${itinerary.flights.selectedReturnFlight.price}`}
@@ -464,28 +464,28 @@ function FullTourContent() {
                                         {/* Day Header - Clickable */}
                                         <button
                                             onClick={() => toggleDay(day.day_number)}
-                                            className="w-full p-6 bg-gradient-to-r from-[#FFE5B4]/20 to-[#FFB56D]/10 border-b border-white/10 hover:from-[#FFE5B4]/30 hover:to-[#FFB56D]/20 transition-all"
+                                            className="w-full p-6 bg-gradient-to-r from-[#5FCBC4]/20 to-[#4AB8B0]/10 border-b border-white/10 hover:from-[#5FCBC4]/30 hover:to-[#4AB8B0]/20 transition-all"
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-4">
                                                     {isExpanded ? (
-                                                        <ChevronDown className="w-5 h-5 text-[#FFE5B4]" />
+                                                        <ChevronDown className="w-5 h-5 text-[#5FCBC4]" />
                                                     ) : (
-                                                        <ChevronUp className="w-5 h-5 text-[#FFE5B4]" />
+                                                        <ChevronUp className="w-5 h-5 text-[#5FCBC4]" />
                                                     )}
                                                     <div className="text-left">
-                                                        <p className="text-sm uppercase tracking-widest text-[#FFE5B4] mb-1">
+                                                        <p className="text-sm uppercase tracking-widest text-[#5FCBC4] mb-1">
                                                             Day {day.day_number}
                                                         </p>
                                                         <h2 className="text-2xl font-bold">{formatDate(day.date)}</h2>
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="text-sm text-[#A5ABA3]">Estimated Cost</p>
-                                                    <p className="text-2xl font-bold text-[#FFE5B4]">${day.day_cost}</p>
+                                                    <p className="text-sm text-[#64748B]">Estimated Cost</p>
+                                                    <p className="text-2xl font-bold text-[#5FCBC4]">${day.day_cost}</p>
                                                 </div>
                                             </div>
-                                            <div className="mt-4 flex gap-4 text-sm text-[#D0D7D8]">
+                                            <div className="mt-4 flex gap-4 text-sm text-[#475569]">
                                                 <span>{day.blocks.length} activities</span>
                                                 <span>•</span>
                                                 <span>Full day planned</span>
@@ -498,7 +498,7 @@ function FullTourContent() {
                                                 {/* Timeline */}
                                                 <div className="relative">
                                                     {/* Timeline Line */}
-                                                    <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#FFE5B4] via-[#FFB56D] to-[#FFE5B4]/20" />
+                                                    <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#5FCBC4] via-[#4AB8B0] to-[#5FCBC4]/20" />
 
                                                     <div className="space-y-6">
                                                         {day.blocks.map((block, idx) => {
@@ -510,8 +510,8 @@ function FullTourContent() {
                                                             return (
                                                                 <div key={blockKey} className="relative pl-16">
                                                                     {/* Timeline Dot */}
-                                                                    <div className="absolute left-6 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-[#FFE5B4] to-[#FFB56D] flex items-center justify-center z-10 ring-4 ring-[#09131A]">
-                                                                        <div className="w-2 h-2 rounded-full bg-[#2B1200]" />
+                                                                    <div className="absolute left-6 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-[#5FCBC4] to-[#4AB8B0] flex items-center justify-center z-10 ring-4 ring-[#E0F7FA]">
+                                                                        <div className="w-2 h-2 rounded-full bg-[#FFFFFF]" />
                                                                     </div>
 
                                                                     {/* Block Card */}
@@ -555,7 +555,7 @@ function FullTourContent() {
                                                                             <div className="mt-4 pt-4 border-t border-white/20">
                                                                                 {isLoading ? (
                                                                                     <div className="flex items-center justify-center py-4">
-                                                                                        <Loader2 className="w-6 h-6 animate-spin text-[#FFE5B4]" />
+                                                                                        <Loader2 className="w-6 h-6 animate-spin text-[#5FCBC4]" />
                                                                                     </div>
                                                                                 ) : details ? (
                                                                                     <div className="space-y-6">
@@ -588,7 +588,7 @@ function FullTourContent() {
                                                                                                                     <div
                                                                                                                         key={idx}
                                                                                                                         className={`rounded-lg overflow-hidden group cursor-pointer transition-all ${currentImageIdx === idx
-                                                                                                                            ? 'ring-2 ring-[#FFE5B4] ring-offset-2 ring-offset-[#09131A]'
+                                                                                                                            ? 'ring-2 ring-[#5FCBC4] ring-offset-2 ring-offset-[#E0F7FA]'
                                                                                                                             : 'opacity-70 hover:opacity-100'
                                                                                                                             }`}
                                                                                                                         onClick={(e) => {
@@ -622,7 +622,7 @@ function FullTourContent() {
                                                                                                             <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
                                                                                                             <span className="font-bold text-amber-400 text-lg">{details.rating}</span>
                                                                                                         </div>
-                                                                                                        <span className="text-sm text-[#A5ABA3]">
+                                                                                                        <span className="text-sm text-[#64748B]">
                                                                                                             ({details.userRatingCount?.toLocaleString() || 0} reviews)
                                                                                                         </span>
                                                                                                     </div>
@@ -644,8 +644,8 @@ function FullTourContent() {
                                                                                         {/* Editorial Summary */}
                                                                                         {details.editorialSummary_text && (
                                                                                             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                                                                                                <h5 className="text-sm font-semibold text-[#FFE5B4] mb-2 uppercase tracking-wide">About</h5>
-                                                                                                <p className="text-sm text-[#D0D7D8] leading-relaxed">
+                                                                                                <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">About</h5>
+                                                                                                <p className="text-sm text-[#475569] leading-relaxed">
                                                                                                     {details.editorialSummary_text}
                                                                                                 </p>
                                                                                             </div>
@@ -654,7 +654,7 @@ function FullTourContent() {
                                                                                         {/* Reviews Section */}
                                                                                         {details.reviews && details.reviews.length > 0 && (
                                                                                             <div className="space-y-3">
-                                                                                                <h5 className="text-sm font-semibold text-[#FFE5B4] uppercase tracking-wide">Recent Reviews</h5>
+                                                                                                <h5 className="text-sm font-semibold text-[#5FCBC4] uppercase tracking-wide">Recent Reviews</h5>
                                                                                                 <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
                                                                                                     {details.reviews.slice(0, 3).map((review, idx) => (
                                                                                                         <div
@@ -675,7 +675,7 @@ function FullTourContent() {
                                                                                                                     )}
                                                                                                                 </div>
                                                                                                                 {review.relativePublishTimeDescription && (
-                                                                                                                    <span className="text-xs text-[#A5ABA3]">
+                                                                                                                    <span className="text-xs text-[#64748B]">
                                                                                                                         {review.relativePublishTimeDescription}
                                                                                                                     </span>
                                                                                                                 )}
@@ -683,7 +683,7 @@ function FullTourContent() {
 
                                                                                                             {/* Review Text */}
                                                                                                             {review.text?.text && (
-                                                                                                                <p className="text-sm text-[#D0D7D8] leading-relaxed line-clamp-4">
+                                                                                                                <p className="text-sm text-[#475569] leading-relaxed line-clamp-4">
                                                                                                                     {review.text.text}
                                                                                                                 </p>
                                                                                                             )}
@@ -694,7 +694,7 @@ function FullTourContent() {
                                                                                         )}
                                                                                     </div>
                                                                                 ) : (
-                                                                                    <p className="text-sm text-[#A5ABA3]">Click to load details...</p>
+                                                                                    <p className="text-sm text-[#64748B]">Click to load details...</p>
                                                                                 )}
                                                                             </div>
                                                                         )}
@@ -727,8 +727,8 @@ function FullTourContent() {
             </main>
 
             {/* Footer */}
-            <footer className="mt-auto border-t border-white/10 bg-[#061017]/80 backdrop-blur py-6">
-                <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#7D837A]">
+            <footer className="mt-auto border-t border-white/10 bg-[#1E293B]/80 backdrop-blur py-6">
+                <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#94A3B8]">
                     © 2025 VietJourney. All rights reserved.
                 </div>
             </footer>
