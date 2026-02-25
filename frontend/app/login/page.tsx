@@ -35,20 +35,20 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7] overflow-hidden">
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B] overflow-hidden">
         {/* Background Layers */}
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(224,247,250,0.9),rgba(240,253,250,0.6)_42%,rgba(236,253,245,0.8))]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(95,203,196,0.08)_0%,rgba(255,255,255,0)_70%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-white/60 via-white/20 to-transparent" />
         </div>
         <div className="w-full max-w-lg z-10">
           {/* Title and Description */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+            <h1 className="text-4xl font-semibold text-[#0F172A]">
               Welcome Back
             </h1>
-            <p className="text-base text-[#A5ABA3] mt-2 max-w-md mx-auto">
+            <p className="text-base text-[#64748B] mt-2 max-w-md mx-auto">
               Sign in to continue your journey
             </p>
           </div>
@@ -56,12 +56,12 @@ export default function LoginPage() {
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-8">
             <div className="grid gap-6">
-              <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-6 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
+              <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 p-6 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10">
                 <div className="mb-6 space-y-2 text-center">
-                  <h2 className="text-lg font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+                  <h2 className="text-lg font-semibold text-[#0F172A]">
                     Sign In
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
+                  <p className="text-sm text-[#64748B]">
                     Enter your credentials to access your account
                   </p>
                 </div>
@@ -71,12 +71,11 @@ export default function LoginPage() {
                   <div className="grid gap-2">
                     <label
                       htmlFor="email"
-                      className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
+                      className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium"
                     >
                       Email
                     </label>
                     <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                       <input
                         tabIndex={1}
                         id="email"
@@ -86,7 +85,7 @@ export default function LoginPage() {
                         required
                         autoComplete="email"
                         placeholder="info@example.com…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                        className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -98,19 +97,18 @@ export default function LoginPage() {
                     <div className="flex items-center">
                       <label
                         htmlFor="password"
-                        className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
+                        className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium"
                       >
                         Password
                       </label>
                       <Link
                         href="/reset-password"
-                        className="ml-auto text-xs text-[#7EE0FF] transition hover:text-[#FFE5B4] underline decoration-[#7EE0FF]/30 underline-offset-4 hover:decoration-[#FFE5B4]/50"
+                        className="ml-auto text-xs text-[#5FCBC4] transition hover:text-[#4AB8B0] underline decoration-[#5FCBC4]/30 underline-offset-4 hover:decoration-[#4AB8B0]/50"
                       >
                         Forgot password?
                       </Link>
                     </div>
                     <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                       <input
                         tabIndex={2}
                         id="password"
@@ -119,14 +117,14 @@ export default function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         // required
                         placeholder="Enter your password…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                        className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 pr-12 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                       />
                       {password && (
                         <button
                           key="password-toggle"
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#B6C2C6] hover:text-[#FFE5B4] transition-colors focus:outline-none z-10"
+                          className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#5FCBC4] transition-colors focus:outline-none z-10"
                           aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                           {showPassword ? (
@@ -140,7 +138,7 @@ export default function LoginPage() {
                   </div>
 
                   {/* Remember Me Checkbox */}
-                  <div className="flex items-center space-x-3 rounded-2xl border border-white/15 bg-[rgba(7,20,28,0.68)] p-3">
+                  <div className="flex items-center space-x-3 rounded-2xl border border-gray-100 bg-[#F8FFFE] p-3">
                     <div className="relative">
                       <input
                         tabIndex={3}
@@ -148,13 +146,13 @@ export default function LoginPage() {
                         type="checkbox"
                         checked={remember}
                         onChange={(e) => setRemember(e.target.checked)}
-                        className="peer size-4 shrink-0 rounded-[4px] border border-[#FFE5B4]/70 bg-transparent checked:bg-[#FFE5B4] checked:border-[#FFE5B4] focus:outline-none focus:ring-2 focus:ring-[#FFE5B4]/50 focus:ring-offset-2 focus:ring-offset-[#0A1820] transition-all cursor-pointer appearance-none"
+                        className="peer size-4 shrink-0 rounded-[4px] border border-[#5FCBC4]/70 bg-transparent checked:bg-[#5FCBC4] checked:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/50 focus:ring-offset-2 focus:ring-offset-white transition-all cursor-pointer appearance-none"
                       />
-                      <CheckIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-3 text-[#0A1820] pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" />
+                      <CheckIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" />
                     </div>
                     <label
                       htmlFor="remember"
-                      className="text-sm text-[#11d4ee] cursor-pointer select-none"
+                      className="text-sm text-[#5FCBC4] cursor-pointer select-none"
                     >
                       Keep me logged in
                     </label>
@@ -163,19 +161,12 @@ export default function LoginPage() {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.04] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFEED0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-[#5FCBC4] text-sm font-semibold text-white shadow-lg shadow-[#5FCBC4]/30 transition-all hover:bg-[#4AB8B0] hover:shadow-xl hover:shadow-[#5FCBC4]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/80 focus-visible:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:bg-[#5FCBC4]"
                     disabled={isLoading}
                   >
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    >
-                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
-                      <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
-                    </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#2B1200] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
+                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em]">
                       {isLoading && (
-                        <LoaderCircle className="h-4 w-4 animate-spin text-[#2B1200]" />
+                        <LoaderCircle className="h-4 w-4 animate-spin" />
                       )}
                       Sign In
                     </span>
@@ -184,8 +175,8 @@ export default function LoginPage() {
               </div>
 
               {/* Register Card */}
-              <div className="rounded-3xl border border-white/15 bg-[rgba(8,23,31,0.75)] p-6 text-center text-sm text-[#D0D7D8] backdrop-blur-2xl shadow-[0_28px_90px_-55px_rgba(0,0,0,0.62)]">
-                <p className="mb-3 text-xs uppercase tracking-[0.25em] text-[#FFE5B4]">
+              <div className="rounded-3xl border border-[#5FCBC4]/15 bg-white/80 p-6 text-center text-sm text-[#64748B] backdrop-blur-2xl shadow-md">
+                <p className="mb-3 text-xs uppercase tracking-[0.25em] text-[#5FCBC4] font-medium">
                   New Here?
                 </p>
                 <p className="mb-4 text-sm">
@@ -193,7 +184,7 @@ export default function LoginPage() {
                 </p>
                 <Link
                   href="/register"
-                  className="inline-flex items-center gap-2 text-sm text-[#7EE0FF] transition hover:text-[#FFE5B4] underline decoration-[#7EE0FF]/30 underline-offset-4 hover:decoration-[#FFE5B4]/50"
+                  className="inline-flex items-center gap-2 text-sm text-[#5FCBC4] transition hover:text-[#4AB8B0] underline decoration-[#5FCBC4]/30 underline-offset-4 hover:decoration-[#4AB8B0]/50"
                 >
                   Create Account
                   <span aria-hidden>→</span>
