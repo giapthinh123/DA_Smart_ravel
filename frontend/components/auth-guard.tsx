@@ -71,10 +71,10 @@ export function AuthGuard({
   // Show loading state while waiting for hydration
   if (!hasHydrated) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FFE5B4] mx-auto"></div>
-          <p className="mt-4 text-[#F6F1E7]">Đang tải...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5FCBC4] mx-auto"></div>
+          <p className="mt-4 text-[#1E293B]">Đang tải...</p>
         </div>
       </div>
     )

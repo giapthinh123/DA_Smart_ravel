@@ -152,7 +152,7 @@ export default function JourneyBuilder() {
         onClick={handleSubmit}
         disabled={isLoading}
         className={cn(
-          "h-12 w-full rounded-xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_20px_60px_-20px_rgba(255,186,102,0.85)] transition-all",
+          "h-12 w-full rounded-xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-sm font-semibold text-[#FFFFFF] shadow-[0_20px_60px_-20px_rgba(255,186,102,0.85)] transition-all",
           isLoading ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] hover:shadow-[0_20px_70px_-20px_rgba(255,186,102,0.95)]"
         )}
       >
@@ -188,13 +188,13 @@ export default function JourneyBuilder() {
           {/* Card 1: Route & Schedule */}
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur travel-search__card">
             <div className="mb-6">
-              <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#FFE5B4]">
+              <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
                 Chapter 01
               </p>
               <h3 className="text-2xl font-semibold text-white">
                 Route & preferred schedule
               </h3>
-              <p className="mt-2 text-sm text-[#D0D7D8]">
+              <p className="mt-2 text-sm text-[#475569]">
                 We connect every crafted stop while balancing each moment across your stay.
               </p>
             </div>
@@ -303,13 +303,13 @@ export default function JourneyBuilder() {
           {/* Card 2: Budget & Travelers */}
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur travel-search__card">
             <div className="mb-6">
-              <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#FFE5B4]">
+              <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
                 Chapter 02
               </p>
               <h3 className="text-2xl font-semibold text-white">
                 Investment & travel party
               </h3>
-              <p className="mt-2 text-sm text-[#D0D7D8]">
+              <p className="mt-2 text-sm text-[#475569]">
                 Refine the planned investment and company so every service feels personal.
               </p>
             </div>
@@ -344,7 +344,7 @@ export default function JourneyBuilder() {
                       onClick={() => setIsGuestOpen(!isGuestOpen)}
                       className="guest-selector__trigger"
                     >
-                      <span className={dataBuildTour.adults + dataBuildTour.children === 0 ? "text-[#B6C2C6]" : "text-white"}>
+                      <span className={dataBuildTour.adults + dataBuildTour.children === 0 ? "text-[#94A3B8]" : "text-white"}>
                         {renderGuestLabel()}
                       </span>
                       <svg

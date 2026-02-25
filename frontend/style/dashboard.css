@@ -29,9 +29,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   justify-content: space-between;
   padding: 0.85rem 1.1rem;
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(9, 19, 26, 0.6);
-  color: #f4f8f9;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(248, 255, 254, 0.6);
+  color: #1E293B;
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -41,8 +41,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .guest-selector__trigger:hover,
 .guest-selector__trigger:focus {
-  border-color: rgba(255, 229, 180, 0.55);
-  background: rgba(16, 34, 44, 0.72);
+  border-color: rgba(95, 203, 196, 0.55);
+  background: rgba(245, 253, 252, 0.72);
 }
 
 .guest-counter-panel {
@@ -53,10 +53,10 @@ input[type="password"]::-webkit-textfield-decoration-container {
   max-width: 369px;
   width: min(320px, 100%);
   box-sizing: content-box;
-  background: rgba(8, 22, 31, 0.92);
+  background: rgba(248, 255, 254, 0.92);
   border-radius: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 35px 80px -25px rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 35px 80px -25px rgba(0, 0, 0, 0.06);
   padding: 1.25rem;
   z-index: 20;
   backdrop-filter: blur(18px);
@@ -67,7 +67,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .counter-row:last-of-type {
@@ -78,7 +78,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  color: #f4f7f9;
+  color: #1E293B;
 }
 
 .counter-label strong {
@@ -88,7 +88,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .counter-label span {
   font-size: 0.85rem;
-  color: rgba(216, 230, 236, 0.72);
+  color: rgba(100, 116, 139, 0.72);
 }
 
 .counter-buttons {
@@ -101,9 +101,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(21, 38, 48, 0.85);
-  color: #fef7eb;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(238, 248, 247, 0.85);
+  color: #1E293B;
   font-size: 1.25rem;
   display: flex;
   align-items: center;
@@ -113,8 +113,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .counter-buttons button:hover:not(:disabled) {
-  border-color: rgba(255, 229, 180, 0.6);
-  background: rgba(32, 52, 64, 0.9);
+  border-color: rgba(95, 203, 196, 0.6);
+  background: rgba(235, 245, 244, 0.9);
 }
 
 .counter-buttons button:disabled {
@@ -123,7 +123,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .counter-buttons span {
-  color: #f4f7f9;
+  color: #1E293B;
   font-weight: 600;
   min-width: 1.75rem;
   text-align: center;
@@ -135,8 +135,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   padding: 0.85rem;
   border-radius: 1rem;
   border: none;
-  background: linear-gradient(135deg, #ffe4c4 0%, #f4b973 100%);
-  color: #102024;
+  background: linear-gradient(135deg, #5FCBC4 0%, #4AB8B0 100%);
+  color: #FFFFFF;
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -146,11 +146,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .done-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 18px 35px -22px rgba(255, 206, 153, 0.65);
+  box-shadow: 0 18px 35px -22px rgba(74, 184, 176, 0.65);
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 
@@ -177,14 +177,14 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .navbar.glass {
-  background: rgba(10, 22, 29, 0.55);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 24px 60px -45px rgba(0, 0, 0, 0.75);
+  background: rgba(245, 253, 252, 0.55);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 24px 60px -45px rgba(0, 0, 0, 0.08);
 }
 
 .navbar.solid {
   background: rgba(249, 250, 251, 0.95);
-  color: #0b1720;
+  color: #0F172A;
 }
 
 .navbar__inner {
@@ -209,13 +209,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
   text-transform: uppercase;
   font-size: 0.65rem;
   letter-spacing: 0.38em;
-  color: rgba(255, 229, 180, 0.8);
+  color: rgba(95, 203, 196, 0.8);
 }
 
 .navbar__brand-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #f7f2e5;
+  color: #1E293B;
 }
 
 .navbar__links {
@@ -226,7 +226,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .navbar__link {
   position: relative;
-  color: rgba(235, 243, 247, 0.82);
+  color: rgba(71, 85, 105, 0.82);
   font-size: 0.9rem;
   font-weight: 500;
   text-decoration: none;
@@ -241,7 +241,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   bottom: -0.35rem;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #ffe5b4 0%, transparent 100%);
+  background: linear-gradient(90deg, #5FCBC4 0%, transparent 100%);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.25s ease;
@@ -249,7 +249,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .navbar__link:hover,
 .navbar__link:focus {
-  color: #ffe6bc;
+  color: #5FCBC4;
 }
 
 .navbar__link:hover::after,
@@ -270,7 +270,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .navbar__auth-link {
-  color: rgba(226, 236, 240, 0.85);
+  color: rgba(100, 116, 139, 0.85);
   text-decoration: none;
   font-weight: 500;
   font-size: 0.9rem;
@@ -282,8 +282,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.4rem;
   padding: 0.6rem 1.1rem;
   border-radius: 999px;
-  background: linear-gradient(135deg, #ffe4c4 0%, #f4b973 100%);
-  color: #102024;
+  background: linear-gradient(135deg, #5FCBC4 0%, #4AB8B0 100%);
+  color: #FFFFFF;
   font-weight: 600;
   font-size: 0.9rem;
   text-decoration: none;
@@ -292,7 +292,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .navbar__auth-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 30px -20px rgba(255, 206, 153, 0.65);
+  box-shadow: 0 18px 30px -20px rgba(74, 184, 176, 0.65);
 }
 
 .navbar__user {
@@ -301,23 +301,23 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.65rem;
   padding: 0.55rem 0.9rem;
   border-radius: 999px;
-  background: rgba(12, 26, 34, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f6f8f9;
+  background: rgba(240, 250, 249, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #1E293B;
   font-weight: 500;
   transition: border 0.2s ease, background 0.2s ease;
 }
 
 .navbar__user:hover {
-  border-color: rgba(255, 229, 180, 0.45);
-  background: rgba(20, 37, 48, 0.72);
+  border-color: rgba(95, 203, 196, 0.45);
+  background: rgba(238, 248, 247, 0.72);
 }
 
 .navbar__user-avatar {
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 999px;
-  background: rgba(255, 229, 180, 0.18);
+  background: rgba(95, 203, 196, 0.18);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -334,9 +334,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   right: 0;
   width: 200px;
   border-radius: 1rem;
-  background: rgba(12, 24, 31, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 32px 80px -24px rgba(0, 0, 0, 0.55);
+  background: rgba(240, 250, 249, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 32px 80px -24px rgba(0, 0, 0, 0.05);
   padding: 0.75rem;
   display: none;
   backdrop-filter: blur(14px);
@@ -353,7 +353,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   width: 100%;
   padding: 0.6rem 0.75rem;
   border-radius: 0.75rem;
-  color: rgba(235, 243, 247, 0.85);
+  color: rgba(71, 85, 105, 0.85);
   text-decoration: none;
   font-size: 0.9rem;
   text-align: left;
@@ -364,8 +364,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .auth-dropdown-content a:hover,
 .auth-dropdown__logout:hover {
-  background: rgba(255, 229, 180, 0.12);
-  color: #ffe6bc;
+  background: rgba(95, 203, 196, 0.12);
+  color: #5FCBC4;
 }
 
 /* Hero -------------------------------------------------------------------- */
@@ -394,31 +394,31 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-self: flex-start;
   padding: 0.5rem 1.1rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.45);
-  background: rgba(24, 39, 47, 0.6);
+  border: 1px solid rgba(95, 203, 196, 0.45);
+  background: rgba(238, 248, 247, 0.6);
   font-size: 0.65rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.85);
+  color: rgba(95, 203, 196, 0.85);
 }
 
 .dashboard-hero__title {
   font-size: clamp(2.65rem, 4vw, 3.5rem);
   line-height: 1.1;
   font-weight: 600;
-  color: #f8f1e6;
+  color: #1E293B;
   max-width: 620px;
 }
 
 .dashboard-hero__title-accent {
   display: inline-block;
-  color: #ffe6bc;
-  text-shadow: 0 0 20px rgba(255, 214, 153, 0.45);
+  color: #5FCBC4;
+  text-shadow: 0 0 20px rgba(95, 203, 196, 0.45);
 }
 
 .dashboard-hero__subtitle {
   max-width: 540px;
-  color: rgba(221, 233, 237, 0.78);
+  color: rgba(100, 116, 139, 0.78);
   font-size: 1rem;
   line-height: 1.7;
 }
@@ -444,9 +444,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-hero__cta--primary {
-  background: linear-gradient(135deg, #ffe4c4 0%, #f4b973 100%);
-  color: #102024;
-  box-shadow: 0 20px 45px -28px rgba(255, 206, 153, 0.75);
+  background: linear-gradient(135deg, #5FCBC4 0%, #4AB8B0 100%);
+  color: #FFFFFF;
+  box-shadow: 0 20px 45px -28px rgba(74, 184, 176, 0.75);
 }
 
 .dashboard-hero__cta--primary:hover {
@@ -454,13 +454,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-hero__cta--ghost {
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: rgba(235, 243, 247, 0.85);
-  background: rgba(17, 35, 45, 0.55);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: rgba(71, 85, 105, 0.85);
+  background: rgba(240, 250, 249, 0.55);
 }
 
 .dashboard-hero__cta--ghost:hover {
-  border-color: rgba(255, 229, 180, 0.45);
+  border-color: rgba(95, 203, 196, 0.45);
 }
 
 .dashboard-hero__stats {
@@ -473,16 +473,16 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: relative;
   padding: 1.2rem;
   border-radius: 1.4rem;
-  background: rgba(17, 34, 44, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 24px 60px -35px rgba(0, 0, 0, 0.6);
+  background: rgba(240, 250, 249, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 24px 60px -35px rgba(0, 0, 0, 0.06);
   backdrop-filter: blur(16px);
 }
 
 .dashboard-hero__stat-value {
   font-size: 1.75rem;
   font-weight: 600;
-  color: #ffe6bc;
+  color: #5FCBC4;
 }
 
 .dashboard-hero__stat-label {
@@ -491,7 +491,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.75rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(225, 236, 240, 0.72);
+  color: rgba(100, 116, 139, 0.72);
 }
 
 .dashboard-hero__visual {
@@ -501,7 +501,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-hero__visual-glow {
   position: absolute;
   inset: -4% 0% -8% -8%;
-  background: radial-gradient(circle at 20% 20%, rgba(255, 231, 193, 0.32), transparent 65%);
+  background: radial-gradient(circle at 20% 20%, rgba(95, 203, 196, 0.32), transparent 65%);
   filter: blur(38px);
   opacity: 0.55;
 }
@@ -510,9 +510,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: relative;
   overflow: hidden;
   border-radius: 2.1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(14, 29, 38, 0.82);
-  box-shadow: 0 35px 90px -45px rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(240, 250, 249, 0.82);
+  box-shadow: 0 35px 90px -45px rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(18px);
 }
 
@@ -543,7 +543,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.8rem;
   letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.85);
+  color: rgba(95, 203, 196, 0.85);
 }
 
 .dashboard-hero__visual-list {
@@ -553,14 +553,14 @@ input[type="password"]::-webkit-textfield-decoration-container {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  color: rgba(227, 237, 241, 0.85);
+  color: rgba(100, 116, 139, 0.85);
   font-size: 0.92rem;
 }
 
 .dashboard-hero__visual-list li::before {
   content: '✦';
   margin-right: 0.65rem;
-  color: rgba(255, 229, 180, 0.75);
+  color: rgba(95, 203, 196, 0.75);
 }
 
 /* Search section --------------------------------------------------------- */
@@ -573,7 +573,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: absolute;
   inset: auto 10% -30% 10%;
   height: 320px;
-  background: radial-gradient(circle, rgba(144, 224, 255, 0.15), transparent 70%);
+  background: radial-gradient(circle, rgba(95, 203, 196, 0.15), transparent 70%);
   filter: blur(55px);
   opacity: 0.65;
   z-index: 0;
@@ -585,9 +585,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   margin: 0 auto;
   padding: 2rem 2.25rem;
   border-radius: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(13, 26, 36, 0.78);
-  box-shadow: 0 42px 120px -55px rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(240, 250, 249, 0.78);
+  box-shadow: 0 42px 120px -55px rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(22px);
   z-index: 1;
 }
@@ -600,9 +600,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: absolute;
   inset: -55% 5% -55% 5%;
   background:
-    radial-gradient(circle at 15% 20%, rgba(255, 231, 193, 0.25), transparent 65%),
-    radial-gradient(circle at 80% 15%, rgba(151, 206, 255, 0.18), transparent 70%),
-    radial-gradient(circle at 50% 80%, rgba(255, 206, 153, 0.2), transparent 65%);
+    radial-gradient(circle at 15% 20%, rgba(95, 203, 196, 0.25), transparent 65%),
+    radial-gradient(circle at 80% 15%, rgba(95, 203, 196, 0.18), transparent 70%),
+    radial-gradient(circle at 50% 80%, rgba(74, 184, 176, 0.2), transparent 65%);
   filter: blur(75px);
   opacity: 0.55;
   z-index: -1;
@@ -615,11 +615,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 2.75rem;
   padding: 2.75rem 2.5rem;
   border-radius: 2.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  /* background: rgba(9, 20, 27, 0.88); */
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  /* background: rgba(248, 255, 254, 0.88); */
   box-shadow:
-    0 45px 120px -60px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 45px 120px -60px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.2);
   backdrop-filter: blur(30px);
 }
 
@@ -634,12 +634,12 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-self: flex-start;
   padding: 0.55rem 1.2rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.42);
-  background: rgba(19, 36, 47, 0.85);
+  border: 1px solid rgba(95, 203, 196, 0.42);
+  background: rgba(240, 250, 249, 0.85);
   font-size: 0.68rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.88);
+  color: rgba(95, 203, 196, 0.88);
 }
 
 .travel-search__title {
@@ -648,13 +648,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-weight: 500;
   color: #ffffff;
   line-height: 1.08;
-  text-shadow: 0 0 24px rgba(255, 229, 180, 0.15);
+  text-shadow: 0 0 24px rgba(95, 203, 196, 0.15);
 }
 
 .travel-search__subtitle {
   font-size: 1rem;
   line-height: 1.75;
-  color: rgba(218, 232, 236, 0.82);
+  color: rgba(100, 116, 139, 0.82);
   max-width: 560px;
 }
 
@@ -671,22 +671,22 @@ input[type="password"]::-webkit-textfield-decoration-container {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  background: linear-gradient(145deg, rgba(14, 32, 43, 0.92) 0%, rgba(10, 24, 33, 0.82) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(145deg, rgba(240, 250, 249, 0.92) 0%, rgba(245, 253, 252, 0.82) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.15);
   box-shadow:
-    0 35px 110px -65px rgba(0, 0, 0, 0.85),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 35px 110px -65px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(148, 163, 184, 0.1);
   backdrop-filter: blur(24px);
 }
 
 .travel-search__card--primary {
-  background: linear-gradient(155deg, rgba(17, 38, 50, 0.9) 0%, rgba(10, 24, 33, 0.78) 100%);
-  border: 1px solid rgba(255, 229, 180, 0.08);
+  background: linear-gradient(155deg, rgba(240, 250, 249, 0.9) 0%, rgba(245, 253, 252, 0.78) 100%);
+  border: 1px solid rgba(95, 203, 196, 0.08);
 }
 
 .travel-search__card--secondary {
-  background: linear-gradient(150deg, rgba(14, 30, 39, 0.88) 0%, rgba(9, 21, 29, 0.76) 100%);
-  border: 1px solid rgba(151, 206, 255, 0.12);
+  background: linear-gradient(150deg, rgba(240, 250, 249, 0.88) 0%, rgba(9, 21, 29, 0.76) 100%);
+  border: 1px solid rgba(95, 203, 196, 0.12);
 }
 
 .travel-search__card::after {
@@ -696,7 +696,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   border-radius: inherit;
   pointer-events: none;
   border: 1px solid transparent;
-  background: linear-gradient(120deg, rgba(255, 229, 180, 0.18), rgba(151, 206, 255, 0.12)) border-box;
+  background: linear-gradient(120deg, rgba(95, 203, 196, 0.18), rgba(95, 203, 196, 0.12)) border-box;
   -webkit-mask:
     linear-gradient(#fff 0 0) padding-box,
     linear-gradient(#fff 0 0);
@@ -715,19 +715,19 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.7rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.75);
+  color: rgba(95, 203, 196, 0.75);
 }
 
 .travel-search__card-header h3 {
   font-size: 1.35rem;
   font-weight: 600;
-  color: #f4fbff;
+  color: #1E293B;
 }
 
 .travel-search__card-header p {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: rgba(209, 222, 229, 0.78);
+  color: rgba(100, 116, 139, 0.78);
   max-width: 440px;
 }
 
@@ -775,9 +775,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 1rem;
   padding: 1.05rem 1.2rem;
   border-radius: 1.35rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(17, 33, 44, 0.55);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: rgba(240, 250, 249, 0.55);
+  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.1);
 }
 
 .travel-search__meta-label {
@@ -785,13 +785,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.72rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: rgba(198, 214, 222, 0.68);
+  color: rgba(148, 163, 184, 0.68);
 }
 
 .travel-search__meta-value {
   margin-top: 0.4rem;
   font-size: 0.95rem;
-  color: #f8fcff;
+  color: #0F172A;
   font-weight: 500;
 }
 
@@ -802,17 +802,17 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 1.5rem;
   padding: 1.65rem 1.75rem;
   border-radius: 1.45rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(135deg, rgba(17, 34, 44, 0.92) 0%, rgba(26, 45, 58, 0.78) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: linear-gradient(135deg, rgba(240, 250, 249, 0.92) 0%, rgba(238, 248, 247, 0.78) 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 24px 60px -30px rgba(0, 0, 0, 0.55);
+    inset 0 1px 0 rgba(148, 163, 184, 0.1),
+    0 24px 60px -30px rgba(0, 0, 0, 0.05);
 }
 
 .travel-search__cta-text p {
   font-size: 0.95rem;
   line-height: 1.65;
-  color: rgba(214, 226, 232, 0.78);
+  color: rgba(100, 116, 139, 0.78);
   max-width: 420px;
 }
 
@@ -820,41 +820,41 @@ input[type="password"]::-webkit-textfield-decoration-container {
   min-width: 220px;
   font-size: 0.92rem;
   padding: 0.95rem 1.9rem;
-  background: linear-gradient(120deg, #ffe4c4, #f4b973);
-  color: #0f1f26;
+  background: linear-gradient(120deg, #5FCBC4, #4AB8B0);
+  color: #0F172A;
   border-radius: 1.15rem;
-  box-shadow: 0 22px 45px -25px rgba(255, 206, 153, 0.75);
+  box-shadow: 0 22px 45px -25px rgba(74, 184, 176, 0.75);
 }
 
 .travel-search__button:hover {
-  box-shadow: 0 28px 55px -25px rgba(255, 206, 153, 0.85);
+  box-shadow: 0 28px 55px -25px rgba(74, 184, 176, 0.85);
 }
 
 .travel-search__card .dashboard-form__prime .p-inputtext,
 .travel-search__card .dashboard-form__prime .p-dropdown,
 .travel-search__card .dashboard-form__prime .p-inputtext:enabled,
 .travel-search__card .dashboard-form__prime .p-dropdown:enabled {
-  background: rgba(15, 31, 41, 0.82) !important;
-  border-color: rgba(255, 229, 180, 0.18) !important;
+  background: rgba(240, 250, 249, 0.82) !important;
+  border-color: rgba(95, 203, 196, 0.18) !important;
 }
 
 .travel-search__card .dashboard-form__prime .p-inputtext:focus,
 .travel-search__card .dashboard-form__prime .p-dropdown:not(.p-disabled):hover,
 .travel-search__card .dashboard-form__prime .p-dropdown.p-focus {
-  border-color: rgba(255, 229, 180, 0.55) !important;
-  box-shadow: 0 0 0 3px rgba(255, 229, 180, 0.22) !important;
-  background: rgba(19, 38, 50, 0.92) !important;
+  border-color: rgba(95, 203, 196, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(95, 203, 196, 0.22) !important;
+  background: rgba(240, 250, 249, 0.92) !important;
 }
 
 .travel-search__grid--balanced .guest-selector__trigger {
-  border-color: rgba(255, 229, 180, 0.2);
-  background: rgba(15, 31, 41, 0.82);
+  border-color: rgba(95, 203, 196, 0.2);
+  background: rgba(240, 250, 249, 0.82);
 }
 
 .travel-search__grid--balanced .guest-selector__trigger:hover,
 .travel-search__grid--balanced .guest-selector__trigger:focus {
-  border-color: rgba(255, 229, 180, 0.45);
-  background: rgba(20, 40, 53, 0.88);
+  border-color: rgba(95, 203, 196, 0.45);
+  background: rgba(238, 248, 247, 0.88);
 }
 
 @media (max-width: 1024px) {
@@ -922,29 +922,29 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.9rem;
   padding: 1rem 1.15rem;
   border-radius: 1.3rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(17, 32, 40, 0.55);
-  color: rgba(229, 239, 243, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(240, 250, 249, 0.55);
+  color: rgba(71, 85, 105, 0.75);
   text-align: left;
   transition: all 0.25s ease;
 }
 
 .dashboard-tab:hover,
 .dashboard-tab:focus-visible {
-  border-color: rgba(255, 229, 180, 0.35);
-  color: rgba(255, 229, 180, 0.9);
+  border-color: rgba(95, 203, 196, 0.35);
+  color: rgba(95, 203, 196, 0.9);
 }
 
 .dashboard-tab--active {
-  background: rgba(23, 44, 56, 0.75);
-  border-color: rgba(255, 229, 180, 0.45);
-  color: rgba(255, 229, 180, 0.95);
-  box-shadow: 0 28px 70px -45px rgba(255, 210, 155, 0.55);
+  background: rgba(238, 248, 247, 0.75);
+  border-color: rgba(95, 203, 196, 0.45);
+  color: rgba(95, 203, 196, 0.95);
+  box-shadow: 0 28px 70px -45px rgba(95, 203, 196, 0.55);
 }
 
 .dashboard-tab__icon {
   font-size: 1.35rem;
-  color: rgba(255, 229, 180, 0.8);
+  color: rgba(95, 203, 196, 0.8);
 }
 
 .dashboard-tab__label {
@@ -957,21 +957,21 @@ input[type="password"]::-webkit-textfield-decoration-container {
   display: block;
   margin-top: 0.35rem;
   font-size: 0.8rem;
-  color: rgba(218, 232, 236, 0.68);
+  color: rgba(100, 116, 139, 0.68);
 }
 
 .dashboard-search__panel {
   border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   padding: 1.75rem;
-  background: rgba(9, 21, 30, 0.78);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: rgba(245, 253, 252, 0.78);
+  box-shadow: inset 0 1px 0 rgba(148, 163, 184, 0.2);
 }
 
 .dashboard-placeholder {
   text-align: center;
   padding: 3.5rem 1rem;
-  color: rgba(227, 238, 242, 0.78);
+  color: rgba(100, 116, 139, 0.78);
   display: grid;
   gap: 1rem;
 }
@@ -982,11 +982,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   margin: 0 auto;
   padding: 3rem 2.5rem;
   border-radius: 2.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   background: rgba(10, 22, 30, 0.82);
   box-shadow:
-    0 42px 120px -62px rgba(0, 0, 0, 0.78),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 42px 120px -62px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.15);
   backdrop-filter: blur(32px);
   overflow: hidden;
 }
@@ -995,9 +995,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: absolute;
   inset: -55% 0 -65% 0;
   background:
-    radial-gradient(circle at 15% 20%, rgba(255, 231, 193, 0.28), transparent 65%),
-    radial-gradient(circle at 80% 15%, rgba(151, 206, 255, 0.18), transparent 70%),
-    radial-gradient(circle at 50% 85%, rgba(255, 194, 140, 0.2), transparent 60%);
+    radial-gradient(circle at 15% 20%, rgba(95, 203, 196, 0.28), transparent 65%),
+    radial-gradient(circle at 80% 15%, rgba(95, 203, 196, 0.18), transparent 70%),
+    radial-gradient(circle at 50% 85%, rgba(74, 184, 176, 0.2), transparent 60%);
   filter: blur(80px);
   opacity: 0.55;
   pointer-events: none;
@@ -1016,28 +1016,28 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-self: flex-start;
   padding: 0.55rem 1.2rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.45);
-  background: rgba(22, 40, 51, 0.86);
+  border: 1px solid rgba(95, 203, 196, 0.45);
+  background: rgba(238, 248, 247, 0.86);
   font-size: 0.68rem;
   letter-spacing: 0.36em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.92);
+  color: rgba(95, 203, 196, 0.92);
 }
 
 .dashboard-journey__titles h2 {
   font-family: 'Playfair Display', 'DM Serif Display', serif;
   font-size: clamp(2.15rem, 3.6vw, 3rem);
   font-weight: 500;
-  color: #f9f5ec;
+  color: #0F172A;
   line-height: 1.12;
-  text-shadow: 0 0 24px rgba(255, 229, 180, 0.18);
+  text-shadow: 0 0 24px rgba(95, 203, 196, 0.18);
   margin-bottom: 0.65rem;
 }
 
 .dashboard-journey__titles p {
   font-size: 1rem;
   line-height: 1.8;
-  color: rgba(213, 225, 232, 0.82);
+  color: rgba(100, 116, 139, 0.82);
   max-width: 620px;
 }
 
@@ -1058,11 +1058,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: relative;
   padding: 2rem;
   border-radius: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(155deg, rgba(17, 38, 50, 0.92) 0%, rgba(12, 29, 39, 0.78) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: linear-gradient(155deg, rgba(240, 250, 249, 0.92) 0%, rgba(240, 250, 249, 0.78) 100%);
   box-shadow:
-    0 36px 80px -58px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 36px 80px -58px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.1);
   display: grid;
   gap: 1.1rem;
 }
@@ -1073,7 +1073,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  border: 1px solid rgba(255, 229, 180, 0.1);
+  border: 1px solid rgba(95, 203, 196, 0.1);
 }
 
 .dashboard-journey__milestone-index {
@@ -1083,8 +1083,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   width: 50px;
   height: 50px;
   border-radius: 16px;
-  background: rgba(255, 229, 180, 0.18);
-  color: rgba(255, 229, 180, 0.88);
+  background: rgba(95, 203, 196, 0.18);
+  color: rgba(95, 203, 196, 0.88);
   font-weight: 600;
   font-size: 1.1rem;
 }
@@ -1092,13 +1092,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-journey__milestone-body h3 {
   font-size: 1.28rem;
   font-weight: 600;
-  color: #f5f2e9;
+  color: #1E293B;
   margin-bottom: 0.5rem;
 }
 
 .dashboard-journey__milestone-body p {
   font-size: 0.98rem;
-  color: rgba(216, 228, 233, 0.78);
+  color: rgba(100, 116, 139, 0.78);
   margin-bottom: 1rem;
   line-height: 1.7;
 }
@@ -1106,7 +1106,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-journey__milestone-body ul {
   display: grid;
   gap: 0.6rem;
-  color: rgba(207, 220, 227, 0.75);
+  color: rgba(148, 163, 184, 0.75);
   font-size: 0.92rem;
 }
 
@@ -1118,7 +1118,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-journey__milestone-body li::before {
   content: '✦';
-  color: rgba(255, 229, 180, 0.85);
+  color: rgba(95, 203, 196, 0.85);
   font-size: 0.7rem;
   margin-top: 0.35rem;
 }
@@ -1127,11 +1127,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: relative;
   padding: 2.1rem;
   border-radius: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(160deg, rgba(14, 32, 43, 0.9) 0%, rgba(8, 22, 31, 0.78) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: linear-gradient(160deg, rgba(240, 250, 249, 0.9) 0%, rgba(248, 255, 254, 0.78) 100%);
   box-shadow:
-    0 30px 72px -50px rgba(0, 0, 0, 0.78),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 30px 72px -50px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.1);
   display: grid;
   gap: 1.6rem;
 }
@@ -1159,9 +1159,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   width: 42px;
   height: 42px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 229, 180, 0.26);
-  background: rgba(255, 229, 180, 0.14);
-  color: rgba(255, 229, 180, 0.92);
+  border: 1px solid rgba(95, 203, 196, 0.26);
+  background: rgba(95, 203, 196, 0.14);
+  color: rgba(95, 203, 196, 0.92);
   display: grid;
   place-items: center;
   font-weight: 600;
@@ -1169,14 +1169,14 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-journey__timeline-copy h5 {
   font-size: 1rem;
-  color: #f4f0e7;
+  color: #1E293B;
   margin-bottom: 0.35rem;
 }
 
 .dashboard-journey__timeline-copy p {
   font-size: 0.92rem;
   line-height: 1.6;
-  color: rgba(208, 222, 229, 0.75);
+  color: rgba(100, 116, 139, 0.75);
 }
 
 @media (max-width: 1024px) {
@@ -1212,11 +1212,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   margin: 0 auto;
   padding: 3rem 2.5rem;
   border-radius: 2.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   background: rgba(11, 24, 33, 0.82);
   box-shadow:
-    0 40px 120px -60px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 40px 120px -60px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.15);
   backdrop-filter: blur(30px);
   z-index: 1;
   margin-top: 3rem;
@@ -1226,9 +1226,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: absolute;
   inset: -60% 5% -50% 5%;
   background:
-    radial-gradient(circle at 10% 15%, rgba(255, 231, 193, 0.2), transparent 65%),
-    radial-gradient(circle at 80% 15%, rgba(141, 206, 255, 0.16), transparent 70%),
-    radial-gradient(circle at 50% 90%, rgba(255, 204, 153, 0.18), transparent 60%);
+    radial-gradient(circle at 10% 15%, rgba(95, 203, 196, 0.2), transparent 65%),
+    radial-gradient(circle at 80% 15%, rgba(95, 203, 196, 0.16), transparent 70%),
+    radial-gradient(circle at 50% 90%, rgba(74, 184, 176, 0.18), transparent 60%);
   filter: blur(80px);
   opacity: 0.5;
   z-index: -1;
@@ -1245,26 +1245,26 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-self: flex-start;
   padding: 0.5rem 1.15rem;
   border-radius: 999px;
-  border: 1px solid rgba(151, 206, 255, 0.4);
-  background: rgba(20, 38, 50, 0.85);
+  border: 1px solid rgba(95, 203, 196, 0.4);
+  background: rgba(238, 248, 247, 0.85);
   font-size: 0.68rem;
   letter-spacing: 0.36em;
   text-transform: uppercase;
-  color: rgba(189, 223, 254, 0.92);
+  color: rgba(127, 216, 210, 0.92);
 }
 
 .dashboard-history__titles h2 {
   font-family: 'Playfair Display', 'DM Serif Display', serif;
   font-size: clamp(2rem, 3.4vw, 2.75rem);
   font-weight: 500;
-  color: #f7fbff;
+  color: #0F172A;
   margin-bottom: 0.75rem;
 }
 
 .dashboard-history__titles p {
   font-size: 1rem;
   line-height: 1.75;
-  color: rgba(212, 226, 233, 0.82);
+  color: rgba(100, 116, 139, 0.82);
   max-width: 600px;
 }
 
@@ -1278,11 +1278,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: relative;
   padding: 2.05rem;
   border-radius: 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(150deg, rgba(16, 34, 44, 0.9) 0%, rgba(12, 28, 37, 0.78) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: linear-gradient(150deg, rgba(245, 253, 252, 0.9) 0%, rgba(240, 250, 249, 0.78) 100%);
   box-shadow:
-    0 28px 75px -60px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    0 28px 75px -60px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.1);
   display: flex;
   flex-direction: column;
   gap: 1.35rem;
@@ -1294,7 +1294,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  border: 1px solid rgba(255, 229, 180, 0.06);
+  border: 1px solid rgba(95, 203, 196, 0.06);
 }
 
 .dashboard-history__badge {
@@ -1306,24 +1306,24 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.75rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.92);
-  background: rgba(255, 229, 180, 0.16);
+  color: rgba(95, 203, 196, 0.92);
+  background: rgba(95, 203, 196, 0.16);
 }
 
 .dashboard-history__badge--accent {
-  color: rgba(189, 223, 254, 0.92);
-  background: rgba(151, 206, 255, 0.16);
+  color: rgba(127, 216, 210, 0.92);
+  background: rgba(95, 203, 196, 0.16);
 }
 
 .dashboard-history__badge--neutral {
-  color: rgba(214, 225, 231, 0.68);
-  background: rgba(214, 225, 231, 0.12);
+  color: rgba(148, 163, 184, 0.68);
+  background: rgba(148, 163, 184, 0.12);
 }
 
 .dashboard-history__item h3 {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #f8fcff;
+  color: #0F172A;
 }
 
 .dashboard-history__item ul {
@@ -1344,11 +1344,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.78rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(186, 202, 211, 0.65);
+  color: rgba(148, 163, 184, 0.65);
 }
 
 .dashboard-history__item li strong {
-  color: #f8fcff;
+  color: #0F172A;
   font-weight: 600;
 }
 
@@ -1359,9 +1359,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.65rem;
   padding: 0.75rem 1.1rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.18);
-  background: rgba(255, 229, 180, 0.08);
-  color: rgba(255, 229, 180, 0.92);
+  border: 1px solid rgba(95, 203, 196, 0.18);
+  background: rgba(95, 203, 196, 0.08);
+  color: rgba(95, 203, 196, 0.92);
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1370,9 +1370,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-history__action:hover,
 .dashboard-history__action:focus-visible {
-  border-color: rgba(255, 229, 180, 0.42);
-  background: rgba(255, 229, 180, 0.18);
-  color: rgba(255, 229, 180, 1);
+  border-color: rgba(95, 203, 196, 0.42);
+  background: rgba(95, 203, 196, 0.18);
+  color: rgba(95, 203, 196, 1);
 }
 
 @media (max-width: 1024px) {
@@ -1410,9 +1410,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: absolute;
   inset: -40% 5% -15% 5%;
   background:
-    radial-gradient(circle at 15% 20%, rgba(255, 231, 193, 0.25), transparent 70%),
-    radial-gradient(circle at 80% 15%, rgba(151, 206, 255, 0.18), transparent 70%),
-    radial-gradient(circle at 50% 85%, rgba(255, 194, 140, 0.2), transparent 60%);
+    radial-gradient(circle at 15% 20%, rgba(95, 203, 196, 0.25), transparent 70%),
+    radial-gradient(circle at 80% 15%, rgba(95, 203, 196, 0.18), transparent 70%),
+    radial-gradient(circle at 50% 85%, rgba(74, 184, 176, 0.2), transparent 60%);
   filter: blur(75px);
   opacity: 0.55;
   pointer-events: none;
@@ -1423,11 +1423,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   z-index: 1;
   border-radius: 2.4rem;
   padding: 2rem 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(9, 20, 27, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(248, 255, 254, 0.88);
   box-shadow:
-    0 42px 120px -62px rgba(0, 0, 0, 0.78),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 42px 120px -62px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.15);
   backdrop-filter: blur(32px);
   display: flex;
   flex-direction: column;
@@ -1440,19 +1440,19 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.6rem;
   padding: 0.55rem 1.1rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.45);
-  background: rgba(22, 40, 51, 0.86);
+  border: 1px solid rgba(95, 203, 196, 0.45);
+  background: rgba(238, 248, 247, 0.86);
   font-size: 0.68rem;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.92);
+  color: rgba(95, 203, 196, 0.92);
 }
 
 .dashboard-preferences__chip-sep {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: rgba(255, 229, 180, 0.7);
+  background: rgba(95, 203, 196, 0.7);
 }
 
 .dashboard-preferences__header {
@@ -1465,16 +1465,16 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-family: 'Playfair Display', 'DM Serif Display', serif;
   font-size: clamp(2.1rem, 3.6vw, 3rem);
   font-weight: 500;
-  color: #f9f5ec;
+  color: #0F172A;
   line-height: 1.12;
-  text-shadow: 0 0 24px rgba(255, 229, 180, 0.18);
+  text-shadow: 0 0 24px rgba(95, 203, 196, 0.18);
   margin-bottom: 0.65rem;
 }
 
 .dashboard-preferences__titles p {
   font-size: 1rem;
   line-height: 1.8;
-  color: rgba(213, 225, 232, 0.82);
+  color: rgba(100, 116, 139, 0.82);
   max-width: 620px;
 }
 
@@ -1497,11 +1497,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 1.4rem;
   padding: 1.85rem;
   border-radius: 1.8rem;
-  border: 1px solid rgba(255, 229, 180, 0.12);
-  background: linear-gradient(155deg, rgba(17, 38, 50, 0.9) 0%, rgba(10, 24, 33, 0.78) 100%);
+  border: 1px solid rgba(95, 203, 196, 0.12);
+  background: linear-gradient(155deg, rgba(240, 250, 249, 0.9) 0%, rgba(245, 253, 252, 0.78) 100%);
   box-shadow:
-    0 32px 90px -50px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 32px 90px -50px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.1);
 }
 
 .dashboard-preferences__summary-header {
@@ -1515,7 +1515,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.78rem;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.75);
+  color: rgba(95, 203, 196, 0.75);
 }
 
 .dashboard-preferences__summary-header button {
@@ -1524,16 +1524,16 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.5rem;
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.18);
-  background: rgba(255, 229, 180, 0.08);
-  color: rgba(255, 229, 180, 0.92);
+  border: 1px solid rgba(95, 203, 196, 0.18);
+  background: rgba(95, 203, 196, 0.08);
+  color: rgba(95, 203, 196, 0.92);
   font-size: 0.82rem;
   transition: all 0.2s ease;
 }
 
 .dashboard-preferences__summary-header button:hover {
-  border-color: rgba(255, 229, 180, 0.42);
-  background: rgba(255, 229, 180, 0.16);
+  border-color: rgba(95, 203, 196, 0.42);
+  background: rgba(95, 203, 196, 0.16);
 }
 
 .dashboard-preferences__summary ul {
@@ -1551,12 +1551,12 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.74rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(207, 220, 227, 0.62);
+  color: rgba(148, 163, 184, 0.62);
 }
 
 .dashboard-preferences__summary li strong {
   font-size: 1.05rem;
-  color: #f5f2e9;
+  color: #1E293B;
   font-weight: 600;
 }
 
@@ -1566,8 +1566,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 1.25rem;
   padding: 1rem 1.15rem;
   border-radius: 1.35rem;
-  border: 1px solid rgba(255, 229, 180, 0.12);
-  background: rgba(17, 33, 44, 0.6);
+  border: 1px solid rgba(95, 203, 196, 0.12);
+  background: rgba(240, 250, 249, 0.6);
 }
 
 .dashboard-preferences__summary-stat>div {
@@ -1580,12 +1580,12 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.74rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(207, 220, 227, 0.62);
+  color: rgba(148, 163, 184, 0.62);
 }
 
 .dashboard-preferences__summary-stat strong {
   font-size: 1.2rem;
-  color: #ffe6bc;
+  color: #5FCBC4;
 }
 
 .dashboard-preferences__progress {
@@ -1602,14 +1602,14 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-preferences__progress header h4 {
   font-size: 0.9rem;
-  color: rgba(229, 238, 242, 0.85);
+  color: rgba(71, 85, 105, 0.85);
   text-transform: uppercase;
   letter-spacing: 0.18em;
 }
 
 .dashboard-preferences__progress header span {
   font-size: 0.82rem;
-  color: rgba(229, 238, 242, 0.68);
+  color: rgba(71, 85, 105, 0.68);
 }
 
 .dashboard-preferences__progress-steps {
@@ -1625,8 +1625,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   padding: 0.85rem 1.1rem;
   border-radius: 1.05rem;
   border: 1px solid transparent;
-  background: rgba(12, 26, 34, 0.6);
-  color: rgba(229, 238, 242, 0.78);
+  background: rgba(240, 250, 249, 0.6);
+  color: rgba(71, 85, 105, 0.78);
   text-align: left;
   transition: all 0.2s ease;
 }
@@ -1637,13 +1637,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-preferences__progress-step small {
   font-size: 0.78rem;
-  color: rgba(207, 220, 227, 0.6);
+  color: rgba(148, 163, 184, 0.6);
 }
 
 .dashboard-preferences__progress-step.is-active {
-  border-color: rgba(255, 229, 180, 0.45);
-  background: rgba(22, 40, 51, 0.86);
-  color: rgba(255, 229, 180, 0.95);
+  border-color: rgba(95, 203, 196, 0.45);
+  background: rgba(238, 248, 247, 0.86);
+  color: rgba(95, 203, 196, 0.95);
 }
 
 .dashboard-preferences__progress-step.is-complete span::after {
@@ -1657,15 +1657,15 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 1rem;
   padding: 1.25rem;
   border-radius: 1.25rem;
-  border: 1px solid rgba(151, 206, 255, 0.18);
-  background: rgba(17, 33, 44, 0.55);
+  border: 1px solid rgba(95, 203, 196, 0.18);
+  background: rgba(240, 250, 249, 0.55);
 }
 
 .dashboard-preferences__schedule h4 {
   font-size: 0.9rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(189, 223, 254, 0.85);
+  color: rgba(127, 216, 210, 0.85);
 }
 
 .dashboard-preferences__schedule ul {
@@ -1679,11 +1679,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
   justify-content: space-between;
   gap: 1rem;
   font-size: 0.92rem;
-  color: rgba(229, 238, 242, 0.82);
+  color: rgba(71, 85, 105, 0.82);
 }
 
 .dashboard-preferences__schedule li strong {
-  color: rgba(151, 206, 255, 0.92);
+  color: rgba(95, 203, 196, 0.92);
   font-weight: 600;
 }
 
@@ -1692,7 +1692,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-items: center;
   justify-content: space-between;
   font-weight: 600;
-  color: rgba(189, 223, 254, 0.85);
+  color: rgba(127, 216, 210, 0.85);
 }
 
 .dashboard-preferences__content {
@@ -1705,18 +1705,18 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-preferences__empty {
   min-height: 300px;
   border-radius: 1.6rem;
-  border: 1px dashed rgba(255, 229, 180, 0.25);
-  background: rgba(12, 26, 34, 0.55);
+  border: 1px dashed rgba(95, 203, 196, 0.25);
+  background: rgba(240, 250, 249, 0.55);
   backdrop-filter: blur(12px);
   display: grid;
   place-items: center;
   text-align: center;
   gap: 1rem;
-  color: rgba(229, 238, 242, 0.78);
+  color: rgba(71, 85, 105, 0.78);
 }
 
 .dashboard-preferences__empty svg {
-  color: rgba(151, 206, 255, 0.6);
+  color: rgba(95, 203, 196, 0.6);
 }
 
 .dashboard-preferences__cards {
@@ -1726,11 +1726,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-preferences__card {
   border-radius: 1.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(150deg, rgba(16, 34, 44, 0.9) 0%, rgba(12, 28, 37, 0.78) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: linear-gradient(150deg, rgba(245, 253, 252, 0.9) 0%, rgba(240, 250, 249, 0.78) 100%);
   box-shadow:
-    0 32px 90px -55px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 32px 90px -55px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(148, 163, 184, 0.1);
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
@@ -1747,31 +1747,31 @@ input[type="password"]::-webkit-textfield-decoration-container {
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 1rem;
-  background: rgba(255, 229, 180, 0.12);
+  background: rgba(95, 203, 196, 0.12);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 229, 180, 0.92);
+  color: rgba(95, 203, 196, 0.92);
   flex-shrink: 0;
 }
 
 .dashboard-preferences__card h3 {
   font-size: 1.15rem;
   font-weight: 600;
-  color: #f7f2e5;
+  color: #1E293B;
 }
 
 .dashboard-preferences__card p {
   font-size: 0.92rem;
-  color: rgba(213, 225, 232, 0.78);
+  color: rgba(100, 116, 139, 0.78);
 }
 
 .dashboard-preferences__collapse {
   margin-left: auto;
   border-radius: 50%;
-  border: 1px solid rgba(255, 229, 180, 0.18);
-  background: rgba(255, 229, 180, 0.08);
-  color: rgba(255, 229, 180, 0.75);
+  border: 1px solid rgba(95, 203, 196, 0.18);
+  background: rgba(95, 203, 196, 0.08);
+  color: rgba(95, 203, 196, 0.75);
   width: 2rem;
   height: 2rem;
   display: inline-flex;
@@ -1788,8 +1788,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-preferences__item {
   padding: 1.1rem;
   border-radius: 1.2rem;
-  border: 1px solid rgba(255, 229, 180, 0.12);
-  background: rgba(12, 26, 34, 0.55);
+  border: 1px solid rgba(95, 203, 196, 0.12);
+  background: rgba(240, 250, 249, 0.55);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1806,13 +1806,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-preferences__item-body h4 {
   font-size: 1.05rem;
-  color: #f5f2e9;
+  color: #1E293B;
   font-weight: 600;
 }
 
 .dashboard-preferences__item-body p {
   font-size: 0.85rem;
-  color: rgba(207, 220, 227, 0.68);
+  color: rgba(148, 163, 184, 0.68);
 }
 
 .dashboard-preferences__item-meta {
@@ -1820,7 +1820,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   flex-wrap: wrap;
   gap: 0.7rem;
   font-size: 0.85rem;
-  color: rgba(189, 223, 254, 0.78);
+  color: rgba(127, 216, 210, 0.78);
 }
 
 .dashboard-preferences__item-meta span {
@@ -1841,23 +1841,23 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.45rem;
   padding: 0.55rem 1rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.16);
-  background: rgba(17, 33, 44, 0.55);
-  color: rgba(229, 238, 242, 0.85);
+  border: 1px solid rgba(95, 203, 196, 0.16);
+  background: rgba(240, 250, 249, 0.55);
+  color: rgba(71, 85, 105, 0.85);
   font-size: 0.85rem;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .dashboard-preferences__pill:hover {
-  border-color: rgba(255, 229, 180, 0.32);
-  background: rgba(24, 44, 58, 0.7);
+  border-color: rgba(95, 203, 196, 0.32);
+  background: rgba(238, 248, 247, 0.7);
 }
 
 .dashboard-preferences__pill.is-active {
-  border-color: rgba(255, 229, 180, 0.55);
-  background: rgba(255, 229, 180, 0.12);
-  color: rgba(255, 229, 180, 0.95);
+  border-color: rgba(95, 203, 196, 0.55);
+  background: rgba(95, 203, 196, 0.12);
+  color: rgba(95, 203, 196, 0.95);
 }
 
 .dashboard-preferences__footer {
@@ -1867,7 +1867,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 1.25rem;
   padding-right: 1.75rem;
   padding-top: 1.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
 }
 
 .dashboard-preferences__footer-meta {
@@ -1882,29 +1882,29 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.5rem;
   padding: 0.55rem 1rem;
   border-radius: 999px;
-  border: 1px solid rgba(151, 206, 255, 0.25);
-  background: rgba(17, 33, 44, 0.6);
-  color: rgba(189, 223, 254, 0.92);
+  border: 1px solid rgba(95, 203, 196, 0.25);
+  background: rgba(240, 250, 249, 0.6);
+  color: rgba(127, 216, 210, 0.92);
   font-size: 0.85rem;
   transition: all 0.2s ease;
 }
 
 .dashboard-preferences__footer-meta button:hover {
-  border-color: rgba(151, 206, 255, 0.45);
-  background: rgba(22, 42, 56, 0.75);
+  border-color: rgba(95, 203, 196, 0.45);
+  background: rgba(238, 248, 247, 0.75);
 }
 
 .dashboard-preferences__footer-meta div {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  color: rgba(229, 238, 242, 0.78);
+  color: rgba(71, 85, 105, 0.78);
   font-size: 0.85rem;
 }
 
 .dashboard-preferences__footer-meta strong {
   font-size: 1.1rem;
-  color: rgba(151, 206, 255, 0.92);
+  color: rgba(95, 203, 196, 0.92);
   font-weight: 600;
 }
 
@@ -1924,8 +1924,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-items: center;
   gap: 0.6rem;
   border: 1px solid transparent;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(229, 238, 242, 0.88);
+  background: rgba(148, 163, 184, 0.15);
+  color: rgba(71, 85, 105, 0.88);
 }
 
 .dashboard-preferences__feedback.is-success {
@@ -1946,17 +1946,17 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.55rem;
   padding: 0.75rem 1.4rem;
   border-radius: 0.95rem;
-  border: 1px solid rgba(151, 206, 255, 0.35);
-  background: rgba(17, 33, 44, 0.45);
-  color: rgba(189, 223, 254, 0.92);
+  border: 1px solid rgba(95, 203, 196, 0.35);
+  background: rgba(240, 250, 249, 0.45);
+  color: rgba(127, 216, 210, 0.92);
   font-weight: 500;
   font-size: 0.9rem;
   transition: all 0.2s ease;
 }
 
 .dashboard-preferences__ghost:hover:not(:disabled) {
-  border-color: rgba(151, 206, 255, 0.55);
-  background: rgba(24, 44, 58, 0.65);
+  border-color: rgba(95, 203, 196, 0.55);
+  background: rgba(238, 248, 247, 0.65);
 }
 
 .dashboard-preferences__ghost:disabled {
@@ -1970,18 +1970,18 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.75rem;
   padding: 0.85rem 1.6rem;
   border-radius: 1.15rem;
-  border: 1px solid rgba(255, 229, 180, 0.25);
-  background: linear-gradient(120deg, #ffe4c4, #f4b973);
-  color: #0f1f26;
+  border: 1px solid rgba(95, 203, 196, 0.25);
+  background: linear-gradient(120deg, #5FCBC4, #4AB8B0);
+  color: #0F172A;
   font-weight: 600;
   font-size: 0.95rem;
-  box-shadow: 0 24px 55px -28px rgba(255, 206, 153, 0.75);
+  box-shadow: 0 24px 55px -28px rgba(74, 184, 176, 0.75);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dashboard-preferences__primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 28px 65px -28px rgba(255, 206, 153, 0.85);
+  box-shadow: 0 28px 65px -28px rgba(74, 184, 176, 0.85);
 }
 
 @media (max-width: 1024px) {
@@ -2075,14 +2075,14 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-preferences__category-card {
   border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(12, 26, 34, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(240, 250, 249, 0.65);
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .dashboard-preferences__category-card:hover {
-  border-color: rgba(255, 229, 180, 0.2);
+  border-color: rgba(95, 203, 196, 0.2);
 }
 
 .dashboard-preferences__category-header-new {
@@ -2095,18 +2095,18 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-preferences__category-header-new:hover {
-  background: rgba(17, 33, 44, 0.5);
+  background: rgba(240, 250, 249, 0.5);
 }
 
 .dashboard-preferences__category-icon {
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 1rem;
-  background: rgba(255, 229, 180, 0.12);
+  background: rgba(95, 203, 196, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 229, 180, 0.92);
+  color: rgba(95, 203, 196, 0.92);
   flex-shrink: 0;
 }
 
@@ -2120,13 +2120,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-preferences__category-info h3 {
   font-size: 1.15rem;
   font-weight: 600;
-  color: #f7f2e5;
+  color: #1E293B;
   margin: 0;
 }
 
 .dashboard-preferences__category-info p {
   font-size: 0.88rem;
-  color: rgba(213, 225, 232, 0.7);
+  color: rgba(100, 116, 139, 0.7);
   line-height: 1.5;
   margin: 0;
 }
@@ -2135,9 +2135,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 50%;
-  border: 1px solid rgba(255, 229, 180, 0.18);
-  background: rgba(255, 229, 180, 0.08);
-  color: rgba(255, 229, 180, 0.75);
+  border: 1px solid rgba(95, 203, 196, 0.18);
+  background: rgba(95, 203, 196, 0.08);
+  color: rgba(95, 203, 196, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2146,8 +2146,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-preferences__category-toggle:hover {
-  border-color: rgba(255, 229, 180, 0.35);
-  background: rgba(255, 229, 180, 0.15);
+  border-color: rgba(95, 203, 196, 0.35);
+  background: rgba(95, 203, 196, 0.15);
 }
 
 .dashboard-preferences__items-container {
@@ -2160,8 +2160,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-preferences__item-card {
   padding: 1.25rem;
   border-radius: 1.15rem;
-  border: 1px solid rgba(255, 229, 180, 0.14);
-  background: rgba(16, 34, 44, 0.7);
+  border: 1px solid rgba(95, 203, 196, 0.14);
+  background: rgba(245, 253, 252, 0.7);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2170,9 +2170,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-preferences__item-card:hover {
-  border-color: rgba(255, 229, 180, 0.28);
-  background: rgba(19, 39, 50, 0.8);
-  box-shadow: 0 8px 24px -12px rgba(255, 229, 180, 0.15);
+  border-color: rgba(95, 203, 196, 0.28);
+  background: rgba(240, 250, 249, 0.8);
+  box-shadow: 0 8px 24px -12px rgba(95, 203, 196, 0.15);
 }
 
 .dashboard-preferences__item-content {
@@ -2186,13 +2186,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-preferences__item-name {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #f5f2e9;
+  color: #1E293B;
   margin: 0;
 }
 
 .dashboard-preferences__item-category {
   font-size: 0.82rem;
-  color: rgba(207, 220, 227, 0.65);
+  color: rgba(148, 163, 184, 0.65);
   margin: 0;
 }
 
@@ -2207,17 +2207,17 @@ input[type="password"]::-webkit-textfield-decoration-container {
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  color: rgba(255, 229, 180, 0.92);
+  color: rgba(95, 203, 196, 0.92);
   font-size: 0.9rem;
   font-weight: 600;
 }
 
 .dashboard-preferences__item-rating svg {
-  color: rgba(255, 229, 180, 0.88);
+  color: rgba(95, 203, 196, 0.88);
 }
 
 .dashboard-preferences__item-reviews {
-  color: rgba(207, 220, 227, 0.62);
+  color: rgba(148, 163, 184, 0.62);
   font-weight: 400;
   font-size: 0.82rem;
 }
@@ -2225,7 +2225,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-preferences__item-price {
   font-size: 0.88rem;
   font-weight: 600;
-  color: rgba(189, 223, 254, 0.82);
+  color: rgba(127, 216, 210, 0.82);
 }
 
 .dashboard-preferences__item-actions-new {
@@ -2286,9 +2286,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.75rem;
-  border: 1px solid rgba(255, 229, 180, 0.16);
-  background: rgba(17, 33, 44, 0.55);
-  color: rgba(229, 238, 242, 0.75);
+  border: 1px solid rgba(95, 203, 196, 0.16);
+  background: rgba(240, 250, 249, 0.55);
+  color: rgba(71, 85, 105, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2296,15 +2296,15 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-preferences__action:hover {
-  border-color: rgba(255, 229, 180, 0.32);
-  background: rgba(24, 44, 58, 0.7);
-  color: rgba(255, 229, 180, 0.92);
+  border-color: rgba(95, 203, 196, 0.32);
+  background: rgba(238, 248, 247, 0.7);
+  color: rgba(95, 203, 196, 0.92);
 }
 
 .dashboard-preferences__action.is-active {
-  border-color: rgba(255, 229, 180, 0.55);
-  background: rgba(255, 229, 180, 0.16);
-  color: rgba(255, 229, 180, 0.95);
+  border-color: rgba(95, 203, 196, 0.55);
+  background: rgba(95, 203, 196, 0.16);
+  color: rgba(95, 203, 196, 0.95);
 }
 
 .dashboard-preferences__continue {
@@ -2313,18 +2313,18 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.65rem;
   padding: 0.85rem 1.6rem;
   border-radius: 1.05rem;
-  border: 1px solid rgba(255, 229, 180, 0.25);
-  background: linear-gradient(120deg, #ffe4c4, #f4b973);
-  color: #0f1f26;
+  border: 1px solid rgba(95, 203, 196, 0.25);
+  background: linear-gradient(120deg, #5FCBC4, #4AB8B0);
+  color: #0F172A;
   font-weight: 600;
   font-size: 0.95rem;
-  box-shadow: 0 24px 55px -28px rgba(255, 206, 153, 0.75);
+  box-shadow: 0 24px 55px -28px rgba(74, 184, 176, 0.75);
   transition: all 0.2s ease;
 }
 
 .dashboard-preferences__continue:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 28px 65px -28px rgba(255, 206, 153, 0.85);
+  box-shadow: 0 28px 65px -28px rgba(74, 184, 176, 0.85);
 }
 
 .dashboard-preferences__continue:disabled {
@@ -2334,13 +2334,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-preferences__schedule-empty {
   font-size: 0.88rem;
-  color: rgba(213, 225, 232, 0.65);
+  color: rgba(100, 116, 139, 0.65);
   line-height: 1.6;
 }
 
 .dashboard-preferences__footer p {
   font-size: 0.92rem;
-  color: rgba(229, 238, 242, 0.78);
+  color: rgba(71, 85, 105, 0.78);
   margin: 0;
 }
 
@@ -2379,7 +2379,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-placeholder i {
   font-size: 3rem;
-  color: rgba(255, 229, 180, 0.65);
+  color: rgba(95, 203, 196, 0.65);
 }
 
 .dashboard-placeholder h3 {
@@ -2389,7 +2389,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-placeholder p {
   font-size: 0.95rem;
-  color: rgba(200, 214, 219, 0.7);
+  color: rgba(148, 163, 184, 0.7);
 }
 
 .dashboard-loader {
@@ -2397,12 +2397,12 @@ input[type="password"]::-webkit-textfield-decoration-container {
   place-items: center;
   gap: 0.85rem;
   padding: 3rem 1rem;
-  color: rgba(227, 238, 242, 0.75);
+  color: rgba(100, 116, 139, 0.75);
 }
 
 .dashboard-loader i {
   font-size: 2.2rem;
-  color: rgba(255, 229, 180, 0.7);
+  color: rgba(95, 203, 196, 0.7);
 }
 
 /* Form controls ----------------------------------------------------------- */
@@ -2442,7 +2442,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-form label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: rgba(229, 238, 242, 0.82) !important;
+  color: rgba(71, 85, 105, 0.82) !important;
 }
 
 .dashboard-form input,
@@ -2450,22 +2450,22 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-form__input,
 .dashboard-form__select,
 .dashboard-form__prime .p-inputtext {
-  background: rgba(16, 32, 43, 0.78) !important;
-  border: 1px solid rgba(255, 229, 180, 0.18) !important;
+  background: rgba(245, 253, 252, 0.78) !important;
+  border: 1px solid rgba(95, 203, 196, 0.18) !important;
   border-radius: 1.05rem !important;
   padding: 0.85rem 1.05rem !important;
-  color: #f1f7f9 !important;
+  color: #1E293B !important;
   font-size: 0.97rem !important;
-  box-shadow: inset 0 1px 0 rgba(255, 229, 180, 0.08) !important;
+  box-shadow: inset 0 1px 0 rgba(95, 203, 196, 0.08) !important;
   transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .dashboard-form input:focus,
 .dashboard-form select:focus,
 .dashboard-form__prime .p-inputtext:focus {
-  border-color: rgba(255, 229, 180, 0.75) !important;
-  box-shadow: 0 0 0 3px rgba(255, 229, 180, 0.28) !important;
-  background: rgba(19, 38, 50, 0.92) !important;
+  border-color: rgba(95, 203, 196, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(95, 203, 196, 0.28) !important;
+  background: rgba(240, 250, 249, 0.92) !important;
 }
 
 .dashboard-form select {
@@ -2474,15 +2474,15 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-form select option {
-  background: #0f1f27;
+  background: #F0FAFA;
   color: #f5f8f9;
 }
 
 .dashboard-form__prime .p-dropdown {
   width: 100%;
   border-radius: 1.05rem !important;
-  border: 1px solid rgba(255, 229, 180, 0.16) !important;
-  background: rgba(16, 32, 43, 0.85) !important;
+  border: 1px solid rgba(95, 203, 196, 0.16) !important;
+  background: rgba(245, 253, 252, 0.85) !important;
   display: flex !important;
   justify-content: flex-start !important;
   align-items: center !important;
@@ -2495,27 +2495,27 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-form__prime .p-dropdown:not(.p-disabled):hover,
 .dashboard-form__prime .p-dropdown.p-focus {
-  border-color: rgba(255, 229, 180, 0.75) !important;
-  box-shadow: 0 0 0 3px rgba(255, 229, 180, 0.28) !important;
-  background: rgba(19, 38, 50, 0.94) !important;
+  border-color: rgba(95, 203, 196, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(95, 203, 196, 0.28) !important;
+  background: rgba(240, 250, 249, 0.94) !important;
 }
 
 .dashboard-form__prime-panel {
   border-radius: 1.15rem !important;
-  background: rgba(12, 26, 34, 0.98) !important;
-  border: 1px solid rgba(255, 229, 180, 0.14) !important;
-  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.75) !important;
+  background: rgba(240, 250, 249, 0.98) !important;
+  border: 1px solid rgba(95, 203, 196, 0.14) !important;
+  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.08) !important;
 }
 
 .dashboard-form__prime-panel .p-dropdown-item {
-  color: rgba(229, 238, 242, 0.85) !important;
+  color: rgba(71, 85, 105, 0.85) !important;
   border-radius: 0.75rem !important;
 }
 
 .dashboard-form__prime-panel .p-dropdown-item.p-highlight,
 .dashboard-form__prime-panel .p-dropdown-item.p-focus {
-  background: rgba(255, 229, 180, 0.22) !important;
-  color: #ffe5b4 !important;
+  background: rgba(95, 203, 196, 0.22) !important;
+  color: #5FCBC4 !important;
 }
 
 .dashboard-form__prime .p-calendar {
@@ -2531,7 +2531,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   border: none !important;
   font-size: 0.97rem !important;
   padding: 0 !important;
-  color: #f1f7f9 !important;
+  color: #1E293B !important;
 }
 
 .dashboard-form__prime .p-inputnumber-input {
@@ -2545,19 +2545,19 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-form__prime .p-dropdown-clear-icon,
 .dashboard-form__prime .p-dropdown-trigger {
-  color: rgba(255, 229, 180, 0.65) !important;
+  color: rgba(95, 203, 196, 0.65) !important;
 }
 
 .dashboard-form__prime .p-dropdown-clear-icon:hover,
 .dashboard-form__prime .p-dropdown-trigger:hover {
-  color: rgba(255, 229, 180, 0.92) !important;
+  color: rgba(95, 203, 196, 0.92) !important;
 }
 
 .dashboard-form__prime .p-datepicker {
-  background: rgba(12, 26, 34, 0.98) !important;
+  background: rgba(240, 250, 249, 0.98) !important;
   border-radius: 1.25rem !important;
-  border: 1px solid rgba(255, 229, 180, 0.14) !important;
-  box-shadow: 0 32px 90px -38px rgba(0, 0, 0, 0.75) !important;
+  border: 1px solid rgba(95, 203, 196, 0.14) !important;
+  box-shadow: 0 32px 90px -38px rgba(0, 0, 0, 0.08) !important;
 }
 
 .dashboard-form__prime .p-datepicker table td>span {
@@ -2565,17 +2565,17 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-form__prime .p-calendar .p-datepicker-calendar thead th {
-  color: rgba(229, 238, 242, 0.7) !important;
+  color: rgba(71, 85, 105, 0.7) !important;
 }
 
 .dashboard-form__prime .p-datepicker table td>span {
   border-radius: 0.85rem !important;
-  color: rgba(229, 238, 242, 0.85) !important;
+  color: rgba(71, 85, 105, 0.85) !important;
 }
 
 .dashboard-form__prime .p-datepicker .p-highlight {
-  background: rgba(255, 229, 180, 0.35) !important;
-  color: #0f1f26 !important;
+  background: rgba(95, 203, 196, 0.35) !important;
+  color: #0F172A !important;
 }
 
 .dashboard-form__actions,
@@ -2602,7 +2602,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: absolute;
   inset: auto 10% 0 10%;
   height: 380px;
-  background: radial-gradient(circle, rgba(255, 229, 180, 0.18), transparent 70%);
+  background: radial-gradient(circle, rgba(95, 203, 196, 0.18), transparent 70%);
   filter: blur(60px);
   opacity: 0.55;
   z-index: 0;
@@ -2614,10 +2614,10 @@ input[type="password"]::-webkit-textfield-decoration-container {
   margin: 0 auto;
   padding: 4rem 2rem 3rem;
   border-radius: 2.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   background: rgba(10, 21, 29, 0.78);
   backdrop-filter: blur(20px);
-  box-shadow: 0 48px 150px -60px rgba(0, 0, 0, 0.78);
+  box-shadow: 0 48px 150px -60px rgba(0, 0, 0, 0.08);
   z-index: 1;
 }
 
@@ -2632,22 +2632,22 @@ input[type="password"]::-webkit-textfield-decoration-container {
   justify-self: center;
   padding: 0.45rem 1.05rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.45);
-  background: rgba(23, 39, 49, 0.65);
+  border: 1px solid rgba(95, 203, 196, 0.45);
+  background: rgba(240, 250, 249, 0.65);
   font-size: 0.68rem;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.85);
+  color: rgba(95, 203, 196, 0.85);
 }
 
 .dashboard-featured__header h2 {
   font-size: clamp(2rem, 3vw, 2.6rem);
   font-weight: 600;
-  color: #f8f1e6;
+  color: #1E293B;
 }
 
 .dashboard-featured__header p {
-  color: rgba(214, 226, 231, 0.78);
+  color: rgba(100, 116, 139, 0.78);
   max-width: 560px;
   justify-self: center;
   line-height: 1.6;
@@ -2663,9 +2663,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: relative;
   overflow: hidden;
   border-radius: 1.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(16, 28, 36, 0.75);
-  box-shadow: 0 35px 90px -48px rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(245, 253, 252, 0.75);
+  box-shadow: 0 35px 90px -48px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease, border 0.3s ease;
@@ -2673,7 +2673,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(255, 229, 180, 0.35);
+  border-color: rgba(95, 203, 196, 0.35);
 }
 
 .dashboard-card__media {
@@ -2696,7 +2696,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-card__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(8, 16, 22, 0.15) 0%, rgba(8, 16, 22, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.15) 0%, rgba(30, 41, 59, 0.85) 100%);
 }
 
 .dashboard-card__location {
@@ -2708,9 +2708,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   gap: 0.45rem;
   padding: 0.45rem 0.8rem;
   border-radius: 999px;
-  background: rgba(16, 30, 39, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(233, 241, 244, 0.85);
+  background: rgba(245, 253, 252, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: rgba(71, 85, 105, 0.85);
   font-size: 0.82rem;
 }
 
@@ -2724,7 +2724,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-card__content h3 {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #f8f1e6;
+  color: #1E293B;
 }
 
 .dashboard-card__duration {
@@ -2732,7 +2732,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.85rem;
-  color: rgba(214, 226, 231, 0.75);
+  color: rgba(100, 116, 139, 0.75);
 }
 
 .dashboard-card__footer {
@@ -2746,29 +2746,29 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .dashboard-card__price {
   font-size: 0.95rem;
   font-weight: 600;
-  color: rgba(255, 229, 180, 0.95);
+  color: rgba(95, 203, 196, 0.95);
 }
 
 .dashboard-card__button {
   border-radius: 999px !important;
   padding: 0.55rem 1.05rem !important;
   background: transparent !important;
-  color: rgba(233, 241, 244, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(71, 85, 105, 0.85) !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
 }
 
 .dashboard-card__button:hover {
-  border-color: rgba(255, 229, 180, 0.45) !important;
-  color: #ffe6bc !important;
+  border-color: rgba(95, 203, 196, 0.45) !important;
+  color: #5FCBC4 !important;
 }
 
 /* Footer ------------------------------------------------------------------ */
 .dashboard-footer {
   position: relative;
   padding: 4rem 1.5rem 3rem;
-  background: rgba(7, 15, 21, 0.9);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 -24px 80px -60px rgba(0, 0, 0, 0.85);
+  background: rgba(30, 41, 59, 0.9);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 -24px 80px -60px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-footer__background {
@@ -2776,8 +2776,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 15% 25%, rgba(255, 231, 193, 0.18), transparent 60%),
-    radial-gradient(circle at 85% 20%, rgba(110, 225, 255, 0.16), transparent 60%);
+    radial-gradient(circle at 15% 25%, rgba(95, 203, 196, 0.18), transparent 60%),
+    radial-gradient(circle at 85% 20%, rgba(95, 203, 196, 0.16), transparent 60%);
   opacity: 0.4;
 }
 
@@ -2801,37 +2801,37 @@ input[type="password"]::-webkit-textfield-decoration-container {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  color: rgba(227, 238, 242, 0.78);
+  color: rgba(100, 116, 139, 0.78);
 }
 
 .dashboard-footer__tag {
   font-size: 0.7rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.85);
+  color: rgba(95, 203, 196, 0.85);
 }
 
 .dashboard-footer__column h3 {
   font-size: 1.4rem;
   font-weight: 600;
-  color: #f8f1e6;
+  color: #1E293B;
 }
 
 .dashboard-footer__column h4 {
   font-size: 1rem;
   font-weight: 600;
-  color: rgba(255, 229, 180, 0.85);
+  color: rgba(95, 203, 196, 0.85);
   margin-bottom: 0.25rem;
 }
 
 .dashboard-footer__link {
-  color: rgba(227, 238, 242, 0.75);
+  color: rgba(100, 116, 139, 0.75);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .dashboard-footer__link:hover {
-  color: #ffe6bc;
+  color: #5FCBC4;
 }
 
 .dashboard-footer__form {
@@ -2842,13 +2842,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .dashboard-footer__input {
   border-radius: 0.9rem !important;
-  background: rgba(16, 32, 43, 0.82) !important;
+  background: rgba(245, 253, 252, 0.82) !important;
 }
 
 .dashboard-footer__button {
   border-radius: 0.85rem !important;
-  background: linear-gradient(135deg, #ffe4c4 0%, #f4b973 100%) !important;
-  color: #112026 !important;
+  background: linear-gradient(135deg, #5FCBC4 0%, #4AB8B0 100%) !important;
+  color: #FFFFFF !important;
   font-weight: 600 !important;
 }
 
@@ -2866,15 +2866,15 @@ input[type="password"]::-webkit-textfield-decoration-container {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(16, 32, 43, 0.8);
-  color: rgba(227, 238, 242, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(245, 253, 252, 0.8);
+  color: rgba(100, 116, 139, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   transition: all 0.2s ease;
 }
 
 .dashboard-footer__social a:hover {
-  background: rgba(255, 229, 180, 0.2);
-  color: #ffe5b4;
+  background: rgba(95, 203, 196, 0.2);
+  color: #5FCBC4;
 }
 
 .dashboard-footer__bottom {
@@ -2884,8 +2884,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
   justify-content: space-between;
   gap: 1rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(214, 226, 231, 0.7);
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  color: rgba(100, 116, 139, 0.7);
   font-size: 0.9rem;
 }
 
@@ -2964,18 +2964,18 @@ input[type="password"]::-webkit-textfield-decoration-container {
 */
 .dashboard-form__prime.p-inputtext {
   border-radius: 1.15rem !important;
-  background: rgba(12, 26, 34, 0.98) !important;
-  border: 1px solid rgba(255, 229, 180, 0.14) !important;
-  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.75) !important;
+  background: rgba(240, 250, 249, 0.98) !important;
+  border: 1px solid rgba(95, 203, 196, 0.14) !important;
+  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* 2. Ép style nền tối cho Dropdown (Departure & Destination)
 */
 .dashboard-form__prime.p-dropdown {
   border-radius: 1.15rem !important;
-  background: rgba(12, 26, 34, 0.98) !important;
-  border: 1px solid rgba(255, 229, 180, 0.14) !important;
-  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.75) !important;
+  background: rgba(240, 250, 249, 0.98) !important;
+  border: 1px solid rgba(95, 203, 196, 0.14) !important;
+  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.08) !important;
   display: flex !important;
   justify-content: flex-start !important;
   align-items: center !important;
@@ -2998,29 +2998,29 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .p-dropdown-header {
   border-radius: 1.15rem !important;
-  background: rgba(12, 26, 34, 0.98) !important;
-  border: 1px solid rgba(255, 229, 180, 0.14) !important;
-  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.75) !important;
+  background: rgba(240, 250, 249, 0.98) !important;
+  border: 1px solid rgba(95, 203, 196, 0.14) !important;
+  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.08) !important;
 }
 
 .p-dropdown-filter {
   border-radius: 1.15rem !important;
-  background: rgba(12, 26, 34, 0.98) !important;
-  border: 1px solid rgba(255, 229, 180, 0.14) !important;
-  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.75) !important;
+  background: rgba(240, 250, 249, 0.98) !important;
+  border: 1px solid rgba(95, 203, 196, 0.14) !important;
+  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.08) !important;
 }
 
 .p-dropdown-filter-container {
   border-radius: 1.15rem !important;
-  background: rgba(12, 26, 34, 0.98) !important;
-  border: 1px solid rgba(255, 229, 180, 0.14) !important;
-  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.75) !important;
+  background: rgba(240, 250, 249, 0.98) !important;
+  border: 1px solid rgba(95, 203, 196, 0.14) !important;
+  box-shadow: 0 32px 90px -40px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Custom scrollbar for dropdown panel */
 .dashboard-form__prime-panel .p-dropdown-items-wrapper {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 229, 180, 0.3) rgba(12, 26, 34, 0.4);
+  scrollbar-color: rgba(95, 203, 196, 0.3) rgba(240, 250, 249, 0.4);
 }
 
 /* For Webkit browsers (Chrome, Safari, Edge) */
@@ -3029,18 +3029,18 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .dashboard-form__prime-panel .p-dropdown-items-wrapper::-webkit-scrollbar-track {
-  background: rgba(12, 26, 34, 0.4);
+  background: rgba(240, 250, 249, 0.4);
   border-radius: 10px;
 }
 
 .dashboard-form__prime-panel .p-dropdown-items-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(255, 229, 180, 0.3);
+  background: rgba(95, 203, 196, 0.3);
   border-radius: 10px;
   transition: background 0.2s ease;
 }
 
 .dashboard-form__prime-panel .p-dropdown-items-wrapper::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 229, 180, 0.5);
+  background: rgba(95, 203, 196, 0.5);
 }
 
 /* Flight Booking Section ------------------------------------------- */
@@ -3059,7 +3059,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   width: 120%;
   height: 120%;
   background: radial-gradient(circle at center,
-      rgba(255, 229, 180, 0.08) 0%,
+      rgba(95, 203, 196, 0.08) 0%,
       transparent 60%);
   pointer-events: none;
   z-index: 0;
@@ -3082,9 +3082,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
   padding: 0.6rem 1.2rem;
   margin-bottom: 1.5rem;
   border-radius: 999px;
-  background: rgba(24, 39, 47, 0.6);
-  border: 1px solid rgba(255, 229, 180, 0.25);
-  color: rgba(255, 229, 180, 0.85);
+  background: rgba(238, 248, 247, 0.6);
+  border: 1px solid rgba(95, 203, 196, 0.25);
+  color: rgba(95, 203, 196, 0.85);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
@@ -3092,9 +3092,9 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .flight-booking__back:hover {
-  background: rgba(32, 48, 58, 0.75);
-  border-color: rgba(255, 229, 180, 0.45);
-  color: #ffe6bc;
+  background: rgba(235, 245, 244, 0.75);
+  border-color: rgba(95, 203, 196, 0.45);
+  color: #5FCBC4;
 }
 
 .flight-booking__tag {
@@ -3102,26 +3102,26 @@ input[type="password"]::-webkit-textfield-decoration-container {
   padding: 0.5rem 1.1rem;
   margin-bottom: 1rem;
   border-radius: 999px;
-  border: 1px solid rgba(255, 229, 180, 0.45);
-  background: rgba(24, 39, 47, 0.6);
+  border: 1px solid rgba(95, 203, 196, 0.45);
+  background: rgba(238, 248, 247, 0.6);
   font-size: 0.65rem;
   letter-spacing: 0.38em;
   text-transform: uppercase;
-  color: rgba(255, 229, 180, 0.85);
+  color: rgba(95, 203, 196, 0.85);
 }
 
 .flight-booking__title {
   font-size: clamp(2rem, 3vw, 2.75rem);
   line-height: 1.2;
   font-weight: 600;
-  color: #f8f1e6;
+  color: #1E293B;
   margin-bottom: 0.75rem;
 }
 
 .flight-booking__subtitle {
   font-size: 1.05rem;
   line-height: 1.6;
-  color: rgba(235, 243, 247, 0.65);
+  color: rgba(71, 85, 105, 0.65);
   max-width: 720px;
   margin: 0 auto;
 }
@@ -3141,8 +3141,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .flight-booking__card {
-  background: rgba(18, 32, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(245, 253, 252, 0.65);
+  border: 1px solid rgba(148, 163, 184, 0.15);
   border-radius: 1.5rem;
   overflow: hidden;
   backdrop-filter: blur(24px);
@@ -3150,11 +3150,11 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .flight-booking__card--departure {
-  border-top: 3px solid rgba(144, 224, 255, 0.4);
+  border-top: 3px solid rgba(95, 203, 196, 0.4);
 }
 
 .flight-booking__card--return {
-  border-top: 3px solid rgba(255, 206, 153, 0.4);
+  border-top: 3px solid rgba(74, 184, 176, 0.4);
 }
 
 .flight-booking__card-header {
@@ -3167,7 +3167,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .flight-booking__card-header:hover {
-  background: rgba(24, 39, 47, 0.4);
+  background: rgba(238, 248, 247, 0.4);
 }
 
 .flight-booking__card-title {
@@ -3178,23 +3178,23 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .flight-booking__card-title i {
   font-size: 1.5rem;
-  color: rgba(144, 224, 255, 0.85);
+  color: rgba(95, 203, 196, 0.85);
 }
 
 .flight-booking__card--return .flight-booking__card-title i {
-  color: rgba(255, 206, 153, 0.85);
+  color: rgba(74, 184, 176, 0.85);
 }
 
 .flight-booking__card-title h3 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #f7f2e5;
+  color: #1E293B;
   margin-bottom: 0.25rem;
 }
 
 .flight-booking__card-title p {
   font-size: 0.9rem;
-  color: rgba(235, 243, 247, 0.65);
+  color: rgba(71, 85, 105, 0.65);
 }
 
 .flight-booking__card-body {
@@ -3206,8 +3206,8 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 /* Individual Flight */
 .flight-booking__flight {
-  background: rgba(12, 26, 34, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(240, 250, 249, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.2);
   border-radius: 1rem;
   padding: 1.25rem;
   display: flex;
@@ -3218,13 +3218,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 }
 
 .flight-booking__flight:hover {
-  background: rgba(18, 32, 42, 0.75);
-  border-color: rgba(255, 229, 180, 0.2);
+  background: rgba(245, 253, 252, 0.75);
+  border-color: rgba(95, 203, 196, 0.2);
 }
 
 .flight-booking__flight--selected {
-  background: rgba(24, 39, 47, 0.85);
-  border-color: rgba(255, 229, 180, 0.45);
+  background: rgba(238, 248, 247, 0.85);
+  border-color: rgba(95, 203, 196, 0.45);
 }
 
 .flight-booking__flight-info {
@@ -3246,15 +3246,15 @@ input[type="password"]::-webkit-textfield-decoration-container {
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  background: rgba(144, 224, 255, 0.12);
+  background: rgba(95, 203, 196, 0.12);
   border-radius: 0.5rem;
-  color: rgba(144, 224, 255, 0.95);
+  color: rgba(95, 203, 196, 0.95);
   font-weight: 600;
   font-size: 0.9rem;
 }
 
 .flight-booking__airline-name {
-  color: #f7f2e5;
+  color: #1E293B;
   font-weight: 500;
   font-size: 0.95rem;
 }
@@ -3274,12 +3274,12 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .flight-booking__time-value {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #f7f2e5;
+  color: #1E293B;
 }
 
 .flight-booking__time-code {
   font-size: 0.85rem;
-  color: rgba(144, 224, 255, 0.85);
+  color: rgba(95, 203, 196, 0.85);
   font-weight: 500;
 }
 
@@ -3290,15 +3290,15 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: rgba(235, 243, 247, 0.65);
+  color: rgba(71, 85, 105, 0.65);
 }
 
 .flight-booking__line {
   width: 100%;
   height: 2px;
   background: linear-gradient(90deg,
-      rgba(144, 224, 255, 0.3) 0%,
-      rgba(255, 206, 153, 0.3) 100%);
+      rgba(95, 203, 196, 0.3) 0%,
+      rgba(74, 184, 176, 0.3) 100%);
   position: relative;
 }
 
@@ -3308,7 +3308,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   position: absolute;
   width: 8px;
   height: 8px;
-  background: rgba(144, 224, 255, 0.5);
+  background: rgba(95, 203, 196, 0.5);
   border-radius: 50%;
   top: 50%;
   transform: translateY(-50%);
@@ -3320,7 +3320,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .flight-booking__line::after {
   right: 0;
-  background: rgba(255, 206, 153, 0.5);
+  background: rgba(74, 184, 176, 0.5);
 }
 
 .flight-booking__flight-actions {
@@ -3333,14 +3333,14 @@ input[type="password"]::-webkit-textfield-decoration-container {
 .flight-booking__price {
   font-size: 1.75rem;
   font-weight: 600;
-  color: #ffe6bc;
+  color: #5FCBC4;
 }
 
 .flight-booking__select {
   padding: 0.6rem 1.5rem;
   border-radius: 0.75rem;
-  background: linear-gradient(135deg, #ffe4c4 0%, #f4b973 100%);
-  color: #102024;
+  background: linear-gradient(135deg, #5FCBC4 0%, #4AB8B0 100%);
+  color: #FFFFFF;
   font-weight: 600;
   font-size: 0.9rem;
   border: none;
@@ -3353,20 +3353,20 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .flight-booking__select:hover {
   transform: translateY(-2px);
-  box-shadow: 0 18px 30px -20px rgba(255, 206, 153, 0.65);
+  box-shadow: 0 18px 30px -20px rgba(74, 184, 176, 0.65);
 }
 
 .flight-booking__flight--selected .flight-booking__select {
-  background: rgba(144, 224, 255, 0.2);
-  color: rgba(144, 224, 255, 0.95);
+  background: rgba(95, 203, 196, 0.2);
+  color: rgba(95, 203, 196, 0.95);
 }
 
 /* Booking Summary */
 .flight-booking__summary {
   position: sticky;
   top: 6rem;
-  background: rgba(18, 32, 42, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(245, 253, 252, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.15);
   border-radius: 1.5rem;
   overflow: hidden;
   backdrop-filter: blur(24px);
@@ -3378,12 +3378,12 @@ input[type="password"]::-webkit-textfield-decoration-container {
   justify-content: space-between;
   padding: 1.5rem;
   cursor: pointer;
-  background: linear-gradient(135deg, rgba(144, 224, 255, 0.08) 0%, rgba(255, 206, 153, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(95, 203, 196, 0.08) 0%, rgba(74, 184, 176, 0.08) 100%);
   transition: background 0.2s ease;
 }
 
 .flight-booking__summary-header:hover {
-  background: linear-gradient(135deg, rgba(144, 224, 255, 0.12) 0%, rgba(255, 206, 153, 0.12) 100%);
+  background: linear-gradient(135deg, rgba(95, 203, 196, 0.12) 0%, rgba(74, 184, 176, 0.12) 100%);
 }
 
 .flight-booking__summary-header>div {
@@ -3394,13 +3394,13 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .flight-booking__summary-header i {
   font-size: 1.25rem;
-  color: rgba(255, 229, 180, 0.85);
+  color: rgba(95, 203, 196, 0.85);
 }
 
 .flight-booking__summary-header h3 {
   font-size: 1.15rem;
   font-weight: 600;
-  color: #f7f2e5;
+  color: #1E293B;
 }
 
 .flight-booking__summary-body {
@@ -3420,7 +3420,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(235, 243, 247, 0.5);
+  color: rgba(71, 85, 105, 0.5);
   font-weight: 600;
   margin-bottom: 0.25rem;
 }
@@ -3430,24 +3430,24 @@ input[type="password"]::-webkit-textfield-decoration-container {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  background: rgba(12, 26, 34, 0.5);
+  background: rgba(240, 250, 249, 0.5);
   border-radius: 0.75rem;
   font-size: 0.9rem;
 }
 
 .flight-booking__summary-label {
-  color: rgba(235, 243, 247, 0.7);
+  color: rgba(71, 85, 105, 0.7);
 }
 
 .flight-booking__summary-value {
-  color: #f7f2e5;
+  color: #1E293B;
   font-weight: 500;
 }
 
 .flight-booking__summary-empty {
   text-align: center;
   padding: 1.5rem;
-  color: rgba(235, 243, 247, 0.4);
+  color: rgba(71, 85, 105, 0.4);
   font-size: 0.9rem;
 }
 
@@ -3457,19 +3457,19 @@ input[type="password"]::-webkit-textfield-decoration-container {
   align-items: center;
   padding: 1rem;
   margin-top: 0.5rem;
-  background: linear-gradient(135deg, rgba(144, 224, 255, 0.1) 0%, rgba(255, 206, 153, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(95, 203, 196, 0.1) 0%, rgba(74, 184, 176, 0.1) 100%);
   border-radius: 0.75rem;
   font-size: 1.25rem;
   font-weight: 600;
-  color: #ffe6bc;
+  color: #5FCBC4;
 }
 
 .flight-booking__confirm {
   width: 100%;
   padding: 1rem;
   border-radius: 0.75rem;
-  background: linear-gradient(135deg, #ffe4c4 0%, #f4b973 100%);
-  color: #102024;
+  background: linear-gradient(135deg, #5FCBC4 0%, #4AB8B0 100%);
+  color: #FFFFFF;
   font-weight: 600;
   font-size: 1rem;
   border: none;
@@ -3479,7 +3479,7 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .flight-booking__confirm:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 18px 30px -20px rgba(255, 206, 153, 0.65);
+  box-shadow: 0 18px 30px -20px rgba(74, 184, 176, 0.65);
 }
 
 .flight-booking__confirm:disabled {
@@ -3520,41 +3520,41 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 /* Slider Styles ----------------------------------------------------------- */
 .dashboard-form__slider.p-slider {
-  background: rgba(255, 229, 180, 0.15) !important;
+  background: rgba(95, 203, 196, 0.15) !important;
   border-radius: 0.5rem !important;
   height: 0.5rem !important;
 }
 
 .dashboard-form__slider.p-slider .p-slider-range {
-  background: linear-gradient(90deg, #FFE5B4, #FFB56D) !important;
+  background: linear-gradient(90deg, #5FCBC4, #4AB8B0) !important;
   border-radius: 0.5rem !important;
 }
 
 .dashboard-form__slider.p-slider .p-slider-handle {
-  background: linear-gradient(135deg, #FFE5B4, #FFB56D) !important;
-  border: 2px solid rgba(255, 229, 180, 0.9) !important;
+  background: linear-gradient(135deg, #5FCBC4, #4AB8B0) !important;
+  border: 2px solid rgba(95, 203, 196, 0.9) !important;
   width: 1.25rem !important;
   height: 1.25rem !important;
   margin-top: -0.575rem !important;
   margin-left: -0.625rem !important;
-  box-shadow: 0 4px 12px -4px rgba(255, 181, 109, 0.6) !important;
+  box-shadow: 0 4px 12px -4px rgba(74, 184, 176, 0.6) !important;
   transition: transform 0.15s ease, box-shadow 0.15s ease !important;
 }
 
 .dashboard-form__slider.p-slider .p-slider-handle:hover {
   transform: scale(1.15) !important;
-  box-shadow: 0 6px 18px -4px rgba(255, 181, 109, 0.8) !important;
+  box-shadow: 0 6px 18px -4px rgba(74, 184, 176, 0.8) !important;
 }
 
 .dashboard-form__slider.p-slider .p-slider-handle:focus {
-  box-shadow: 0 0 0 4px rgba(255, 229, 180, 0.25), 0 6px 18px -4px rgba(255, 181, 109, 0.8) !important;
+  box-shadow: 0 0 0 4px rgba(95, 203, 196, 0.25), 0 6px 18px -4px rgba(74, 184, 176, 0.8) !important;
 }
 
 /* Checkbox Styles --------------------------------------------------------- */
 .p-checkbox .p-checkbox-box,
 .p-checkbox-box {
-  background: rgba(16, 32, 43, 0.85) !important;
-  border: 1px solid rgba(255, 229, 180, 0.25) !important;
+  background: rgba(245, 253, 252, 0.85) !important;
+  border: 1px solid rgba(95, 203, 196, 0.25) !important;
   border-radius: 0.375rem !important;
   width: 1.25rem !important;
   height: 1.25rem !important;
@@ -3563,36 +3563,36 @@ input[type="password"]::-webkit-textfield-decoration-container {
 
 .p-checkbox .p-checkbox-box:hover,
 .p-checkbox-box:hover {
-  border-color: rgba(255, 229, 180, 0.5) !important;
+  border-color: rgba(95, 203, 196, 0.5) !important;
 }
 
 .p-checkbox .p-checkbox-box.p-highlight,
 .p-checkbox-box.p-highlight,
 .p-checkbox.p-highlight .p-checkbox-box {
-  background: linear-gradient(135deg, #FFE5B4, #FFB56D) !important;
-  border-color: rgba(255, 229, 180, 0.9) !important;
+  background: linear-gradient(135deg, #5FCBC4, #4AB8B0) !important;
+  border-color: rgba(95, 203, 196, 0.9) !important;
 }
 
 .p-checkbox .p-checkbox-box .p-checkbox-icon,
 .p-checkbox-box .p-checkbox-icon,
 .p-checkbox-icon {
-  color: #2B1200 !important;
+  color: #FFFFFF !important;
   font-weight: bold !important;
 }
 
 .p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon,
 .p-checkbox-box.p-highlight .p-checkbox-icon {
-  color: #2B1200 !important;
+  color: #FFFFFF !important;
 }
 
 .p-checkbox:not(.p-disabled):has(.p-checkbox-box.p-highlight):hover .p-checkbox-box,
 .p-checkbox:not(.p-disabled) .p-checkbox-box.p-highlight:hover {
-  background: linear-gradient(135deg, #FFD79E, #FFA64D) !important;
-  border-color: rgba(255, 229, 180, 1) !important;
+  background: linear-gradient(135deg, #7DD8D2, #3DA8A0) !important;
+  border-color: rgba(95, 203, 196, 1) !important;
 }
 
 .p-checkbox .p-checkbox-box.p-focus,
 .p-checkbox-box.p-focus {
-  box-shadow: 0 0 0 3px rgba(255, 229, 180, 0.25) !important;
-  border-color: rgba(255, 229, 180, 0.75) !important;
+  box-shadow: 0 0 0 3px rgba(95, 203, 196, 0.25) !important;
+  border-color: rgba(95, 203, 196, 0.75) !important;
 }

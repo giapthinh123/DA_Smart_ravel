@@ -140,33 +140,33 @@ export default function HistoryTourPage() {
 
     return (
         <AuthGuard>
-            <div className="relative min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+            <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
                 {/* Background Layers */}
                 <div className="pointer-events-none absolute inset-0 -z-10">
                     <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
                     <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-                    <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5]/40 to-transparent" />
                 </div>
 
                 {/* Header */}
                 <header className="mx-auto max-w-7xl px-6 py-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm uppercase tracking-[0.3em] text-[#7D837A]">
+                            <p className="text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
                                 VietJourney
                             </p>
-                            <p className="text-xl font-semibold text-[#F3F0E9]">
+                            <p className="text-xl font-semibold text-[#0F172A]">
                                 Your Travel Timeline
                             </p>
                         </div>
                         <nav className="flex items-center gap-2 text-sm font-medium">
-                            <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+                            <Link href="/" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
                                 Home
                             </Link>
-                            <Link href="/history_tour" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+                            <Link href="/history_tour" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
                                 History Tour
                             </Link>
-                            <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+                            <Link href="/tours" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
                                 Personalities
                             </Link>
                             <span className="mx-2 h-4 w-px bg-white/20"></span>
@@ -182,7 +182,7 @@ export default function HistoryTourPage() {
                         <h1 className="text-4xl font-bold text-white mb-3 drop-shadow-[0_12px_24px_rgba(255,229,180,0.4)]">
                             Tour History
                         </h1>
-                        <p className="text-[#A5ABA3] text-lg">
+                        <p className="text-[#64748B] text-lg">
                             Explore your past adventures and planned journeys
                         </p>
                     </div>
@@ -190,8 +190,8 @@ export default function HistoryTourPage() {
                     {/* Stats Cards */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 transition hover:bg-white/8">
-                            <div className="text-3xl font-bold text-[#FFE5B4] mb-2">{stats.total}</div>
-                            <div className="text-sm text-[#A5ABA3]">Total Tours</div>
+                            <div className="text-3xl font-bold text-[#5FCBC4] mb-2">{stats.total}</div>
+                            <div className="text-sm text-[#64748B]">Total Tours</div>
                         </div>
                         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 backdrop-blur p-6 transition hover:bg-emerald-500/15">
                             <div className="text-3xl font-bold text-emerald-400 mb-2">{stats.completed}</div>
@@ -216,8 +216,8 @@ export default function HistoryTourPage() {
                                     key={option}
                                     onClick={() => setFilter(option)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === option
-                                        ? "bg-[#FFE5B4] text-[#2B1200] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
-                                        : "bg-white/10 text-[#F3F0E9] hover:bg-white/15"
+                                        ? "bg-[#5FCBC4] text-[#FFFFFF] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
+                                        : "bg-white/10 text-[#0F172A] hover:bg-white/15"
                                         }`}
                                 >
                                     {option}
@@ -227,7 +227,7 @@ export default function HistoryTourPage() {
 
                         {/* Search Bar */}
                         <div className="relative w-full md:w-80">
-                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#A5ABA3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#64748B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             <input
@@ -235,7 +235,7 @@ export default function HistoryTourPage() {
                                 placeholder="Search tours or destinations..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-white/20 bg-[#0D1820]/80 text-white placeholder:text-[#A5ABA3] focus:outline-none focus:border-[#FFE5B4] focus:ring-2 focus:ring-[#FFE5B4]/20 transition"
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-white/20 bg-[#0D1820]/80 text-white placeholder:text-[#64748B] focus:outline-none focus:border-[#5FCBC4] focus:ring-2 focus:ring-[#5FCBC4]/20 transition"
                             />
                         </div>
                     </div>
@@ -243,9 +243,9 @@ export default function HistoryTourPage() {
                     {/* Loading State */}
                     {loading && (
                         <div className="text-center py-20 rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
-                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-[#FFE5B4] border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-16 h-16 mx-auto mb-4 border-4 border-[#5FCBC4] border-t-transparent rounded-full animate-spin"></div>
                             <h3 className="text-xl font-semibold text-white mb-2">Loading your tours...</h3>
-                            <p className="text-[#A5ABA3]">Please wait a moment</p>
+                            <p className="text-[#64748B]">Please wait a moment</p>
                         </div>
                     )}
 
@@ -256,10 +256,10 @@ export default function HistoryTourPage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <h3 className="text-xl font-semibold text-white mb-2">Error Loading Tours</h3>
-                            <p className="text-[#A5ABA3] mb-4">{error}</p>
+                            <p className="text-[#64748B] mb-4">{error}</p>
                             <button
                                 onClick={() => window.location.reload()}
-                                className="px-6 py-2 rounded-lg bg-[#FFE5B4] text-[#2B1200] font-semibold hover:bg-[#FFD79E] transition"
+                                className="px-6 py-2 rounded-lg bg-[#5FCBC4] text-[#FFFFFF] font-semibold hover:bg-[#7DD8D2] transition"
                             >
                                 Retry
                             </button>
@@ -269,14 +269,14 @@ export default function HistoryTourPage() {
                     {/* Tours Grid */}
                     {!loading && !error && filteredTours.length === 0 && (
                         <div className="text-center py-20 rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
-                            <svg className="w-16 h-16 mx-auto mb-4 text-[#7D837A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-16 h-16 mx-auto mb-4 text-[#94A3B8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <h3 className="text-xl font-semibold text-white mb-2">No tours found</h3>
-                            <p className="text-[#A5ABA3] mb-4">Try adjusting your filters or search query</p>
+                            <p className="text-[#64748B] mb-4">Try adjusting your filters or search query</p>
                             <Link
                                 href="/tours"
-                                className="inline-block px-6 py-2 rounded-lg bg-[#FFE5B4] text-[#2B1200] font-semibold hover:bg-[#FFD79E] transition"
+                                className="inline-block px-6 py-2 rounded-lg bg-[#5FCBC4] text-[#FFFFFF] font-semibold hover:bg-[#7DD8D2] transition"
                             >
                                 Create New Tour
                             </Link>
@@ -289,7 +289,7 @@ export default function HistoryTourPage() {
                                 {currentTours.map((tour) => (
                                     <div
                                         key={tour.id}
-                                        className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden transition-all hover:border-[#FFE5B4]/40 hover:shadow-[0_8px_32px_rgba(255,229,180,0.2)] cursor-pointer"
+                                        className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden transition-all hover:border-[#5FCBC4]/40 hover:shadow-[0_8px_32px_rgba(255,229,180,0.2)] cursor-pointer"
                                         onClick={() => router.push(`/full_tour?itineraryId=${tour.id}`)}
                                     >
                                         {/* Image */}
@@ -311,25 +311,25 @@ export default function HistoryTourPage() {
 
                                         {/* Content */}
                                         <div className="p-6">
-                                            <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#FFE5B4] transition">
+                                            <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-[#5FCBC4] transition">
                                                 {tour.name}
                                             </h3>
 
                                             <div className="space-y-2 mb-4">
-                                                <div className="flex items-center text-sm text-[#A5ABA3]">
+                                                <div className="flex items-center text-sm text-[#64748B]">
                                                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                                     </svg>
                                                     {tour.destination}
                                                 </div>
-                                                <div className="flex items-center text-sm text-[#A5ABA3]">
+                                                <div className="flex items-center text-sm text-[#64748B]">
                                                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                                     </svg>
                                                     {tour.dates}
                                                 </div>
-                                                <div className="flex items-center text-sm text-[#A5ABA3]">
+                                                <div className="flex items-center text-sm text-[#64748B]">
                                                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                                     </svg>
@@ -340,9 +340,9 @@ export default function HistoryTourPage() {
                                             {/* Footer */}
                                             <div className="flex items-center justify-between pt-4 border-t border-white/10">
                                                 <div className="flex items-center gap-4">
-                                                    <span className="text-lg font-bold text-[#FFE5B4]">{tour.budget}</span>
-                                                    <span className="text-xs text-[#7D837A]">·</span>
-                                                    <span className="text-sm text-[#A5ABA3]">{tour.activities} activities</span>
+                                                    <span className="text-lg font-bold text-[#5FCBC4]">{tour.budget}</span>
+                                                    <span className="text-xs text-[#94A3B8]">·</span>
+                                                    <span className="text-sm text-[#64748B]">{tour.activities} activities</span>
                                                 </div>
                                                 {tour.rating && (
                                                     <div className="flex items-center gap-1">
@@ -362,7 +362,7 @@ export default function HistoryTourPage() {
                             {totalPages > 1 && (
                                 <div className="mt-12 flex flex-col items-center gap-6">
                                     {/* Page Info */}
-                                    <p className="text-sm text-[#A5ABA3]">
+                                    <p className="text-sm text-[#64748B]">
                                         Showing {startIndex + 1}-{Math.min(endIndex, filteredTours.length)} of {filteredTours.length} tours
                                     </p>
 
@@ -373,8 +373,8 @@ export default function HistoryTourPage() {
                                             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                                             disabled={currentPage === 1}
                                             className={`px-4 py-2 rounded-lg font-medium transition-all ${currentPage === 1
-                                                ? "bg-white/5 text-[#7D837A] cursor-not-allowed"
-                                                : "bg-white/10 text-[#F3F0E9] hover:bg-white/15 hover:text-[#FFE5B4]"
+                                                ? "bg-white/5 text-[#94A3B8] cursor-not-allowed"
+                                                : "bg-white/10 text-[#0F172A] hover:bg-white/15 hover:text-[#5FCBC4]"
                                                 }`}
                                             aria-label="Previous page"
                                         >
@@ -398,7 +398,7 @@ export default function HistoryTourPage() {
 
                                                 if (showEllipsisBefore || showEllipsisAfter) {
                                                     return (
-                                                        <span key={page} className="px-2 text-[#7D837A]">
+                                                        <span key={page} className="px-2 text-[#94A3B8]">
                                                             ...
                                                         </span>
                                                     )
@@ -411,8 +411,8 @@ export default function HistoryTourPage() {
                                                         key={page}
                                                         onClick={() => setCurrentPage(page)}
                                                         className={`min-w-[40px] h-10 rounded-lg font-medium transition-all ${currentPage === page
-                                                            ? "bg-[#FFE5B4] text-[#2B1200] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
-                                                            : "bg-white/10 text-[#F3F0E9] hover:bg-white/15 hover:text-[#FFE5B4]"
+                                                            ? "bg-[#5FCBC4] text-[#FFFFFF] shadow-[0_4px_16px_rgba(255,229,180,0.4)]"
+                                                            : "bg-white/10 text-[#0F172A] hover:bg-white/15 hover:text-[#5FCBC4]"
                                                             }`}
                                                         aria-label={`Go to page ${page}`}
                                                         aria-current={currentPage === page ? "page" : undefined}
@@ -428,8 +428,8 @@ export default function HistoryTourPage() {
                                             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                                             disabled={currentPage === totalPages}
                                             className={`px-4 py-2 rounded-lg font-medium transition-all ${currentPage === totalPages
-                                                ? "bg-white/5 text-[#7D837A] cursor-not-allowed"
-                                                : "bg-white/10 text-[#F3F0E9] hover:bg-white/15 hover:text-[#FFE5B4]"
+                                                ? "bg-white/5 text-[#94A3B8] cursor-not-allowed"
+                                                : "bg-white/10 text-[#0F172A] hover:bg-white/15 hover:text-[#5FCBC4]"
                                                 }`}
                                             aria-label="Next page"
                                         >
@@ -445,8 +445,8 @@ export default function HistoryTourPage() {
                 </main>
 
                 {/* Footer */}
-                <footer className="mt-8 border-t border-white/10 bg-[#061017]/80 py-10 backdrop-blur">
-                    <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#7D837A]">
+                <footer className="mt-8 border-t border-white/10 bg-[#1E293B]/80 py-10 backdrop-blur">
+                    <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#94A3B8]">
                         <p>© 2025 VietJourney. All rights reserved</p>
                         <p className="mt-2">Preserving your travel memories.</p>
                     </div>

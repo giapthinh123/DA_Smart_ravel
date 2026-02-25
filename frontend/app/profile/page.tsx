@@ -216,35 +216,35 @@ function ProfileContent() {
 
   return (
     <>
-      <div className="relative min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+      <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
         {/* Background Layers */}
         <div className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5]/40 to-transparent" />
         </div>
 
         <header className="mx-auto max-w-7xl px-6 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-[#7D837A]">
+              <p className="text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
                 VietJourney
               </p>
-              <p className="text-xl font-semibold text-[#F3F0E9]">
+              <p className="text-xl font-semibold text-[#0F172A]">
                 Mapping Vietnam experiences
               </p>
             </div>
             <nav className="flex items-center gap-2 text-sm font-medium">
-              <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+              <Link href="/" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
                 Home
               </Link>
-              <Link href="/planner" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+              <Link href="/planner" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
                 Planner
               </Link>
-              <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+              <Link href="/tours" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
                 Personalities
               </Link>
-              <Link href="#" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
+              <Link href="#" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
                 Contact
               </Link>
               <span className="mx-2 h-4 w-px bg-white/20"></span>
@@ -265,14 +265,14 @@ function ProfileContent() {
                   <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
                     Profile Information
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
+                  <p className="text-sm text-[#475569]">
                     Update your personal details
                   </p>
                 </div>
 
                 <div className="mb-6 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <Avatar className="h-20 w-20 border-2 border-[#FFE5B4]/30">
-                    <AvatarFallback className="text-xl bg-[#FFE5B4]/20 text-[#FFE5B4]">
+                  <Avatar className="h-20 w-20 border-2 border-[#5FCBC4]/30">
+                    <AvatarFallback className="text-xl bg-[#5FCBC4]/20 text-[#5FCBC4]">
                       {(user?.fullname || user?.name || user?.email || "U")
                         .split(" ")
                         .map((n: string) => n[0])
@@ -283,13 +283,13 @@ function ProfileContent() {
                   </Avatar>
                   <div>
                     <h3 className="font-semibold text-white text-lg">{user?.fullname || user?.name || user?.email}</h3>
-                    <p className="text-sm text-[#FFE5B4]">{user?.role}</p>
+                    <p className="text-sm text-[#5FCBC4]">{user?.role}</p>
                   </div>
                 </div>
 
                 <form onSubmit={handleUpdateProfile} className="space-y-5">
                   <div className="grid gap-2">
-                    <label htmlFor="fullName" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
+                    <label htmlFor="fullName" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
                       Full Name
                     </label>
                     <div className="relative">
@@ -301,13 +301,13 @@ function ProfileContent() {
                         value={formData.fullName}
                         onChange={handleInputChange}
                         placeholder="Enter your full name…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="email" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
+                    <label htmlFor="email" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
                       Email
                     </label>
                     <div className="relative">
@@ -317,14 +317,14 @@ function ProfileContent() {
                         type="email"
                         value={user?.email}
                         disabled
-                        className="h-12 w-full r  ounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-[#7D837A] placeholder:text-[#B6C2C6] cursor-not-allowed"
+                        className="h-12 w-full r  ounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-[#94A3B8] placeholder:text-[#94A3B8] cursor-not-allowed"
                       />
                     </div>
-                    <p className="text-xs text-[#7D837A]">Email cannot be changed</p>
+                    <p className="text-xs text-[#94A3B8]">Email cannot be changed</p>
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="phoneNumber" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
+                    <label htmlFor="phoneNumber" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
                       Phone Number
                     </label>
                     <div className="relative">
@@ -336,13 +336,13 @@ function ProfileContent() {
                         value={formData.phoneNumber}
                         onChange={handleInputChange}
                         placeholder="Enter your phone number…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="address" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
+                    <label htmlFor="address" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
                       Address
                     </label>
                     <div className="relative">
@@ -354,7 +354,7 @@ function ProfileContent() {
                         value={formData.address}
                         onChange={handleInputChange}
                         placeholder="Enter your address…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -372,7 +372,7 @@ function ProfileContent() {
                   <button
                     type="submit"
                     disabled={!isProfileFormValid || isUpdatingProfile}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFEED0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-sm font-semibold text-[#FFFFFF] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A8E6E0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFFFFF] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     <span
                       aria-hidden="true"
@@ -381,7 +381,7 @@ function ProfileContent() {
                       <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
                       <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
                     </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#2B1200] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
+                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#FFFFFF] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
                       {isUpdatingProfile ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
@@ -401,14 +401,14 @@ function ProfileContent() {
                   <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
                     Change Password
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
+                  <p className="text-sm text-[#475569]">
                     Update your account password
                   </p>
                 </div>
 
                 <form onSubmit={handleChangePassword} className="space-y-5">
                   <div className="grid gap-2">
-                    <label htmlFor="currentPassword" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
+                    <label htmlFor="currentPassword" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
                       Current Password
                     </label>
                     <div className="relative">
@@ -420,13 +420,13 @@ function ProfileContent() {
                         value={passwordData.currentPassword}
                         onChange={handlePasswordChange}
                         placeholder="Enter current password…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="newPassword" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
+                    <label htmlFor="newPassword" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
                       New Password
                     </label>
                     <div className="relative">
@@ -438,13 +438,13 @@ function ProfileContent() {
                         value={passwordData.newPassword}
                         onChange={handlePasswordChange}
                         placeholder="Enter new password (min. 8 characters)…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="confirmPassword" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
+                    <label htmlFor="confirmPassword" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
                       Confirm New Password
                     </label>
                     <div className="relative">
@@ -456,7 +456,7 @@ function ProfileContent() {
                         value={passwordData.confirmPassword}
                         onChange={handlePasswordChange}
                         placeholder="Confirm new password…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -475,7 +475,7 @@ function ProfileContent() {
                   <button
                     type="submit"
                     disabled={!isPasswordFormValid || isChangingPassword}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFEED0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-sm font-semibold text-[#FFFFFF] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A8E6E0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFFFFF] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     <span
                       aria-hidden="true"
@@ -484,7 +484,7 @@ function ProfileContent() {
                       <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
                       <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
                     </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#2B1200] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
+                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#FFFFFF] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
                       {isChangingPassword ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
@@ -506,14 +506,14 @@ function ProfileContent() {
                   <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
                     Account Information
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
+                  <p className="text-sm text-[#475569]">
                     Your account details
                   </p>
                 </div>
 
                 <div className="space-y-6">
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4] mb-2">
+                    <p className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] mb-2">
                       Account Created
                     </p>
                     <p className="text-base text-white">
@@ -526,7 +526,7 @@ function ProfileContent() {
                   </div>
 
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4] mb-2">
+                    <p className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] mb-2">
                       User Role
                     </p>
                     <p className="text-base text-white">{user?.role}</p>
@@ -540,7 +540,7 @@ function ProfileContent() {
                   <h2 className="text-xl font-semibold text-red-400 drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
                     Danger Zone
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
+                  <p className="text-sm text-[#475569]">
                     Permanently delete your account
                   </p>
                 </div>
@@ -571,7 +571,7 @@ function ProfileContent() {
                         value={deleteAccountData.confirmPassword}
                         onChange={handleDeleteAccountChange}
                         placeholder="Enter your password"
-                        className="h-12 w-full rounded-2xl border border-red-500/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-red-400 focus:outline-none focus:ring-0 transition-colors"
+                        className="h-12 w-full rounded-2xl border border-red-500/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus:border-red-400 focus:outline-none focus:ring-0 transition-colors"
                       />
                     </div>
                   </div>
@@ -589,7 +589,7 @@ function ProfileContent() {
                         value={deleteAccountData.confirmText}
                         onChange={handleDeleteAccountChange}
                         placeholder="Type DELETE"
-                        className="h-12 w-full rounded-2xl border border-red-500/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-red-400 focus:outline-none focus:ring-0 transition-colors"
+                        className="h-12 w-full rounded-2xl border border-red-500/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus:border-red-400 focus:outline-none focus:ring-0 transition-colors"
                       />
                     </div>
                   </div>
@@ -608,7 +608,7 @@ function ProfileContent() {
                   <button
                     type="submit"
                     disabled={!isDeleteAccountValid || isDeletingAccount}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-sm font-semibold text-white shadow-[0_25px_70px_-20px_rgba(220,38,38,0.6)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(220,38,38,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-sm font-semibold text-white shadow-[0_25px_70px_-20px_rgba(220,38,38,0.6)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(220,38,38,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFFFFF] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     <span
                       aria-hidden="true"
@@ -639,22 +639,22 @@ function ProfileContent() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 border-t border-white/10 bg-[#061017]/80 py-10 backdrop-blur">
+        <footer className="mt-16 border-t border-white/10 bg-[#1E293B]/80 py-10 backdrop-blur">
           <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 lg:flex-row lg:justify-between">
             <div className="max-w-sm">
-              <p className="mb-2 text-sm uppercase tracking-[0.3em] text-[#7D837A]">
+              <p className="mb-2 text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
                 VietJourney
               </p>
               <h3 className="mb-4 text-xl font-semibold text-white">
                 Connect and discover experiences over land
               </h3>
-              <p className="mb-2 text-sm text-[#D0D7D8]">
+              <p className="mb-2 text-sm text-[#475569]">
                 43 Building, 348 Arau They Street,
               </p>
-              <p className="mb-2 text-sm text-[#D0D7D8]">
+              <p className="mb-2 text-sm text-[#475569]">
                 Can Giay District, Ha Noi, Vietnam
               </p>
-              <p className="text-sm text-[#D0D7D8]">
+              <p className="text-sm text-[#475569]">
                 help@vietjourneycommander.com
               </p>
             </div>
@@ -662,32 +662,32 @@ function ProfileContent() {
             <div className="grid gap-8 sm:grid-cols-3">
               <div>
                 <h4 className="mb-4 text-sm font-semibold text-white">Platform</h4>
-                <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Tailored experiences</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Signature journeys</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Themed escapes</a></li>
+                <ul className="space-y-2 text-sm text-[#475569]">
+                  <li><a href="#" className="hover:text-[#5FCBC4]">Tailored experiences</a></li>
+                  <li><a href="#" className="hover:text-[#5FCBC4]">Signature journeys</a></li>
+                  <li><a href="#" className="hover:text-[#5FCBC4]">Themed escapes</a></li>
                 </ul>
               </div>
               <div>
                 <h4 className="mb-4 text-sm font-semibold text-white">Support</h4>
-                <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Help centre</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Terms of privacy</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Legal</a></li>
+                <ul className="space-y-2 text-sm text-[#475569]">
+                  <li><a href="#" className="hover:text-[#5FCBC4]">Help centre</a></li>
+                  <li><a href="#" className="hover:text-[#5FCBC4]">Terms of privacy</a></li>
+                  <li><a href="#" className="hover:text-[#5FCBC4]">Legal</a></li>
                 </ul>
               </div>
               <div>
                 <h4 className="mb-4 text-sm font-semibold text-white">Stay looped</h4>
-                <p className="mb-3 text-sm text-[#D0D7D8]">
+                <p className="mb-3 text-sm text-[#475569]">
                   Receive curated travel moments straight to your inbox
                 </p>
                 <div className="flex gap-2">
                   <input
                     type="email"
                     placeholder="Your email..."
-                    className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none"
+                    className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:outline-none"
                   />
-                  <button className="rounded-lg bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] px-4 text-sm font-semibold text-[#2B1200] transition hover:scale-105">
+                  <button className="rounded-lg bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] px-4 text-sm font-semibold text-[#FFFFFF] transition hover:scale-105">
                     Subscribe
                   </button>
                 </div>
@@ -695,7 +695,7 @@ function ProfileContent() {
             </div>
           </div>
 
-          <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-6 pt-8 text-center text-sm text-[#7D837A]">
+          <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-6 pt-8 text-center text-sm text-[#94A3B8]">
             <p>© 2025 VietJourney. All rights reserved</p>
             <p className="mt-2">Design aligned with the Welcome experiences.</p>
           </div>
