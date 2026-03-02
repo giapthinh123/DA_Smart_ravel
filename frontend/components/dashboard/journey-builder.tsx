@@ -121,6 +121,10 @@ export default function JourneyBuilder() {
     return `${guestLabel}${infantLabel}`
   }, [dataBuildTour.adults, dataBuildTour.children, dataBuildTour.infants])
 
+  const renderBudget = useCallback(() => {
+    return dataBuildTour.budget.toLocaleString('en-US')
+  }, [dataBuildTour.budget])
+
   // Handle form submission
   const handleSubmit = useCallback(async () => {
     if (!dataBuildTour.departure || !dataBuildTour.destination || !dataBuildTour.departureDate || !dataBuildTour.returnDate || !dataBuildTour.budget || dataBuildTour.adults === 0) {
@@ -152,8 +156,8 @@ export default function JourneyBuilder() {
         onClick={handleSubmit}
         disabled={isLoading}
         className={cn(
-          "h-12 w-full rounded-xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-sm font-semibold text-[#FFFFFF] shadow-[0_20px_60px_-20px_rgba(255,186,102,0.85)] transition-all",
-          isLoading ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] hover:shadow-[0_20px_70px_-20px_rgba(255,186,102,0.95)]"
+          "h-12 w-full rounded-xl border border-[#3DA8A0] bg-[#3DA8A0] text-sm font-semibold text-white transition-all",
+          isLoading ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02]"
         )}
       >
         {isLoading ? (
@@ -174,7 +178,7 @@ export default function JourneyBuilder() {
     <div>
       {/* Decorative halo effect */}
 
-      <div className="rounded-3xl border border-white/10 bg-white/3 p-8 backdrop-blur travel-search__inner">
+      <div className="rounded-3xl  bg-white/3 p-8 backdrop-blur travel-search__inner">
         {/* Header */}
         <header className="travel-search__header">
           <span className="travel-search__tag">Curated Journey Builder</span>
@@ -191,10 +195,10 @@ export default function JourneyBuilder() {
               <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
                 Chapter 01
               </p>
-              <h3 className="text-2xl font-semibold text-white">
+              <h3 className="text-2xl font-semibold text-[#8bbcb7]">
                 Route & preferred schedule
               </h3>
-              <p className="mt-2 text-sm text-[#475569]">
+              <p className="mt-2 text-sm text-[#486c68]">
                 We connect every crafted stop while balancing each moment across your stay.
               </p>
             </div>
@@ -295,7 +299,7 @@ export default function JourneyBuilder() {
               </div>
               <div className="flex items-center gap-2">
                 <Checkbox inputId="checkbox_flight" checked={isIncludeFlight} onChange={() => setIsIncludeFlight(!isIncludeFlight)} />
-                <label htmlFor="checkbox_flight">You want to include flights in your journey?</label>
+                <label htmlFor="checkbox_flight" className="text-[#3DA8A0]">You want to include flights in your journey?</label>
               </div>
             </div>
           </div>
@@ -306,10 +310,10 @@ export default function JourneyBuilder() {
               <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
                 Chapter 02
               </p>
-              <h3 className="text-2xl font-semibold text-white">
+              <h3 className="text-2xl font-semibold text-[#8bbcb7]">
                 Investment & travel party
               </h3>
-              <p className="mt-2 text-sm text-[#475569]">
+              <p className="mt-2 text-sm text-[#486c68]">
                 Refine the planned investment and company so every service feels personal.
               </p>
             </div>
@@ -323,6 +327,7 @@ export default function JourneyBuilder() {
                   <NumericFormat
                     customInput={InputText}
                     className="dashboard-form__prime"
+                    style={{ color: '#3DA8A0' }}
                     placeholder={'Enter your budget...'}
                     value={dataBuildTour.budget || ''}
                     onValueChange={(values: any) => {
@@ -331,6 +336,7 @@ export default function JourneyBuilder() {
                     thousandSeparator={','}
                     decimalSeparator={'.'}
                     suffix={' $'}
+                    maxLength={10}
                     allowNegative={false}
                   />
                 </div>
@@ -344,7 +350,7 @@ export default function JourneyBuilder() {
                       onClick={() => setIsGuestOpen(!isGuestOpen)}
                       className="guest-selector__trigger"
                     >
-                      <span className={dataBuildTour.adults + dataBuildTour.children === 0 ? "text-[#94A3B8]" : "text-white"}>
+                      <span className={dataBuildTour.adults + dataBuildTour.children === 0 ? "text-[#94A3B8]" : "text-[#3DA8A0]"}>
                         {renderGuestLabel()}
                       </span>
                       <svg
@@ -451,7 +457,7 @@ export default function JourneyBuilder() {
 
                 <div>
                   <span className="travel-search__meta-label">Planned budget</span>
-                  <div className="travel-search__meta-value">{dataBuildTour.budget}</div>
+                  <div className="travel-search__meta-value">{renderBudget()}$</div>
                 </div>
               </div>
               <>

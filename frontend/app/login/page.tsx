@@ -136,28 +136,6 @@ export default function LoginPage() {
                       )}
                     </div>
                   </div>
-
-                  {/* Remember Me Checkbox */}
-                  <div className="flex items-center space-x-3 rounded-2xl border border-gray-100 bg-[#F8FFFE] p-3">
-                    <div className="relative">
-                      <input
-                        tabIndex={3}
-                        id="remember"
-                        type="checkbox"
-                        checked={remember}
-                        onChange={(e) => setRemember(e.target.checked)}
-                        className="peer size-4 shrink-0 rounded-[4px] border border-[#5FCBC4]/70 bg-transparent checked:bg-[#5FCBC4] checked:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/50 focus:ring-offset-2 focus:ring-offset-white transition-all cursor-pointer appearance-none"
-                      />
-                      <CheckIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" />
-                    </div>
-                    <label
-                      htmlFor="remember"
-                      className="text-sm text-[#5FCBC4] cursor-pointer select-none"
-                    >
-                      Keep me logged in
-                    </label>
-                  </div>
-
                   {/* Submit Button */}
                   <button
                     type="submit"

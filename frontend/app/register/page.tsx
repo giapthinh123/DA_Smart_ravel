@@ -87,16 +87,25 @@ export default function RegisterPage() {
 
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
-      setShowSuccess(true)
-
-      // Redirect to login page after 2 seconds
+    try {
+      const registrationData = {
+        email: formData.email,
+        password: formData.password,
+        fullname: formData.fullName,
+        phone: formData.phone,
+      }
+      
+      sessionStorage.setItem('registration_data', JSON.stringify(registrationData))
+      
       setTimeout(() => {
-        router.push("/login")
-      }, 2000)
-    }, 1000)
+        setIsLoading(false)
+        router.push('/register/payment')
+      }, 500)
+    } catch (error) {
+      console.error('Error saving registration data:', error)
+      setIsLoading(false)
+      alert('Có lỗi xảy ra. Vui lòng thử lại.')
+    }
   }
 
   const handleInputChange = (field: string, value: string) => {

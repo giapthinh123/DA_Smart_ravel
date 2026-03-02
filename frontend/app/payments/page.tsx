@@ -233,7 +233,7 @@ function PaymentsContent() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5]">
+      <div className="flex min-h-screen items-center justify-center bg-[#F0FDFA]">
         <Loader2 className="h-10 w-10 animate-spin text-[#5FCBC4]" />
       </div>
     )
@@ -242,13 +242,13 @@ function PaymentsContent() {
   // No data
   if (!itineraryData) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#F0FDFA] text-[#3F3F46]">
         <AlertCircle className="h-16 w-16 text-amber-400" />
-        <h2 className="text-2xl font-bold">No Itinerary Data</h2>
-        <p className="text-[#64748B]">Please go back to your itinerary and proceed to payment from there.</p>
+        <h2 className="text-2xl font-bold text-[#0F4C5C]">No Itinerary Data</h2>
+        <p className="text-[#A1A1AA]">Please go back to your itinerary and proceed to payment from there.</p>
         <Link
           href="/planner"
-          className="mt-4 rounded-xl bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] px-6 py-3 font-semibold text-[#FFFFFF] transition hover:scale-105"
+          className="mt-4 rounded-xl bg-[#5FCBC4] px-6 py-3 font-semibold text-white transition hover:bg-[#4AB8B0] hover:scale-105"
         >
           Go to Planner
         </Link>
@@ -259,25 +259,25 @@ function PaymentsContent() {
   // Success state
   if (paymentSuccess) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[#F0FDFA] text-[#3F3F46]">
         <div className="animate-bounce">
           <CheckCircle className="h-20 w-20 text-emerald-400" />
         </div>
         <h2 className="text-3xl font-bold">Payment Successful!</h2>
-        <p className="text-[#64748B]">
+        <p className="text-[#A1A1AA]">
           Your booking has been confirmed. Payment ID: <span className="font-mono text-[#5FCBC4]">{paymentId}</span>
         </p>
-        <p className="text-lg font-semibold text-emerald-400">{formatCurrency(totalAmount)}</p>
+        <p className="text-lg font-semibold text-[#5FCBC4]">{formatCurrency(totalAmount)}</p>
         <div className="mt-4 flex gap-4">
           <button
             onClick={() => router.push(`/full_tour?itineraryId=${itineraryId}`)}
-            className="rounded-xl border border-white/20 bg-white/5 px-6 py-3 font-semibold text-white transition hover:bg-white/10"
+            className="rounded-xl border border-[#E4E4E7] bg-white px-6 py-3 font-semibold text-[#0F4C5C] transition hover:bg-[#CCFBF1]"
           >
             View Full Tour
           </button>
           <button
             onClick={() => router.push("/planner")}
-            className="rounded-xl bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] px-6 py-3 font-semibold text-[#FFFFFF] transition hover:scale-105"
+            className="rounded-xl bg-[#5FCBC4] px-6 py-3 font-semibold text-white transition hover:bg-[#4AB8B0] hover:scale-105"
           >
             Back to Planner
           </button>
@@ -287,42 +287,38 @@ function PaymentsContent() {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
-      {/* Background layers */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5]/40 to-transparent" />
-      </div>
-
+    <div className="relative min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
       {/* Header */}
-      <header className="mx-auto max-w-6xl px-5 py-6 md:py-8">
+      <header className="mx-auto max-w-6xl px-5 py-6 md:py-8 bg-[#F0FDFA]">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.back()}
-              className="flex items-center gap-1 text-[#64748B] transition hover:text-white"
+              className="flex items-center gap-1 text-[#3F3F46] transition hover:text-[#0F4C5C]"
             >
               <ChevronLeft className="h-5 w-5" />
               <span className="text-sm">Back</span>
             </button>
-            <div className="h-6 w-px bg-white/20" />
+            <div className="h-6 w-px bg-[#E4E4E7]" />
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-[#94A3B8] md:text-sm">VietJourney</p>
-              <p className="mt-1 text-lg font-semibold text-[#0F172A] md:text-xl">Checkout & Secure Payment</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-[#A1A1AA] md:text-sm">VietJourney</p>
+              <p className="mt-1 text-lg font-semibold text-[#0F4C5C] md:text-xl">Checkout & Secure Payment</p>
             </div>
           </div>
-          <nav className="hidden items-center gap-2 text-sm font-medium text-[#64748B] md:flex">
-            <Link href="/planner" className="rounded-full px-3 py-1.5 transition hover:bg-white/5 hover:text-[#0F172A]">
+          <nav className="hidden items-center gap-2 text-sm font-medium text-[#3F3F46] md:flex">
+            <Link
+              href="/planner"
+              className="rounded-full px-3 py-1.5 text-[#3F3F46] transition hover:bg-[#CCFBF1] hover:text-[#0F4C5C]"
+            >
               Planner
             </Link>
             <Link
               href="/history_tour"
-              className="rounded-full px-3 py-1.5 transition hover:bg-white/5 hover:text-[#0F172A]"
+              className="rounded-full px-3 py-1.5 text-[#3F3F46] transition hover:bg-[#CCFBF1] hover:text-[#0F4C5C]"
             >
               History
             </Link>
-            <span className="mx-1 h-4 w-px bg-white/20" />
+            <span className="mx-1 h-4 w-px bg-[#E4E4E7]" />
             <UserMenu />
           </nav>
         </div>
@@ -332,9 +328,9 @@ function PaymentsContent() {
       <main className="mx-auto max-w-6xl px-4 pb-10 md:px-5 md:pb-16">
         <div className="grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.1fr)] lg:gap-8">
           {/* Left: Tour & price card */}
-          <section className="overflow-hidden rounded-[2rem] border border-white/10 bg-[#0D1820]/90 shadow-[0_18px_50px_rgba(3,10,18,0.9)] backdrop-blur">
+          <section className="overflow-hidden rounded-[2rem] border border-[#E4E4E7] bg-white shadow-sm">
             {/* Hero gradient */}
-            <div className="relative h-44 w-full bg-gradient-to-tr from-[#7C3AED] via-[#6366F1] to-[#22D3EE]">
+            <div className="relative h-44 w-full bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0]">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.38),transparent_55%)] mix-blend-screen" />
               <div className="absolute inset-0 flex flex-col justify-between p-5 text-white">
                 <div className="flex items-center gap-2 text-sm font-medium">
@@ -356,16 +352,16 @@ function PaymentsContent() {
             </div>
 
             {/* Details body */}
-            <div className="space-y-4 border-t border-white/10 bg-[#0D1820]/95 px-5 pb-5 pt-4 text-sm text-[#475569] md:px-6 md:pb-6">
+            <div className="space-y-4 border-t border-[#E4E4E7] bg-white px-5 pb-5 pt-4 text-sm text-[#3F3F46] md:px-6 md:pb-6">
               {/* Meta */}
-              <div className="flex flex-wrap gap-4 border-b border-white/10 pb-3 text-xs md:text-[13px]">
+              <div className="flex flex-wrap gap-4 border-b border-[#E4E4E7] pb-3 text-xs md:text-[13px]">
                 <div className="flex items-center gap-2">
                   <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 text-[15px] text-[#5FCBC4]">
                     📅
                   </span>
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#94A3B8]">Duration</p>
-                    <p className="font-medium text-[#0F172A]">{itineraryData.trip_duration_days} Days</p>
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#A1A1AA]">Duration</p>
+                    <p className="font-medium text-[#0F4C5C]">{itineraryData.trip_duration_days} Days</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -373,8 +369,8 @@ function PaymentsContent() {
                     👥
                   </span>
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#94A3B8]">Participants</p>
-                    <p className="font-medium text-[#0F172A]">{itineraryData.guest_count} People</p>
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#A1A1AA]">Participants</p>
+                    <p className="font-medium text-[#0F4C5C]">{itineraryData.guest_count} People</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -382,8 +378,8 @@ function PaymentsContent() {
                     📍
                   </span>
                   <div>
-                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#94A3B8]">Start Date</p>
-                    <p className="font-medium text-[#0F172A]">
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-[#A1A1AA]">Start Date</p>
+                    <p className="font-medium text-[#0F4C5C]">
                       {new Date(itineraryData.start_date).toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",
@@ -400,22 +396,22 @@ function PaymentsContent() {
                   <span>
                     Flight cost
                     {itineraryData.flights?.selectedDepartureFlight && (
-                      <span className="ml-1 text-[11px] text-[#94A3B8]">
+                      <span className="ml-1 text-[11px] text-[#A1A1AA]">
                         ({itineraryData.flights.selectedDepartureFlight.departCode} ↔{" "}
                         {itineraryData.flights.selectedDepartureFlight.arriveCode})
                       </span>
                     )}
                   </span>
-                  <span className="font-medium text-[#0F172A]">{formatCurrency(flightCost)}</span>
+                  <span className="font-medium text-[#0F4C5C]">{formatCurrency(flightCost)}</span>
                 </div>
               )}
 
               {/* Cost breakdown by day */}
-              <div className="space-y-2 text-[13px] text-[#475569]">
+              <div className="space-y-2 text-[13px] text-[#3F3F46]">
                 {dailyCosts.map((day) => (
                   <div key={day.day_number} className="flex items-center justify-between">
                     <span>Cost of Day {day.day_number}</span>
-                    <span className="font-medium text-[#0F172A]">{formatCurrency(day.day_cost)}</span>
+                    <span className="font-medium text-[#0F4C5C]">{formatCurrency(day.day_cost)}</span>
                   </div>
                 ))}
               </div>
@@ -423,8 +419,8 @@ function PaymentsContent() {
               {/* Per person */}
               {itineraryData.summary && (
                 <div className="flex items-center justify-between border-t border-dashed border-white/15 pt-2 text-[13px]">
-                  <span className="text-[#64748B]">Cost per person</span>
-                  <span className="font-medium text-[#0F172A]">
+                  <span className="text-[#A1A1AA]">Cost per person</span>
+                  <span className="font-medium text-[#0F4C5C]">
                     {formatCurrency(itineraryData.summary.cost_per_person)}
                   </span>
                 </div>
@@ -432,15 +428,15 @@ function PaymentsContent() {
 
               {/* Total */}
               <div className="mt-1 flex items-center justify-between border-t border-dashed border-white/15 pt-3">
-                <span className="text-[13px] font-semibold tracking-wide text-[#0F172A]">Total Amount</span>
+                <span className="text-[13px] font-semibold tracking-wide text-[#0F4C5C]">Total Amount</span>
                 <span className="text-lg font-semibold text-[#5FCBC4] md:text-xl">{formatCurrency(totalAmount)}</span>
               </div>
 
               {/* Budget utilization */}
               {itineraryData.summary && (
-                <div className="rounded-xl bg-white/5 px-3 py-2">
+                <div className="rounded-xl bg-[#F0FDFA] px-3 py-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-[#64748B]">Budget utilization</span>
+                    <span className="text-[#A1A1AA]">Budget utilization</span>
                     <span
                       className={`font-bold ${itineraryData.summary.budget_utilized_percent > 100 ? "text-red-400" : "text-emerald-400"
                         }`}
@@ -463,8 +459,8 @@ function PaymentsContent() {
               )}
 
               {/* Secure payment note */}
-              <div className="mt-3 flex items-center gap-2 rounded-xl bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-400 text-[11px] text-[#041015]">
+              <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#CCFBF1] px-3 py-2 text-xs text-[#0F4C5C]">
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#5FCBC4] text-[11px] text-white">
                   🔒
                 </span>
                 <p>Your payment is secure and encrypted.</p>
@@ -473,11 +469,11 @@ function PaymentsContent() {
           </section>
 
           {/* Right: Payment form */}
-          <section className="rounded-[2rem] border border-white/10 bg-[#0D1820]/90 shadow-[0_18px_50px_rgba(3,10,18,0.85)] backdrop-blur">
+          <section className="rounded-[2rem] border border-[#E4E4E7] bg-white shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-6 px-5 py-6 md:px-7 md:py-7">
               {/* Error message */}
               {paymentError && (
-                <div className="flex items-center gap-2 rounded-xl bg-red-500/15 px-4 py-3 text-sm text-red-300">
+                <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                   <AlertCircle className="h-5 w-5 flex-shrink-0" />
                   <span>{paymentError}</span>
                 </div>
@@ -485,7 +481,7 @@ function PaymentsContent() {
 
               {/* Payment method */}
               <div>
-                <h2 className="text-sm font-semibold text-white md:text-base">Payment Method</h2>
+                <h2 className="text-sm font-semibold text-[#0F4C5C] md:text-base">Payment Method</h2>
                 <div className="mt-3 grid grid-cols-3 gap-2">
                   {[
                     { value: "credit_card", label: "Credit Card", icon: "💳" },
@@ -497,8 +493,8 @@ function PaymentsContent() {
                       type="button"
                       onClick={() => setFormData((p) => ({ ...p, paymentMethod: method.value }))}
                       className={`rounded-xl border p-3 text-center text-xs transition ${formData.paymentMethod === method.value
-                        ? "border-[#5FCBC4] bg-[#5FCBC4]/10 text-[#5FCBC4]"
-                        : "border-white/15 bg-white/5 text-[#64748B] hover:border-white/30"
+                        ? "border-[#5FCBC4] bg-[#CCFBF1] text-[#0F4C5C]"
+                        : "border-[#E4E4E7] bg-white text-[#3F3F46] hover:bg-[#CCFBF1] hover:border-[#5FCBC4]"
                         }`}
                     >
                       <span className="block text-lg">{method.icon}</span>
@@ -510,10 +506,10 @@ function PaymentsContent() {
 
               {/* Personal information */}
               <div>
-                <h2 className="text-sm font-semibold text-white md:text-base">Personal Information</h2>
+                <h2 className="text-sm font-semibold text-[#0F4C5C] md:text-base">Personal Information</h2>
                 <div className="mt-4 space-y-4 text-sm">
                   <div>
-                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#A1A1AA]">
                       Full Name
                     </label>
                     <input
@@ -523,11 +519,11 @@ function PaymentsContent() {
                       onChange={handleInput}
                       required
                       placeholder="John Doe"
-                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
+                      className="w-full rounded-xl border border-[#E4E4E7] bg-white px-3.5 py-2.5 text-sm text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#A1A1AA]">
                       Email Address
                     </label>
                     <input
@@ -537,11 +533,11 @@ function PaymentsContent() {
                       onChange={handleInput}
                       required
                       placeholder="john@example.com"
-                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
+                      className="w-full rounded-xl border border-[#E4E4E7] bg-white px-3.5 py-2.5 text-sm text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#A1A1AA]">
                       Phone Number
                     </label>
                     <input
@@ -550,7 +546,7 @@ function PaymentsContent() {
                       value={formData.phone}
                       onChange={handleInput}
                       placeholder="+1 (555) 000-0000"
-                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
+                      className="w-full rounded-xl border border-[#E4E4E7] bg-white px-3.5 py-2.5 text-sm text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                     />
                   </div>
                 </div>
@@ -559,10 +555,10 @@ function PaymentsContent() {
               {/* Card information - only show for credit card */}
               {formData.paymentMethod === "credit_card" && (
                 <div>
-                  <h2 className="text-sm font-semibold text-white md:text-base">Card Information</h2>
+                  <h2 className="text-sm font-semibold text-[#0F4C5C] md:text-base">Card Information</h2>
                   <div className="mt-4 space-y-4 text-sm">
                     <div>
-                      <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
+                      <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#A1A1AA]">
                         Card Number
                       </label>
                       <input
@@ -575,14 +571,15 @@ function PaymentsContent() {
                             cardNumber: e.target.value.replace(/\s/g, ""),
                           }))
                         }
-                        maxLength={19} inputMode="numeric"
+                        maxLength={19}
+                        inputMode="numeric"
                         placeholder="1234 5678 9012 3456"
-                        className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
+                        className="w-full rounded-xl border border-[#E4E4E7] bg-white px-3.5 py-2.5 text-sm text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                       />
                     </div>
                     <div className="grid gap-4 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                       <div>
-                        <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
+                        <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#A1A1AA]">
                           Expiry Date
                         </label>
                         <input
@@ -598,11 +595,11 @@ function PaymentsContent() {
                           }
                           maxLength={5}
                           required
-                          className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
+                          className="w-full rounded-xl border border-[#E4E4E7] bg-white px-3.5 py-2.5 text-sm text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                         />
                       </div>
                       <div>
-                        <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
+                        <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#A1A1AA]">
                           CVV
                         </label>
                         <input
@@ -618,7 +615,7 @@ function PaymentsContent() {
                           inputMode="numeric"
                           placeholder="123"
                           maxLength={3}
-                          className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
+                          className="w-full rounded-xl border border-[#E4E4E7] bg-white px-3.5 py-2.5 text-sm text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                         />
                       </div>
                     </div>
@@ -628,10 +625,10 @@ function PaymentsContent() {
 
               {/* Billing address */}
               <div>
-                <h2 className="text-sm font-semibold text-white md:text-base">Billing Address</h2>
+                <h2 className="text-sm font-semibold text-[#0F4C5C] md:text-base">Billing Address</h2>
                 <div className="mt-4 space-y-4 text-sm">
                   <div>
-                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#94A3B8]">
+                    <label className="mb-1 block text-xs font-medium uppercase tracking-[0.18em] text-[#A1A1AA]">
                       Address
                     </label>
                     <input
@@ -640,7 +637,7 @@ function PaymentsContent() {
                       value={formData.address}
                       onChange={handleInput}
                       placeholder="123 Main Street, City, State 12345"
-                      className="w-full rounded-xl border border-white/15 bg-[#071219]/80 px-3.5 py-2.5 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:bg-[#071219] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
+                      className="w-full rounded-xl border border-[#E4E4E7] bg-white px-3.5 py-2.5 text-sm text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/30"
                     />
                   </div>
                 </div>
@@ -651,7 +648,7 @@ function PaymentsContent() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] px-4 py-3 text-sm font-semibold text-[#FFFFFF] shadow-[0_14px_35px_rgba(255,196,125,0.6)] transition-transform hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/60 focus:ring-offset-2 focus:ring-offset-[#0D1820] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#5FCBC4] px-4 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:scale-[1.01] hover:bg-[#4AB8B0] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/60 focus:ring-offset-2 focus:ring-offset-[#F0FDFA] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
                     <>
@@ -665,7 +662,7 @@ function PaymentsContent() {
                     </>
                   )}
                 </button>
-                <p className="mt-2 text-center text-[11px] text-[#94A3B8]">
+                <p className="mt-2 text-center text-[11px] text-[#A1A1AA]">
                   Payment is securely processed. Your booking will be confirmed immediately.
                 </p>
               </div>

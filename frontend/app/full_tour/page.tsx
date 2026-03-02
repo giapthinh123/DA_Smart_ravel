@@ -53,15 +53,16 @@ interface PlaceDetails {
 
 // Helper functions
 const getBlockColor = (blockType: string): string => {
+    // Use the global color palette (teal + deep navy) for all block cards
     const colors: Record<string, string> = {
-        breakfast: "from-amber-500/30 to-orange-500/20 border-amber-400/40",
-        morning_activity: "from-sky-500/30 to-blue-500/20 border-sky-400/40",
-        lunch: "from-emerald-500/30 to-green-500/20 border-emerald-400/40",
-        afternoon_activity: "from-violet-500/30 to-purple-500/20 border-violet-400/40",
-        dinner: "from-rose-500/30 to-pink-500/20 border-rose-400/40",
-        hotel: "from-slate-500/30 to-gray-500/20 border-slate-400/40"
+        breakfast: "from-[#0F4C5C] to-[#5FCBC4] border-[#5FCBC4]/40",
+        morning_activity: "zfrom-[#0F4C5C] to-[#1E293B] border-[#5FCBC4]/40",
+        lunch: "from-[#5FCBC4] to-[#4AB8B0] border-[#5FCBC4]/40",
+        afternoon_activity: "from-[#1E293B] to-[#0F4C5C] border-[#5FCBC4]/40",
+        dinner: "from-[#0F4C5C] to-[#4AB8B0] border-[#5FCBC4]/40",
+        hotel: "from-[#1E293B] to-[#0F4C5C] border-[#5FCBC4]/40"
     }
-    return colors[blockType] || "from-white/10 to-white/5 border-white/20"
+    return colors[blockType] || "from-[#0F4C5C] to-[#5FCBC4] border-[#5FCBC4]/40"
 }
 
 const getBlockIcon = (blockType: string): string => {
@@ -205,28 +206,22 @@ function FullTourContent() {
     }
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
-            {/* Background */}
-            <div className="pointer-events-none absolute inset-0 -z-10">
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,229,180,0.08)_0%,transparent_50%)]" />
-            </div>
-
+        <div className="relative min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
             {/* Header */}
-            <header className="border-b border-white/10 bg-[#E0F7FA]/95 backdrop-blur-md sticky top-0 z-50">
+            <header className="border-b border-[#E4E4E7] bg-[#F0FDFA]/95 backdrop-blur-md sticky top-0 z-50">
                 <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
                             href="/history_tour"
-                            className="flex items-center gap-2 text-[#64748B] hover:text-white transition"
+                            className="flex items-center gap-2 text-[#3F3F46] hover:text-[#0F4C5C] transition"
                         >
                             <ChevronLeft className="w-5 h-5" />
                             <span className="text-sm">Back</span>
                         </Link>
                         <div className="h-6 w-px bg-white/20" />
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#94A3B8]">VIETJOURNEY</p>
-                            <h1 className="text-sm font-semibold text-[#0F172A]">Full Tour</h1>
+                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#A1A1AA]">VIETJOURNEY</p>
+                            <h1 className="text-sm font-semibold text-[#0F4C5C]">Full Tour</h1>
                         </div>
                     </div>
                     <UserMenu />
@@ -237,7 +232,7 @@ function FullTourContent() {
             <main className="mx-auto max-w-7xl px-6 py-8">
                 {/* Error */}
                 {error && (
-                    <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300 flex items-center justify-between">
+                    <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-600 flex items-center justify-between">
                         <span>{error}</span>
                         <button onClick={() => setError(null)} className="text-sm underline hover:no-underline">Dismiss</button>
                     </div>
@@ -254,11 +249,11 @@ function FullTourContent() {
                 {/* No itinerary */}
                 {!itinerary && !isLoading && !error && (
                     <div className="text-center py-20">
-                        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
+                        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white border border-[#E4E4E7] flex items-center justify-center">
                             <MapPin className="w-10 h-10 text-[#5FCBC4]" />
                         </div>
                         <h2 className="text-2xl font-bold mb-4">No Tour Found</h2>
-                        <p className="text-[#64748B] mb-8 max-w-md mx-auto">
+                        <p className="text-[#A1A1AA] mb-8 max-w-md mx-auto">
                             Please provide a valid itinerary ID.
                         </p>
                         <Link
@@ -277,8 +272,8 @@ function FullTourContent() {
                         {/* Left Sidebar - Trip Info */}
                         <aside className="space-y-6">
                             {/* Trip Summary Card */}
-                            <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
-                                <h2 className="text-lg font-semibold mb-4 text-[#5FCBC4]">Trip Summary</h2>
+                            <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6">
+                                <h2 className="text-lg font-semibold mb-4 text-[#0F4C5C]">Trip Summary</h2>
 
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
@@ -286,7 +281,7 @@ function FullTourContent() {
                                             <Calendar className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#64748B]">Duration</p>
+                                            <p className="text-xs text-[#A1A1AA]">Duration</p>
                                             <p className="font-medium">{itinerary.trip_duration_days} days</p>
                                         </div>
                                     </div>
@@ -296,7 +291,7 @@ function FullTourContent() {
                                             <Users className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#64748B]">Travelers</p>
+                                            <p className="text-xs text-[#A1A1AA]">Travelers</p>
                                             <p className="font-medium">{itinerary.guest_count} guests</p>
                                         </div>
                                     </div>
@@ -306,20 +301,22 @@ function FullTourContent() {
                                             <DollarSign className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#64748B]">Budget</p>
+                                            <p className="text-xs text-[#A1A1AA]">Budget</p>
                                             <p className="font-medium">${itinerary.budget}</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Status Badge */}
-                                <div className="mt-6 pt-4 border-t border-white/10">
+                                <div className="mt-6 pt-4 border-t border-[#E4E4E7]">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-[#64748B]">Status</span>
-                                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${itinerary.status === "complete"
-                                            ? "bg-emerald-500/20 text-emerald-400"
-                                            : "bg-amber-500/20 text-amber-400"
-                                            }`}>
+                                        <span className="text-sm text-[#A1A1AA]">Status</span>
+                                        <span
+                                            className={`px-3 py-1 rounded-full text-xs font-bold ${itinerary.status === "complete"
+                                                ? "bg-[#5FCBC4]/10 text-[#0F4C5C]"
+                                                : "bg-[#CCFBF1] text-[#0F4C5C]"
+                                                }`}
+                                        >
                                             {itinerary.status === "complete" ? "Complete" : "In Progress"}
                                         </span>
                                     </div>
@@ -328,12 +325,12 @@ function FullTourContent() {
 
                             {/* Cost Summary (if complete) */}
                             {itinerary.summary && (
-                                <div className="rounded-2xl border border-[#5FCBC4]/20 bg-gradient-to-br from-[#5FCBC4]/10 to-[#4AB8B0]/5 p-6">
-                                    <h3 className="text-sm font-semibold mb-4 text-[#5FCBC4]">Cost Breakdown</h3>
+                                <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6">
+                                    <h3 className="text-sm font-semibold mb-4 text-[#0F4C5C]">Cost Breakdown</h3>
                                     <div className="space-y-3 text-sm">
                                         {itinerary.summary?.flight_total != null || (itinerary.book_flight && itinerary.flights) ? (
                                             <div className="flex justify-between">
-                                                <span className="text-[#64748B]">Tổng giá vé máy bay</span>
+                                                <span className="text-[#A1A1AA]">Tổng giá vé máy bay</span>
                                                 <span className="font-bold text-[#5FCBC4]">
                                                     {itinerary.summary?.flight_total != null
                                                         ? itinerary.summary.flight_total >= 1000
@@ -349,20 +346,26 @@ function FullTourContent() {
                                             </div>
                                         ) : null}
                                         <div className="flex justify-between">
-                                            <span className="text-[#64748B]">Total Cost</span>
-                                            <span className="font-bold text-white">${itinerary.summary.total_cost}</span>
+                                            <span className="text-[#A1A1AA]">Total Cost</span>
+                                            <span className="font-bold text-[#0F4C5C]">
+                                                ${itinerary.summary.total_cost}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#64748B]">Per Person</span>
-                                            <span className="text-white">${itinerary.summary.cost_per_person}</span>
+                                            <span className="text-[#A1A1AA]">Per Person</span>
+                                            <span className="text-[#0F4C5C]">
+                                                ${itinerary.summary.cost_per_person}
+                                            </span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#64748B]">Per Day (avg)</span>
-                                            <span className="text-white">${itinerary.summary.avg_cost_per_day}</span>
+                                            <span className="text-[#A1A1AA]">Per Day (avg)</span>
+                                            <span className="text-[#0F4C5C]">
+                                                ${itinerary.summary.avg_cost_per_day}
+                                            </span>
                                         </div>
                                         <div className="pt-3 mt-3 border-t border-white/10">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-[#64748B]">Budget Used</span>
+                                                <span className="text-[#A1A1AA]">Budget Used</span>
                                                 <span className={`font-bold ${itinerary.summary.budget_utilized_percent > 100
                                                     ? 'text-red-400'
                                                     : 'text-emerald-400'
@@ -370,11 +373,11 @@ function FullTourContent() {
                                                     {itinerary.summary.budget_utilized_percent}%
                                                 </span>
                                             </div>
-                                            <div className="mt-2 h-2 bg-white/10 rounded-full overflow-hidden">
+                                            <div className="mt-2 h-2 bg-[#E4E4E7] rounded-full overflow-hidden">
                                                 <div
                                                     className={`h-full rounded-full transition-all ${itinerary.summary.budget_utilized_percent > 100
-                                                        ? 'bg-red-400'
-                                                        : 'bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0]'
+                                                        ? "bg-red-400"
+                                                        : "bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0]"
                                                         }`}
                                                     style={{ width: `${Math.min(itinerary.summary.budget_utilized_percent, 100)}%` }}
                                                 />
@@ -389,30 +392,42 @@ function FullTourContent() {
                         <div className="space-y-6">
                             {/* Booked Flights (from flights page) */}
                             {itinerary.book_flight && itinerary.flights && (
-                                <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden p-6">
-                                    <h3 className="text-lg font-bold text-[#5FCBC4] mb-4 flex items-center gap-2">
+                                <div className="rounded-2xl border border-[#E4E4E7] bg-white overflow-hidden p-6">
+                                    <h3 className="text-lg font-bold text-[#0F4C5C] mb-4 flex items-center gap-2">
                                         <span>✈️</span> Booked Flights
                                     </h3>
                                     <div className="grid gap-4 sm:grid-cols-2">
-                                        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                                            <p className="text-xs uppercase tracking-wider text-[#94A3B8] mb-2">Departure</p>
-                                            <p className="font-semibold text-white">{itinerary.flights.selectedDepartureFlight.airline}</p>
-                                            <p className="text-sm text-[#475569] mt-1">
+                                        <div className="rounded-xl border border-[#E4E4E7] bg-white p-4">
+                                            <p className="text-xs uppercase tracking-wider text-[#A1A1AA] mb-2">
+                                                Departure
+                                            </p>
+                                            <p className="font-semibold text-[#0F4C5C]">
+                                                {itinerary.flights.selectedDepartureFlight.airline}
+                                            </p>
+                                            <p className="text-sm text-[#3F3F46] mt-1">
                                                 {itinerary.flights.selectedDepartureFlight.departCode} → {itinerary.flights.selectedDepartureFlight.arriveCode}
                                             </p>
-                                            <p className="text-sm text-[#64748B]">
+                                            <p className="text-sm text-[#A1A1AA]">
                                                 {itinerary.flights.selectedDepartureFlight.departTime} – {itinerary.flights.selectedDepartureFlight.arriveTime} · {itinerary.flights.selectedDepartureFlight.duration} · {formatFlightStopLabel(itinerary.flights.selectedDepartureFlight)}
                                             </p>
                                             {itinerary.flights.selectedDepartureFlight.stops && itinerary.flights.selectedDepartureFlight.stops.length > 0 && (
-                                                <div className="mt-3 pt-3 border-t border-white/10">
-                                                    <p className="text-xs text-[#94A3B8] mb-1">Quá cảnh</p>
+                                                <div className="mt-3 pt-3 border-t border-[#E4E4E7]">
+                                                    <p className="text-xs text-[#A1A1AA] mb-1">Quá cảnh</p>
                                                     {itinerary.flights.selectedDepartureFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
-                                                        <div key={i} className="text-xs text-[#64748B] py-1">
-                                                            <span className="font-medium text-[#475569]">{stop.iata}</span> {stop.name}
+                                                        <div key={i} className="text-xs text-[#A1A1AA] py-1">
+                                                            <span className="font-medium text-[#3F3F46]">
+                                                                {stop.iata}
+                                                            </span>{" "}
+                                                            {stop.name}
                                                             <br />
-                                                            <span className="text-[#94A3B8]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
+                                                            <span className="text-[#A1A1AA]">
+                                                                Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}
+                                                            </span>
                                                             <br />
-                                                            <span className="text-[#94A3B8]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
+                                                            <span className="text-[#A1A1AA]">
+                                                                Departure:{" "}
+                                                                {new Date(stop.departure).toLocaleString("vi-VN")}
+                                                            </span>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -423,25 +438,37 @@ function FullTourContent() {
                                                     : `$${itinerary.flights.selectedDepartureFlight.price}`}
                                             </p>
                                         </div>
-                                        <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                                            <p className="text-xs uppercase tracking-wider text-[#94A3B8] mb-2">Return</p>
-                                            <p className="font-semibold text-white">{itinerary.flights.selectedReturnFlight.airline}</p>
-                                            <p className="text-sm text-[#475569] mt-1">
+                                        <div className="rounded-xl border border-[#E4E4E7] bg-white p-4">
+                                            <p className="text-xs uppercase tracking-wider text-[#A1A1AA] mb-2">
+                                                Return
+                                            </p>
+                                            <p className="font-semibold text-[#0F4C5C]">
+                                                {itinerary.flights.selectedReturnFlight.airline}
+                                            </p>
+                                            <p className="text-sm text-[#3F3F46] mt-1">
                                                 {itinerary.flights.selectedReturnFlight.departCode} → {itinerary.flights.selectedReturnFlight.arriveCode}
                                             </p>
-                                            <p className="text-sm text-[#64748B]">
+                                            <p className="text-sm text-[#A1A1AA]">
                                                 {itinerary.flights.selectedReturnFlight.departTime} – {itinerary.flights.selectedReturnFlight.arriveTime} · {itinerary.flights.selectedReturnFlight.duration} · {formatFlightStopLabel(itinerary.flights.selectedReturnFlight)}
                                             </p>
                                             {itinerary.flights.selectedReturnFlight.stops && itinerary.flights.selectedReturnFlight.stops.length > 0 && (
-                                                <div className="mt-3 pt-3 border-t border-white/10">
-                                                    <p className="text-xs text-[#94A3B8] mb-1">Quá cảnh</p>
+                                                <div className="mt-3 pt-3 border-t border-[#E4E4E7]">
+                                                    <p className="text-xs text-[#A1A1AA] mb-1">Quá cảnh</p>
                                                     {itinerary.flights.selectedReturnFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
-                                                        <div key={i} className="text-xs text-[#64748B] py-1">
-                                                            <span className="font-medium text-[#475569]">{stop.iata}</span> {stop.name}
+                                                        <div key={i} className="text-xs text-[#A1A1AA] py-1">
+                                                            <span className="font-medium text-[#3F3F46]">
+                                                                {stop.iata}
+                                                            </span>{" "}
+                                                            {stop.name}
                                                             <br />
-                                                            <span className="text-[#94A3B8]">Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}</span>
+                                                            <span className="text-[#A1A1AA]">
+                                                                Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}
+                                                            </span>
                                                             <br />
-                                                            <span className="text-[#94A3B8]">Departure: {new Date(stop.departure).toLocaleString("vi-VN")}</span>
+                                                            <span className="text-[#A1A1AA]">
+                                                                Departure:{" "}
+                                                                {new Date(stop.departure).toLocaleString("vi-VN")}
+                                                            </span>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -460,11 +487,14 @@ function FullTourContent() {
                                 const isExpanded = expandedDays.has(day.day_number)
 
                                 return (
-                                    <div key={day.day_number} className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden">
+                                    <div
+                                        key={day.day_number}
+                                        className="rounded-2xl border border-[#E4E4E7] bg-white overflow-hidden"
+                                    >
                                         {/* Day Header - Clickable */}
                                         <button
                                             onClick={() => toggleDay(day.day_number)}
-                                            className="w-full p-6 bg-gradient-to-r from-[#5FCBC4]/20 to-[#4AB8B0]/10 border-b border-white/10 hover:from-[#5FCBC4]/30 hover:to-[#4AB8B0]/20 transition-all"
+                                            className="w-full p-6 bg-[#CCFBF1] border-b border-[#E4E4E7] hover:bg-[#CCFBF1]/80 transition-all"
                                         >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-4">
@@ -477,15 +507,19 @@ function FullTourContent() {
                                                         <p className="text-sm uppercase tracking-widest text-[#5FCBC4] mb-1">
                                                             Day {day.day_number}
                                                         </p>
-                                                        <h2 className="text-2xl font-bold">{formatDate(day.date)}</h2>
+                                                        <h2 className="text-2xl font-bold text-[#0F4C5C]">
+                                                            {formatDate(day.date)}
+                                                        </h2>
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="text-sm text-[#64748B]">Estimated Cost</p>
-                                                    <p className="text-2xl font-bold text-[#5FCBC4]">${day.day_cost}</p>
+                                                    <p className="text-sm text-[#A1A1AA]">Estimated Cost</p>
+                                                    <p className="text-2xl font-bold text-[#5FCBC4]">
+                                                        ${day.day_cost}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className="mt-4 flex gap-4 text-sm text-[#475569]">
+                                            <div className="mt-4 flex gap-4 text-sm text-[#3F3F46]">
                                                 <span>{day.blocks.length} activities</span>
                                                 <span>•</span>
                                                 <span>Full day planned</span>
@@ -510,7 +544,7 @@ function FullTourContent() {
                                                             return (
                                                                 <div key={blockKey} className="relative pl-16">
                                                                     {/* Timeline Dot */}
-                                                                    <div className="absolute left-6 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-[#5FCBC4] to-[#4AB8B0] flex items-center justify-center z-10 ring-4 ring-[#E0F7FA]">
+                                                                    <div className="absolute left-6 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-[#5FCBC4] to-[#4AB8B0] flex items-center justify-center z-10 ring-4 ring-[#F0FDFA]">
                                                                         <div className="w-2 h-2 rounded-full bg-[#FFFFFF]" />
                                                                     </div>
 
@@ -534,20 +568,29 @@ function FullTourContent() {
                                                                                 </div>
                                                                             </div>
                                                                             <div className="text-right">
-                                                                                <div className="flex items-center gap-1 text-amber-400">
+                                                                                <div className="flex items-center gap-1 text-[#5FCBC4]">
                                                                                     <Star className="w-4 h-4 fill-current" />
-                                                                                    <span className="font-bold">{block.place.rating}</span>
+                                                                                    <span className="font-bold">
+                                                                                        {block.place.rating}
+                                                                                    </span>
                                                                                 </div>
-                                                                                <span className="text-lg font-bold text-emerald-400">${block.estimated_cost}</span>
+                                                                                <span className="text-lg font-bold text-white">
+                                                                                    ${block.estimated_cost}
+                                                                                </span>
                                                                             </div>
                                                                         </div>
 
                                                                         {/* Place Name */}
-                                                                        <h3 className="text-xl font-bold text-white mb-2">{block.place.name}</h3>
+                                                                        <h3 className="text-xl font-bold text-white mb-2">
+                                                                            {block.place.name}
+                                                                        </h3>
 
                                                                         {/* Quick Info */}
-                                                                        <div className="flex items-center gap-4 text-sm text-white/60">
-                                                                            <span>{block.place.userRatingCount.toLocaleString()} reviews</span>
+                                                                        <div className="flex items-center gap-4 text-sm text-white/80">
+                                                                            <span>
+                                                                                {block.place.userRatingCount.toLocaleString()}{" "}
+                                                                                reviews
+                                                                            </span>
                                                                         </div>
 
                                                                         {/* Expanded Details */}
@@ -569,7 +612,9 @@ function FullTourContent() {
                                                                                                         {/* Main Image */}
                                                                                                         <div
                                                                                                             className="relative rounded-xl overflow-hidden group"
-                                                                                                            onClick={(e) => e.stopPropagation()}
+                                                                                                            onClick={(e) =>
+                                                                                                                e.stopPropagation()
+                                                                                                            }
                                                                                                         >
                                                                                                             <img
                                                                                                                 src={details.image_url[currentImageIdx]}
@@ -584,25 +629,35 @@ function FullTourContent() {
                                                                                                         {/* Thumbnail Gallery */}
                                                                                                         {details.image_url.length > 1 && (
                                                                                                             <div className="grid grid-cols-4 gap-2">
-                                                                                                                {details.image_url.slice(0, 8).map((url, idx) => (
-                                                                                                                    <div
-                                                                                                                        key={idx}
-                                                                                                                        className={`rounded-lg overflow-hidden group cursor-pointer transition-all ${currentImageIdx === idx
-                                                                                                                            ? 'ring-2 ring-[#5FCBC4] ring-offset-2 ring-offset-[#E0F7FA]'
-                                                                                                                            : 'opacity-70 hover:opacity-100'
-                                                                                                                            }`}
-                                                                                                                        onClick={(e) => {
-                                                                                                                            e.stopPropagation()
-                                                                                                                            setSelectedImageIndex(prev => ({ ...prev, [blockKey]: idx }))
-                                                                                                                        }}
-                                                                                                                    >
-                                                                                                                        <img
-                                                                                                                            src={url}
-                                                                                                                            alt={`${details.displayName_text} ${idx + 1}`}
-                                                                                                                            className="w-full h-20 object-cover transition-transform duration-300 group-hover:scale-110"
-                                                                                                                        />
-                                                                                                                    </div>
-                                                                                                                ))}
+                                                                                                                {details.image_url
+                                                                                                                    .slice(0, 8)
+                                                                                                                    .map((url, idx) => (
+                                                                                                                        <div
+                                                                                                                            key={idx}
+                                                                                                                            className={`rounded-lg overflow-hidden group cursor-pointer transition-all ${currentImageIdx === idx
+                                                                                                                                ? "ring-2 ring-[#5FCBC4] ring-offset-2 ring-offset-[#F0FDFA]"
+                                                                                                                                : "opacity-70 hover:opacity-100"
+                                                                                                                                }`}
+                                                                                                                            onClick={(
+                                                                                                                                e,
+                                                                                                                            ) => {
+                                                                                                                                e.stopPropagation()
+                                                                                                                                setSelectedImageIndex(
+                                                                                                                                    prev => ({
+                                                                                                                                        ...prev,
+                                                                                                                                        [blockKey]:
+                                                                                                                                            idx
+                                                                                                                                    }),
+                                                                                                                                )
+                                                                                                                            }}
+                                                                                                                        >
+                                                                                                                            <img
+                                                                                                                                src={url}
+                                                                                                                                alt={`${details.displayName_text} ${idx + 1}`}
+                                                                                                                                className="w-full h-20 object-cover transition-transform duration-300 group-hover:scale-110"
+                                                                                                                            />
+                                                                                                                        </div>
+                                                                                                                    ))}
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </div>
@@ -618,22 +673,31 @@ function FullTourContent() {
 
                                                                                                     {/* Rating & Reviews */}
                                                                                                     <div className="flex items-center gap-4 mb-3">
-                                                                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/30">
-                                                                                                            <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-                                                                                                            <span className="font-bold text-amber-400 text-lg">{details.rating}</span>
+                                                                                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#5FCBC4]/20 border border-[#5FCBC4]/40">
+                                                                                                            <Star className="w-5 h-5 fill-[#5FCBC4] text-[#5FCBC4]" />
+                                                                                                            <span className="font-bold text-[#0F4C5C] text-lg">
+                                                                                                                {details.rating}
+                                                                                                            </span>
                                                                                                         </div>
-                                                                                                        <span className="text-sm text-[#64748B]">
-                                                                                                            ({details.userRatingCount?.toLocaleString() || 0} reviews)
+                                                                                                        <span className="text-sm text-white/80">
+                                                                                                            (
+                                                                                                            {details.userRatingCount?.toLocaleString() ||
+                                                                                                                0}{" "}
+                                                                                                            reviews)
                                                                                                         </span>
                                                                                                     </div>
 
                                                                                                     {/* Average Price */}
                                                                                                     {details.avg_price && (
-                                                                                                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30">
-                                                                                                            <DollarSign className="w-5 h-5 text-emerald-400" />
+                                                                                                        <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#CCFBF1] border border-[#5FCBC4]/40">
+                                                                                                            <DollarSign className="w-5 h-5 text-[#0F4C5C]" />
                                                                                                             <div>
-                                                                                                                <p className="text-xs text-emerald-300/70 uppercase tracking-wide">Avg. Price</p>
-                                                                                                                <p className="text-xl font-bold text-emerald-400">${details.avg_price}</p>
+                                                                                                                <p className="text-xs text-[#0F4C5C]/70 uppercase tracking-wide">
+                                                                                                                    Avg. Price
+                                                                                                                </p>
+                                                                                                                <p className="text-xl font-bold text-[#0F4C5C]">
+                                                                                                                    ${details.avg_price}
+                                                                                                                </p>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     )}
@@ -644,8 +708,10 @@ function FullTourContent() {
                                                                                         {/* Editorial Summary */}
                                                                                         {details.editorialSummary_text && (
                                                                                             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                                                                                                <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">About</h5>
-                                                                                                <p className="text-sm text-[#475569] leading-relaxed">
+                                                                                                <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">
+                                                                                                    About
+                                                                                                </h5>
+                                                                                                <p className="text-sm text-[#E5E7EB] leading-relaxed">
                                                                                                     {details.editorialSummary_text}
                                                                                                 </p>
                                                                                             </div>
@@ -654,56 +720,72 @@ function FullTourContent() {
                                                                                         {/* Reviews Section */}
                                                                                         {details.reviews && details.reviews.length > 0 && (
                                                                                             <div className="space-y-3">
-                                                                                                <h5 className="text-sm font-semibold text-[#5FCBC4] uppercase tracking-wide">Recent Reviews</h5>
+                                                                                                <h5 className="text-sm font-semibold text-[#5FCBC4] uppercase tracking-wide">
+                                                                                                    Recent Reviews
+                                                                                                </h5>
                                                                                                 <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
-                                                                                                    {details.reviews.slice(0, 3).map((review, idx) => (
-                                                                                                        <div
-                                                                                                            key={idx}
-                                                                                                            className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
-                                                                                                        >
-                                                                                                            {/* Review Header */}
-                                                                                                            <div className="flex items-start justify-between mb-3">
-                                                                                                                <div className="flex items-center gap-2">
-                                                                                                                    <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/30">
-                                                                                                                        <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                                                                                                                        <span className="font-bold text-amber-400 text-sm">{review.rating}</span>
+                                                                                                    {details.reviews
+                                                                                                        .slice(0, 3)
+                                                                                                        .map((review, idx) => (
+                                                                                                            <div
+                                                                                                                key={idx}
+                                                                                                                className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                                                                                                            >
+                                                                                                                {/* Review Header */}
+                                                                                                                <div className="flex items-start justify-between mb-3">
+                                                                                                                    <div className="flex items-center gap-2">
+                                                                                                                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#5FCBC4]/20 border border-[#5FCBC4]/40">
+                                                                                                                            <Star className="w-3.5 h-3.5 fill-[#5FCBC4] text-[#5FCBC4]" />
+                                                                                                                            <span className="font-bold text-[#0F4C5C] text-sm">
+                                                                                                                                {review.rating}
+                                                                                                                            </span>
+                                                                                                                        </div>
+                                                                                                                        {review.authorAttribution?.displayName && (
+                                                                                                                            <span className="text-sm font-medium text-white/90">
+                                                                                                                                {
+                                                                                                                                    review
+                                                                                                                                        .authorAttribution
+                                                                                                                                        .displayName
+                                                                                                                                }
+                                                                                                                            </span>
+                                                                                                                        )}
                                                                                                                     </div>
-                                                                                                                    {review.authorAttribution?.displayName && (
-                                                                                                                        <span className="text-sm font-medium text-white/90">
-                                                                                                                            {review.authorAttribution.displayName}
+                                                                                                                    {review.relativePublishTimeDescription && (
+                                                                                                                        <span className="text-xs text-white/70">
+                                                                                                                            {
+                                                                                                                                review.relativePublishTimeDescription
+                                                                                                                            }
                                                                                                                         </span>
                                                                                                                     )}
                                                                                                                 </div>
-                                                                                                                {review.relativePublishTimeDescription && (
-                                                                                                                    <span className="text-xs text-[#64748B]">
-                                                                                                                        {review.relativePublishTimeDescription}
-                                                                                                                    </span>
+
+                                                                                                                {/* Review Text */}
+                                                                                                                {review.text?.text && (
+                                                                                                                    <p className="text-sm text-[#E5E7EB] leading-relaxed line-clamp-4">
+                                                                                                                        {review.text.text}
+                                                                                                                    </p>
                                                                                                                 )}
                                                                                                             </div>
-
-                                                                                                            {/* Review Text */}
-                                                                                                            {review.text?.text && (
-                                                                                                                <p className="text-sm text-[#475569] leading-relaxed line-clamp-4">
-                                                                                                                    {review.text.text}
-                                                                                                                </p>
-                                                                                                            )}
-                                                                                                        </div>
-                                                                                                    ))}
+                                                                                                        ))}
                                                                                                 </div>
                                                                                             </div>
                                                                                         )}
                                                                                     </div>
                                                                                 ) : (
-                                                                                    <p className="text-sm text-[#64748B]">Click to load details...</p>
+                                                                                    <p className="text-sm text-[#A1A1AA]">
+                                                                                        Click to load details...
+                                                                                    </p>
                                                                                 )}
                                                                             </div>
                                                                         )}
 
                                                                         {/* Transport to next */}
                                                                         {block.transport_to_next && idx < day.blocks.length - 1 && (
-                                                                            <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-4 text-sm text-white/50">
+                                                                            <div className="mt-4 pt-4 border-t border-white/20 flex items-center gap-4 text-sm text-white/80">
                                                                                 <Navigation className="w-4 h-4" />
-                                                                                <span className="capitalize font-medium">{block.transport_to_next}</span>
+                                                                                <span className="capitalize font-medium">
+                                                                                    {block.transport_to_next}
+                                                                                </span>
                                                                                 <span>•</span>
                                                                                 <span>{block.distance_to_next_km} km</span>
                                                                                 <span>•</span>

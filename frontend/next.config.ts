@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
         source: '/api/:path*',
         // In Docker, use internal service DNS (or override via env)
         // Always use internal Docker DNS for server-side proxy
-        destination: `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://backend:5000'}/api/:path*`,
+        destination: `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000'}/api/:path*`,
       },
     ]
   },

@@ -59,15 +59,15 @@ export default function ActivitiesSearch() {
   }
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/3 p-8 backdrop-blur">
+    <div className="p-8">
       <div className="mb-6">
         <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
           Experience Finder
         </p>
-        <h3 className="text-2xl font-semibold text-white">
+        <h3 className="text-2xl font-semibold text-[#0F4C5C]">
           Explore activities and unique experiences
         </h3>
-        <p className="mt-2 text-sm text-[#475569]">
+        <p className="mt-2 text-sm text-[#3F3F46]">
           Discover adventures, cultural experiences, and local activities tailored to your interests.
         </p>
       </div>
@@ -176,8 +176,8 @@ export default function ActivitiesSearch() {
           onClick={handleSubmit}
           disabled={isLoading}
           className={cn(
-            "h-12 w-full rounded-xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-sm font-semibold text-[#FFFFFF] shadow-[0_20px_60px_-20px_rgba(255,186,102,0.85)] transition-all",
-            isLoading ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] hover:shadow-[0_20px_70px_-20px_rgba(255,186,102,0.95)]"
+            "h-12 w-full rounded-xl bg-[#5FCBC4] text-sm font-semibold text-white transition-all",
+            isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#4AB8B0] hover:scale-[1.02]"
           )}
         >
           {isLoading ? (

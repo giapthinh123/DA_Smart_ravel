@@ -41,7 +41,7 @@ export default function Home() {
   ]
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
+    <div className="relative min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
       <style jsx global>{`
         @keyframes floatSlow {
           0%, 100% { transform: translateY(0px); }
@@ -51,9 +51,7 @@ export default function Home() {
 
       {/* Background Layers */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(224,247,250,0.9),rgba(240,253,250,0.6)_42%,rgba(236,253,245,0.8))]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(95,203,196,0.08)_0%,rgba(255,255,255,0)_70%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-white/60 via-white/20 to-transparent" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(204,251,241,0.4)_0%,rgba(240,253,250,0)_60%)]" />
       </div>
 
       {/* Header */}
@@ -64,7 +62,7 @@ export default function Home() {
             <p className="text-sm uppercase tracking-[0.3em] text-[#5FCBC4]">
               Smart Travel
             </p>
-            <p className="text-xl font-semibold text-[#1E293B]">
+            <p className="text-xl font-semibold text-[#0F4C5C]">
               Discover the world your way
             </p>
           </div>
@@ -76,7 +74,7 @@ export default function Home() {
             <>
               <Link
                 href="/planner"
-                className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#1E293B]"
+                className="rounded-full px-4 py-2 text-[#A1A1AA] transition hover:text-[#0F4C5C]"
               >
                 Planner
               </Link>
@@ -91,7 +89,7 @@ export default function Home() {
             <>
               <Link
                 href="/login"
-                className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#1E293B]"
+                className="rounded-full px-4 py-2 text-[#A1A1AA] transition hover:text-[#0F4C5C]"
               >
                 Login
               </Link>
@@ -114,10 +112,10 @@ export default function Home() {
             <span className="inline-flex items-center gap-2 rounded-full border border-[#5FCBC4]/40 bg-[#E0F7FA] px-4 py-2 text-xs font-medium uppercase tracking-[0.35em] text-[#2A9D8F]">
               The First Tour Recommendation Platform in Vietnam
             </span>
-            <h1 className="text-4xl font-semibold leading-tight text-[#0F172A] sm:text-5xl">
+            <h1 className="text-4xl font-semibold leading-tight text-[#0F4C5C] sm:text-5xl">
               Create a personalized travel itinerary in minutes
             </h1>
-            <p className="max-w-xl text-base leading-relaxed text-[#64748B]">
+            <p className="max-w-xl text-base leading-relaxed text-[#3F3F46]">
               Smart Travel helps you design your own journey: choose departure/arrival points, book round-trip flights, select favorite restaurants, hotels, and locations, and instantly receive an optimized daily schedule.            </p>
 
             {/* Statistics */}
@@ -125,7 +123,7 @@ export default function Home() {
               {stats.map((stat, index) => (
                 <div
                   key={stat.label}
-                  className="group relative overflow-hidden rounded-2xl border border-[#5FCBC4]/20 bg-white/80 p-4 backdrop-blur shadow-sm transition hover:border-[#5FCBC4]/50 hover:shadow-md"
+                  className="group relative overflow-hidden rounded-2xl border border-[#E4E4E7] bg-white p-4 shadow-sm transition hover:border-[#5FCBC4]/50 hover:shadow-md"
                   style={{
                     animation: `floatSlow ${18 + index * 2}s ease-in-out infinite ${index * 1.2}s`,
                   }}
@@ -133,7 +131,7 @@ export default function Home() {
                   <p className="relative text-3xl font-semibold text-[#5FCBC4]">
                     {stat.value}
                   </p>
-                  <p className="relative mt-1 text-xs uppercase tracking-[0.3em] text-[#94A3B8]">
+                  <p className="relative mt-1 text-xs uppercase tracking-[0.3em] text-[#A1A1AA]">
                     {stat.label}
                   </p>
                 </div>
@@ -151,7 +149,7 @@ export default function Home() {
               </Link>
               <a
                 href="#tours"
-                className="inline-flex items-center gap-2 rounded-full border border-[#5FCBC4]/30 px-6 py-3 text-sm font-semibold text-[#1E293B] transition hover:border-[#5FCBC4] hover:bg-[#E0F7FA]"
+                className="inline-flex items-center gap-2 rounded-full border border-[#E4E4E7] px-6 py-3 text-sm font-semibold text-[#3F3F46] transition hover:border-[#5FCBC4] hover:bg-[#CCFBF1]"
               >
                 View Tours
               </a>
@@ -160,14 +158,14 @@ export default function Home() {
 
           {/* Suggested Itinerary Card */}
           <div className="relative">
-            <div className="absolute -inset-3 rounded-[2.2rem] bg-gradient-to-br from-[#5FCBC4]/20 via-transparent to-transparent blur-[70px]" />
-            <div className="relative overflow-hidden rounded-[2rem] border border-[#5FCBC4]/15 bg-white/90 p-4 backdrop-blur shadow-xl shadow-[#5FCBC4]/10 transition duration-500 hover:border-[#5FCBC4]/40 hover:shadow-2xl">
+            <div className="absolute -inset-3 rounded-[2.2rem] bg-gradient-to-br from-[#CCFBF1]/60 via-transparent to-transparent blur-[70px]" />
+            <div className="relative overflow-hidden rounded-[2rem] border border-[#E4E4E7] bg-white p-4 shadow-xl transition duration-500 hover:border-[#5FCBC4]/40 hover:shadow-2xl">
               {/* Header */}
               <div className="mb-8">
                 <p className="text-xs uppercase tracking-[0.4em] text-[#5FCBC4]">
                   Smart Travel Planner
                 </p>
-                <h3 className="mt-2 text-xl font-semibold text-[#0F172A]">
+                <h3 className="mt-2 text-xl font-semibold text-[#0F4C5C]">
                   Suggested Itinerary Overview
                 </h3>
               </div>
@@ -177,7 +175,7 @@ export default function Home() {
                 {featuredTours.map((tour, index) => (
                   <article
                     key={tour.name}
-                    className="group flex gap-5 rounded-2xl border border-gray-100 bg-[#F8FFFE] p-5 transition duration-500 hover:border-[#5FCBC4]/30 hover:shadow-md"
+                    className="group flex gap-5 rounded-2xl border border-[#E4E4E7] bg-white p-5 transition duration-500 hover:border-[#5FCBC4]/30 hover:bg-[#CCFBF1]/20 hover:shadow-md"
                     style={{
                       animation: `floatSlow ${16 + index * 1.5}s ease-in-out infinite ${index * 0.8}s`,
                     }}
@@ -191,10 +189,10 @@ export default function Home() {
                     </div>
                     <div className="flex flex-1 flex-col justify-between">
                       <div>
-                        <h4 className="text-sm font-semibold text-[#1E293B]">
+                        <h4 className="text-sm font-semibold text-[#0F4C5C]">
                           {tour.name}
                         </h4>
-                        <p className="mt-1.5 text-xs text-[#64748B] leading-relaxed">
+                        <p className="mt-1.5 text-xs text-[#3F3F46] leading-relaxed">
                           {tour.description}
                         </p>
                       </div>
@@ -207,7 +205,7 @@ export default function Home() {
               </div>
 
               {/* Footer Note */}
-              <p className="mt-8 text-sm text-[#64748B] leading-relaxed">
+              <p className="mt-8 text-sm text-[#A1A1AA] leading-relaxed">
                 The Smart Travel AI algorithm updates flight status, accommodation availability, and optimizes the daily itinerary for the whole group.
               </p>
             </div>
@@ -223,10 +221,10 @@ export default function Home() {
               <p className="text-xs uppercase tracking-[0.4em] text-[#5FCBC4]">
                 Popular Destinations
               </p>
-              <h2 className="text-4xl font-semibold text-[#0F172A]">
+              <h2 className="text-4xl font-semibold text-[#0F4C5C]">
                 Featured Tours
               </h2>
-              <p className="mt-3 max-w-2xl text-base text-[#64748B] leading-relaxed">
+              <p className="mt-3 max-w-2xl text-base text-[#3F3F46] leading-relaxed">
                 Explore curated travel experiences designed by our AI and refined by local experts
               </p>
             </div>
@@ -235,7 +233,7 @@ export default function Home() {
             {featuredTours.map((tour, index) => (
               <article
                 key={tour.name}
-                className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm backdrop-blur transition duration-500 hover:border-[#5FCBC4]/40 hover:shadow-xl hover:shadow-[#5FCBC4]/10"
+                className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-[#E4E4E7] bg-white shadow-sm transition duration-500 hover:border-[#5FCBC4]/40 hover:shadow-xl hover:shadow-[#5FCBC4]/10"
                 style={{
                   animation: `floatSlow ${18 + index * 1.4}s ease-in-out infinite ${index * 0.9}s`,
                 }}
@@ -250,14 +248,14 @@ export default function Home() {
                 </div>
                 <div className="flex flex-1 flex-col justify-between p-6">
                   <div className="space-y-3">
-                    <h3 className="text-xl font-semibold text-[#1E293B] transition-colors group-hover:text-[#5FCBC4]">
+                    <h3 className="text-xl font-semibold text-[#0F4C5C] transition-colors group-hover:text-[#5FCBC4]">
                       {tour.name}
                     </h3>
-                    <p className="text-sm text-[#64748B] leading-relaxed">
+                    <p className="text-sm text-[#3F3F46] leading-relaxed">
                       {tour.description}
                     </p>
                   </div>
-                  <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-sm font-medium text-[#5FCBC4]">
+                  <div className="mt-6 pt-4 border-t border-[#E4E4E7] flex items-center justify-between text-sm font-medium text-[#5FCBC4]">
                     <span>{tour.duration}</span>
                     <span className="text-base">from ${tour.price}</span>
                   </div>

@@ -19,6 +19,7 @@ import {
     GenerateDayResponse
 } from "@/services/itinerary.service"
 import { PlacesService } from "@/services/places.service"
+import { PaymentService } from "@/services/payment.service"
 import {
     Loader2,
     MapPin,
@@ -55,14 +56,14 @@ interface PlaceDetails {
 // Helper functions
 const getBlockColor = (blockType: string): string => {
     const colors: Record<string, string> = {
-        breakfast: "from-amber-500/30 to-orange-500/20 border-amber-400/40",
-        morning_activity: "from-sky-500/30 to-blue-500/20 border-sky-400/40",
-        lunch: "from-emerald-500/30 to-green-500/20 border-emerald-400/40",
-        afternoon_activity: "from-violet-500/30 to-purple-500/20 border-violet-400/40",
-        dinner: "from-rose-500/30 to-pink-500/20 border-rose-400/40",
-        hotel: "from-slate-500/30 to-gray-500/20 border-slate-400/40"
+        breakfast: "from-amber-50 to-orange-50 border-amber-200",
+        morning_activity: "from-sky-50 to-blue-50 border-sky-200",
+        lunch: "from-emerald-50 to-green-50 border-emerald-200",
+        afternoon_activity: "from-violet-50 to-purple-50 border-violet-200",
+        dinner: "from-rose-50 to-pink-50 border-rose-200",
+        hotel: "from-slate-50 to-gray-50 border-slate-200"
     }
-    return colors[blockType] || "from-white/10 to-white/5 border-white/20"
+    return colors[blockType] || "from-white to-[#F0FDFA] border-[#E4E4E7]"
 }
 
 const getBlockIcon = (blockType: string): string => {
@@ -120,6 +121,8 @@ function ItineraryContent() {
     const [placeDetails, setPlaceDetails] = useState<Record<string, PlaceDetails>>({})
     const [loadingDetails, setLoadingDetails] = useState<Set<string>>(new Set())
     const [selectedImageIndex, setSelectedImageIndex] = useState<Record<string, number>>({})
+    const [vnpayLoading, setVnpayLoading] = useState(false)
+    const [vnpayError, setVnpayError] = useState<string | null>(null)
 
     // Ref to prevent double generation from React Strict Mode
     const isGeneratingRef = useRef(false)
@@ -409,45 +412,40 @@ function ItineraryContent() {
     const currentDay = itinerary?.daily_itinerary.find(d => d.day_number === selectedDay)
 
     return (
-        <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
-            {/* Background */}
-            <div className="pointer-events-none absolute inset-0 -z-10">
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,229,180,0.08)_0%,transparent_50%)]" />
-            </div>
+        <div className="relative min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
 
             {/* Header */}
-            <header className="border-b border-white/10 bg-[#E0F7FA]/95 backdrop-blur-md sticky top-0 z-50">
+            <header className="border-b border-[#E4E4E7] bg-white sticky top-0 z-50 shadow-sm">
                 <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link
                             href="/planner"
-                            className="flex items-center gap-2 text-[#64748B] hover:text-white transition"
+                            className="flex items-center gap-2 text-[#A1A1AA] hover:text-[#5FCBC4] transition"
                         >
                             <ChevronLeft className="w-5 h-5" />
                             <span className="text-sm">Back</span>
                         </Link>
-                        <div className="h-6 w-px bg-white/20" />
+                        <div className="h-6 w-px bg-[#E4E4E7]" />
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#94A3B8]">VIETJOURNEY</p>
-                            <h1 className="text-sm font-semibold text-[#0F172A]">Your Itinerary</h1>
+                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#A1A1AA]">VIETJOURNEY</p>
+                            <h1 className="text-sm font-semibold text-[#0F4C5C]">Your Itinerary</h1>
                         </div>
                     </div>
                     <nav className="flex items-center gap-3">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <button className="rounded-full bg-white/10 px-4 py-2 text-sm text-white hover:bg-white/20 transition">
+                                <button className="rounded-full border border-[#E4E4E7] bg-white px-4 py-2 text-sm text-[#3F3F46] hover:bg-[#CCFBF1] hover:border-[#5FCBC4] transition">
                                     {user?.fullname || "User"} ▼
                                 </button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className="bg-[#1A1D1C]/95 backdrop-blur-lg border-white/10">
-                                <DropdownMenuItem onClick={() => router.push("/profile")} className="text-white hover:bg-white/10 cursor-pointer">
+                            <DropdownMenuContent className="bg-white border-[#E4E4E7] shadow-lg">
+                                <DropdownMenuItem onClick={() => router.push("/profile")} className="text-[#3F3F46] hover:bg-[#CCFBF1] cursor-pointer">
                                     Profile
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push("/planner")} className="text-white hover:bg-white/10 cursor-pointer">
+                                <DropdownMenuItem onClick={() => router.push("/planner")} className="text-[#3F3F46] hover:bg-[#CCFBF1] cursor-pointer">
                                     Dashboard
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => { logout(); router.push("/login") }} className="text-red-400 hover:bg-red-500/10 cursor-pointer">
+                                <DropdownMenuItem onClick={() => { logout(); router.push("/login") }} className="text-red-500 hover:bg-red-50 cursor-pointer">
                                     Logout
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -460,7 +458,7 @@ function ItineraryContent() {
             <main className="mx-auto max-w-7xl px-6 py-8">
                 {/* Error */}
                 {error && (
-                    <div className="mb-6 p-4 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300 flex items-center justify-between">
+                    <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 flex items-center justify-between">
                         <span>{error}</span>
                         <button onClick={() => setError(null)} className="text-sm underline hover:no-underline">Dismiss</button>
                     </div>
@@ -469,16 +467,16 @@ function ItineraryContent() {
                 {/* No itinerary - Show message */}
                 {!itinerary && !isGenerating && !error && (
                     <div className="text-center py-20">
-                        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white/5 flex items-center justify-center">
+                        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#CCFBF1] flex items-center justify-center">
                             <MapPin className="w-10 h-10 text-[#5FCBC4]" />
                         </div>
-                        <h2 className="text-2xl font-bold mb-4">No Itinerary Found</h2>
-                        <p className="text-[#64748B] mb-8 max-w-md mx-auto">
+                        <h2 className="text-2xl font-bold mb-4 text-[#0F4C5C]">No Itinerary Found</h2>
+                        <p className="text-[#A1A1AA] mb-8 max-w-md mx-auto">
                             Start planning your trip by selecting a destination and your preferences.
                         </p>
                         <Link
                             href="/planner"
-                            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] text-[#FFFFFF] font-bold rounded-xl hover:scale-105 transition"
+                            className="inline-flex items-center gap-2 px-8 py-4 bg-[#5FCBC4] text-white font-bold rounded-xl hover:bg-[#4AB8B0] transition"
                         >
                             <Home className="w-5 h-5" />
                             Go to Planner
@@ -490,7 +488,7 @@ function ItineraryContent() {
                 {isGenerating && !itinerary && (
                     <div className="text-center py-20">
                         <Loader2 className="w-12 h-12 animate-spin text-[#5FCBC4] mx-auto mb-4" />
-                        <p className="text-lg">Loading your itinerary...</p>
+                        <p className="text-lg text-[#3F3F46]">Loading your itinerary...</p>
                     </div>
                 )}
 
@@ -500,8 +498,8 @@ function ItineraryContent() {
                         {/* Left Sidebar - Trip Info */}
                         <aside className="space-y-6">
                             {/* Trip Summary Card */}
-                            <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
-                                <h2 className="text-lg font-semibold mb-4 text-[#5FCBC4]">Trip Summary</h2>
+                            <div className="rounded-2xl border border-[#E4E4E7] bg-white shadow-sm p-6">
+                                <h2 className="text-lg font-semibold mb-4 text-[#0F4C5C]">Trip Summary</h2>
 
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
@@ -509,8 +507,8 @@ function ItineraryContent() {
                                             <Calendar className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#64748B]">Duration</p>
-                                            <p className="font-medium">{itinerary.trip_duration_days} days</p>
+                                            <p className="text-xs text-[#A1A1AA]">Duration</p>
+                                            <p className="font-medium text-[#3F3F46]">{itinerary.trip_duration_days} days</p>
                                         </div>
                                     </div>
 
@@ -519,8 +517,8 @@ function ItineraryContent() {
                                             <Users className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#64748B]">Travelers</p>
-                                            <p className="font-medium">{itinerary.guest_count} guests</p>
+                                            <p className="text-xs text-[#A1A1AA]">Travelers</p>
+                                            <p className="font-medium text-[#3F3F46]">{itinerary.guest_count} guests</p>
                                         </div>
                                     </div>
 
@@ -529,29 +527,29 @@ function ItineraryContent() {
                                             <DollarSign className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#64748B]">Budget</p>
-                                            <p className="font-medium">${itinerary.budget}</p>
+                                            <p className="text-xs text-[#A1A1AA]">Budget</p>
+                                            <p className="font-medium text-[#3F3F46]">${itinerary.budget}</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Status Badge */}
-                                <div className="mt-6 pt-4 border-t border-white/10">
+                                <div className="mt-6 pt-4 border-t border-[#E4E4E7]">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-[#64748B]">Status</span>
+                                        <span className="text-sm text-[#A1A1AA]">Status</span>
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold ${itinerary.status === "complete"
-                                            ? "bg-emerald-500/20 text-emerald-400"
-                                            : "bg-amber-500/20 text-amber-400"
+                                            ? "bg-emerald-100 text-emerald-700"
+                                            : "bg-amber-100 text-amber-700"
                                             }`}>
                                             {itinerary.status === "complete" ? "Complete" : "In Progress"}
                                         </span>
                                     </div>
-                                    <div className="mt-2 text-sm text-[#64748B]">
+                                    <div className="mt-2 text-sm text-[#A1A1AA]">
                                         {itinerary.daily_itinerary.length} / {itinerary.trip_duration_days || 3} days planned
                                     </div>
 
                                     {/* Progress bar */}
-                                    <div className="mt-3 h-2 bg-white/10 rounded-full overflow-hidden">
+                                    <div className="mt-3 h-2 bg-[#E4E4E7] rounded-full overflow-hidden">
                                         <div
                                             className="h-full rounded-full bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] transition-all"
                                             style={{ width: `${((itinerary.daily_itinerary.length || 0) / (itinerary.trip_duration_days || 3)) * 100}%` }}
@@ -562,32 +560,32 @@ function ItineraryContent() {
 
                             {/* Cost Summary (if complete) */}
                             {itinerary.summary && (
-                                <div className="rounded-2xl border border-[#5FCBC4]/20 bg-gradient-to-br from-[#5FCBC4]/10 to-[#4AB8B0]/5 p-6">
-                                    <h3 className="text-sm font-semibold mb-4 text-[#5FCBC4]">Cost Breakdown</h3>
+                                <div className="rounded-2xl border border-[#E4E4E7] bg-white shadow-sm p-6">
+                                    <h3 className="text-sm font-semibold mb-4 text-[#0F4C5C]">Cost Breakdown</h3>
                                     <div className="space-y-3 text-sm">
                                         <div className="flex justify-between">
-                                            <span className="text-[#64748B]">Total Cost</span>
-                                            <span className="font-bold text-white">${itinerary.summary.total_cost}</span>
+                                            <span className="text-[#A1A1AA]">Total Cost</span>
+                                            <span className="font-bold text-[#0F4C5C]">${itinerary.summary.total_cost}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#64748B]">Per Person</span>
-                                            <span className="text-white">${itinerary.summary.cost_per_person}</span>
+                                            <span className="text-[#A1A1AA]">Per Person</span>
+                                            <span className="text-[#3F3F46]">${itinerary.summary.cost_per_person}</span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#64748B]">Per Day (avg)</span>
-                                            <span className="text-white">${itinerary.summary.avg_cost_per_day}</span>
+                                            <span className="text-[#A1A1AA]">Per Day (avg)</span>
+                                            <span className="text-[#3F3F46]">${itinerary.summary.avg_cost_per_day}</span>
                                         </div>
-                                        <div className="pt-3 mt-3 border-t border-white/10">
+                                        <div className="pt-3 mt-3 border-t border-[#E4E4E7]">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-[#64748B]">Budget Used</span>
+                                                <span className="text-[#A1A1AA]">Budget Used</span>
                                                 <span className={`font-bold ${itinerary.summary.budget_utilized_percent > 100
-                                                    ? 'text-red-400'
-                                                    : 'text-emerald-400'
+                                                    ? 'text-red-500'
+                                                    : 'text-emerald-600'
                                                     }`}>
                                                     {itinerary.summary.budget_utilized_percent}%
                                                 </span>
                                             </div>
-                                            <div className="mt-2 h-2 bg-white/10 rounded-full overflow-hidden">
+                                            <div className="mt-2 h-2 bg-[#E4E4E7] rounded-full overflow-hidden">
                                                 <div
                                                     className={`h-full rounded-full transition-all ${itinerary.summary.budget_utilized_percent > 100
                                                         ? 'bg-red-400'
@@ -602,21 +600,21 @@ function ItineraryContent() {
                             )}
 
                             {/* Day Selector */}
-                            <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-4">
+                            <div className="rounded-2xl border border-[#E4E4E7] bg-white shadow-sm p-4">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-sm font-semibold text-[#5FCBC4]">Select Day</h3>
+                                    <h3 className="text-sm font-semibold text-[#0F4C5C]">Select Day</h3>
                                     <div className="flex gap-1">
                                         <button
                                             onClick={goToPrevDay}
                                             disabled={selectedDay <= 1}
-                                            className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                                            className="p-1 rounded hover:bg-[#CCFBF1] text-[#3F3F46] disabled:opacity-30 disabled:cursor-not-allowed transition"
                                         >
                                             <ChevronLeft className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={goToNextDay}
                                             disabled={!itinerary || selectedDay >= itinerary.daily_itinerary.length}
-                                            className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                                            className="p-1 rounded hover:bg-[#CCFBF1] text-[#3F3F46] disabled:opacity-30 disabled:cursor-not-allowed transition"
                                         >
                                             <ChevronRight className="w-4 h-4" />
                                         </button>
@@ -635,16 +633,16 @@ function ItineraryContent() {
                                                 onClick={() => hasData && setSelectedDay(day)}
                                                 disabled={!hasData && !isGeneratingThis}
                                                 className={`relative p-3 rounded-xl text-center transition-all ${isSelected
-                                                    ? "bg-gradient-to-br from-[#5FCBC4] to-[#4AB8B0] text-[#FFFFFF] shadow-lg shadow-[#5FCBC4]/20"
+                                                    ? "bg-[#5FCBC4] text-white shadow-md"
                                                     : hasData
-                                                        ? "bg-white/10 text-white hover:bg-white/20"
-                                                        : "bg-white/5 text-[#94A3B8] cursor-not-allowed"
+                                                        ? "bg-[#CCFBF1] text-[#0F4C5C] hover:bg-[#5FCBC4]/20 border border-[#E4E4E7]"
+                                                        : "bg-[#F0FDFA] text-[#A1A1AA] cursor-not-allowed border border-[#E4E4E7]"
                                                     } ${isGeneratingThis ? "animate-pulse" : ""}`}
                                             >
                                                 <span className="block text-xs opacity-70">Day</span>
                                                 <span className="block text-lg font-bold">{day}</span>
                                                 {dayData && (
-                                                    <span className={`block text-[10px] mt-1 ${isSelected ? 'opacity-80' : 'text-[#64748B]'}`}>
+                                                    <span className={`block text-[10px] mt-1 ${isSelected ? 'opacity-90' : 'text-[#A1A1AA]'}`}>
                                                         {formatShortDate(dayData.date)}
                                                     </span>
                                                 )}
@@ -665,20 +663,20 @@ function ItineraryContent() {
                             {currentDay ? (
                                 <div>
                                     {/* Day Header */}
-                                    <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-[#5FCBC4]/20 to-[#4AB8B0]/10 border border-[#5FCBC4]/30">
+                                    <div className="mb-8 p-6 rounded-2xl bg-white border border-[#E4E4E7] shadow-sm">
                                         <div className="flex items-center justify-between">
                                             <div>
                                                 <p className="text-sm uppercase tracking-widest text-[#5FCBC4] mb-1">
                                                     Day {currentDay.day_number}
                                                 </p>
-                                                <h2 className="text-2xl font-bold">{formatDate(currentDay.date)}</h2>
+                                                <h2 className="text-2xl font-bold text-[#0F4C5C]">{formatDate(currentDay.date)}</h2>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-sm text-[#64748B]">Estimated Cost</p>
+                                                <p className="text-sm text-[#A1A1AA]">Estimated Cost</p>
                                                 <p className="text-2xl font-bold text-[#5FCBC4]">${currentDay.day_cost}</p>
                                             </div>
                                         </div>
-                                        <div className="mt-4 flex gap-4 text-sm text-[#475569]">
+                                        <div className="mt-4 flex gap-4 text-sm text-[#A1A1AA]">
                                             <span>{currentDay.blocks.length} activities</span>
                                             <span>•</span>
                                             <span>Full day planned</span>
@@ -700,24 +698,24 @@ function ItineraryContent() {
                                                 return (
                                                     <div key={blockKey} className="relative pl-16">
                                                         {/* Timeline Dot */}
-                                                        <div className="absolute left-6 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-[#5FCBC4] to-[#4AB8B0] flex items-center justify-center z-10 ring-4 ring-[#E0F7FA]">
+                                                        <div className="absolute left-6 top-6 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-br from-[#5FCBC4] to-[#4AB8B0] flex items-center justify-center z-10 ring-4 ring-[#F0FDFA]">
                                                             <div className="w-2 h-2 rounded-full bg-[#FFFFFF]" />
                                                         </div>
 
                                                         {/* Block Card */}
                                                         <div
                                                             onClick={() => toggleBlock(blockKey, block.place.id)}
-                                                            className={`cursor-pointer rounded-2xl border bg-gradient-to-br backdrop-blur-sm p-5 transition-all hover:scale-[1.01] hover:shadow-xl ${getBlockColor(block.block_type)}`}
+                                                            className={`cursor-pointer rounded-2xl border bg-gradient-to-br p-5 transition-all hover:scale-[1.01] hover:shadow-md ${getBlockColor(block.block_type)}`}
                                                         >
                                                             {/* Block Header */}
                                                             <div className="flex items-start justify-between mb-3">
                                                                 <div className="flex items-center gap-3">
                                                                     <span className="text-3xl">{getBlockIcon(block.block_type)}</span>
                                                                     <div>
-                                                                        <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
+                                                                        <p className="text-xs font-semibold uppercase tracking-wide text-[#A1A1AA]">
                                                                             {getBlockLabel(block.block_type)}
                                                                         </p>
-                                                                        <div className="flex items-center gap-2 text-sm text-white/60">
+                                                                        <div className="flex items-center gap-2 text-sm text-[#A1A1AA]">
                                                                             <Clock className="w-3 h-3" />
                                                                             <span>{block.time_range}</span>
                                                                         </div>
@@ -728,21 +726,21 @@ function ItineraryContent() {
                                                                         <Star className="w-4 h-4 fill-current" />
                                                                         <span className="font-bold">{block.place.rating}</span>
                                                                     </div>
-                                                                    <span className="text-lg font-bold text-emerald-400">${block.estimated_cost}</span>
+                                                                    <span className="text-lg font-bold text-emerald-600">${block.estimated_cost}</span>
                                                                 </div>
                                                             </div>
 
                                                             {/* Place Name */}
-                                                            <h3 className="text-xl font-bold text-white mb-2">{block.place.name}</h3>
+                                                            <h3 className="text-xl font-bold text-[#0F4C5C] mb-2">{block.place.name}</h3>
 
                                                             {/* Quick Info */}
-                                                            <div className="flex items-center gap-4 text-sm text-white/60">
+                                                            <div className="flex items-center gap-4 text-sm text-[#A1A1AA]">
                                                                 <span>{block.place.userRatingCount.toLocaleString()} reviews</span>
                                                             </div>
 
                                                             {/* Expanded Details */}
                                                             {isExpanded && (
-                                                                <div className="mt-4 pt-4 border-t border-white/20">
+                                                                <div className="mt-4 pt-4 border-t border-[#E4E4E7]">
                                                                     {isLoading ? (
                                                                         <div className="flex items-center justify-center py-4">
                                                                             <Loader2 className="w-6 h-6 animate-spin text-[#5FCBC4]" />
@@ -778,7 +776,7 @@ function ItineraryContent() {
                                                                                                         <div
                                                                                                             key={idx}
                                                                                                             className={`rounded-lg overflow-hidden group cursor-pointer transition-all ${currentImageIdx === idx
-                                                                                                                ? 'ring-2 ring-[#5FCBC4] ring-offset-2 ring-offset-[#E0F7FA]'
+                                                                                                                ? 'ring-2 ring-[#5FCBC4] ring-offset-2 ring-offset-[#F0FDFA]'
                                                                                                                 : 'opacity-70 hover:opacity-100'
                                                                                                                 }`}
                                                                                                             onClick={(e) => {
@@ -802,7 +800,7 @@ function ItineraryContent() {
                                                                                 {/* Right - Place Information */}
                                                                                 <div className="space-y-4">
                                                                                     <div>
-                                                                                        <h4 className="text-2xl font-bold text-white mb-3">
+                                                                                        <h4 className="text-2xl font-bold text-[#0F4C5C] mb-3">
                                                                                             {details.displayName_text}
                                                                                         </h4>
 
@@ -812,18 +810,18 @@ function ItineraryContent() {
                                                                                                 <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
                                                                                                 <span className="font-bold text-amber-400 text-lg">{details.rating}</span>
                                                                                             </div>
-                                                                                            <span className="text-sm text-[#64748B]">
+                                                                                            <span className="text-sm text-[#A1A1AA]">
                                                                                                 ({details.userRatingCount?.toLocaleString() || 0} reviews)
                                                                                             </span>
                                                                                         </div>
 
                                                                                         {/* Average Price */}
                                                                                         {details.avg_price && (
-                                                                                            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 inline-flex">
-                                                                                                <DollarSign className="w-5 h-5 text-emerald-400" />
+                                                                                            <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 inline-flex">
+                                                                                                <DollarSign className="w-5 h-5 text-emerald-600" />
                                                                                                 <div>
-                                                                                                    <p className="text-xs text-emerald-300/70 uppercase tracking-wide">Avg. Price</p>
-                                                                                                    <p className="text-xl font-bold text-emerald-400">${details.avg_price}</p>
+                                                                                                    <p className="text-xs text-emerald-500 uppercase tracking-wide">Avg. Price</p>
+                                                                                                    <p className="text-xl font-bold text-emerald-700">${details.avg_price}</p>
                                                                                                 </div>
                                                                                             </div>
                                                                                         )}
@@ -833,9 +831,9 @@ function ItineraryContent() {
 
                                                                             {/* Editorial Summary */}
                                                                             {details.editorialSummary_text && (
-                                                                                <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                                                                                <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7]">
                                                                                     <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">About</h5>
-                                                                                    <p className="text-sm text-[#475569] leading-relaxed">
+                                                                                    <p className="text-sm text-[#3F3F46] leading-relaxed">
                                                                                         {details.editorialSummary_text}
                                                                                     </p>
                                                                                 </div>
@@ -849,23 +847,23 @@ function ItineraryContent() {
                                                                                         {details.reviews.slice(0, 3).map((review, idx) => (
                                                                                             <div
                                                                                                 key={idx}
-                                                                                                className="p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                                                                                                className="p-4 rounded-xl bg-white border border-[#E4E4E7] hover:bg-[#F0FDFA] transition-colors"
                                                                                             >
                                                                                                 {/* Review Header */}
                                                                                                 <div className="flex items-start justify-between mb-3">
                                                                                                     <div className="flex items-center gap-2">
-                                                                                                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/30">
-                                                                                                            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                                                                                                            <span className="font-bold text-amber-400 text-sm">{review.rating}</span>
+                                                                                                        <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-100 border border-amber-200">
+                                                                                                            <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                                                                                                            <span className="font-bold text-amber-600 text-sm">{review.rating}</span>
                                                                                                         </div>
                                                                                                         {review.authorAttribution?.displayName && (
-                                                                                                            <span className="text-sm font-medium text-white/90">
+                                                                                                            <span className="text-sm font-medium text-[#3F3F46]">
                                                                                                                 {review.authorAttribution.displayName}
                                                                                                             </span>
                                                                                                         )}
                                                                                                     </div>
                                                                                                     {review.relativePublishTimeDescription && (
-                                                                                                        <span className="text-xs text-[#64748B]">
+                                                                                                        <span className="text-xs text-[#A1A1AA]">
                                                                                                             {review.relativePublishTimeDescription}
                                                                                                         </span>
                                                                                                     )}
@@ -873,7 +871,7 @@ function ItineraryContent() {
 
                                                                                                 {/* Review Text */}
                                                                                                 {review.text?.text && (
-                                                                                                    <p className="text-sm text-[#475569] leading-relaxed line-clamp-4">
+                                                                                                    <p className="text-sm text-[#3F3F46] leading-relaxed line-clamp-4">
                                                                                                         {review.text.text}
                                                                                                     </p>
                                                                                                 )}
@@ -884,14 +882,14 @@ function ItineraryContent() {
                                                                             )}
                                                                         </div>
                                                                     ) : (
-                                                                        <p className="text-sm text-[#64748B]">Click to load details...</p>
+                                                                        <p className="text-sm text-[#A1A1AA]">Click to load details...</p>
                                                                     )}
                                                                 </div>
                                                             )}
 
                                                             {/* Transport to next */}
                                                             {block.transport_to_next && idx < currentDay.blocks.length - 1 && (
-                                                                <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-4 text-sm text-white/50">
+                                                                <div className="mt-4 pt-4 border-t border-[#E4E4E7] flex items-center gap-4 text-sm text-[#A1A1AA]">
                                                                     <Navigation className="w-4 h-4" />
                                                                     <span className="capitalize font-medium">{block.transport_to_next}</span>
                                                                     <span>•</span>
@@ -908,11 +906,11 @@ function ItineraryContent() {
                                     </div>
 
                                     {/* Action Buttons - Continue / Edit */}
-                                    <div className="mt-8 p-6 rounded-2xl border border-white/10 bg-white/5 backdrop-blur">
+                                    <div className="mt-8 p-6 rounded-2xl border border-[#E4E4E7] bg-white shadow-sm">
                                         <div className="flex items-center justify-between mb-4">
                                             <div>
-                                                <p className="text-sm text-[#64748B]">Day {currentDay.day_number} of {itinerary.trip_duration_days || 3}</p>
-                                                <p className="text-lg font-semibold text-white">
+                                                <p className="text-sm text-[#A1A1AA]">Day {currentDay.day_number} of {itinerary.trip_duration_days || 3}</p>
+                                                <p className="text-lg font-semibold text-[#0F4C5C]">
                                                     {currentDay.day_number < (itinerary.trip_duration_days || 3)
                                                         ? "Ready to plan the next day?"
                                                         : itinerary.status === 'complete'
@@ -928,7 +926,7 @@ function ItineraryContent() {
                                             <button
                                                 onClick={() => handleEditDay(currentDay.day_number)}
                                                 disabled={isGenerating || generatingDay !== null}
-                                                className="flex-1 py-4 px-6 rounded-xl border border-white/20 bg-white/5 text-white font-semibold hover:bg-white/10 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                                className="flex-1 py-4 px-6 rounded-xl border border-[#E4E4E7] bg-white text-[#3F3F46] font-semibold hover:bg-[#CCFBF1] hover:border-[#5FCBC4] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                             >
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -941,7 +939,7 @@ function ItineraryContent() {
                                                 <button
                                                     onClick={handleContinueGenerate}
                                                     disabled={isGenerating || generatingDay !== null}
-                                                    className="flex-1 py-4 px-6 rounded-xl bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] text-[#FFFFFF] font-bold hover:scale-[1.02] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                                    className="flex-1 py-4 px-6 rounded-xl bg-[#5FCBC4] text-white font-bold hover:bg-[#4AB8B0] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                                 >
                                                     {generatingDay !== null ? (
                                                         <>
@@ -959,30 +957,46 @@ function ItineraryContent() {
 
                                             {/* Complete message */}
                                             {itinerary.status === 'complete' && (
-                                                <button
-                                                    onClick={() => {
-                                                        // Store itinerary data for payment page
-                                                        const paymentData = {
-                                                            itinerary_id: itinerary.itinerary_id,
-                                                            user_id: itinerary.user_id,
-                                                            city_id: itinerary.city_id,
-                                                            trip_duration_days: itinerary.trip_duration_days,
-                                                            start_date: itinerary.start_date,
-                                                            guest_count: itinerary.guest_count,
-                                                            budget: itinerary.budget,
-                                                            summary: itinerary.summary,
-                                                            daily_itinerary: itinerary.daily_itinerary,
-                                                            book_flight: itinerary.book_flight,
-                                                            flights: itinerary.flights,
-                                                        }
-                                                        localStorage.setItem('payment_itinerary_data', JSON.stringify(paymentData))
-                                                        router.push(`/payments?itineraryId=${itinerary.itinerary_id}`)
-                                                    }}
-                                                    className="flex-1 py-4 px-6 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-semibold flex items-center justify-center gap-2 hover:bg-emerald-500/30 transition"
-                                                >
-                                                    <CreditCard className="w-5 h-5" />
-                                                    Proceed to Payment
-                                                </button>
+                                                <div className="flex-1 flex flex-col gap-2">
+                                                    {vnpayError && (
+                                                        <p className="text-sm text-red-600 text-center">{vnpayError}</p>
+                                                    )}
+                                                    <button
+                                                        disabled={vnpayLoading}
+                                                        onClick={async () => {
+                                                            setVnpayError(null)
+                                                            setVnpayLoading(true)
+                                                            try {
+                                                                const amountUsd = itinerary.summary?.total_cost ?? itinerary.budget ?? 0
+                                                                const orderInfo = `Thanh toan tour du lich ${itinerary.itinerary_id}`
+                                                                const result = await PaymentService.createVnpayPaymentUrl({
+                                                                    itinerary_id: itinerary.itinerary_id,
+                                                                    amount_usd: amountUsd,
+                                                                    order_info: orderInfo,
+                                                                    language: 'vn',
+                                                                })
+                                                                window.location.href = result.payment_url
+                                                            } catch (err: unknown) {
+                                                                const msg = err instanceof Error ? err.message : 'Không thể tạo thanh toán VNPAY'
+                                                                setVnpayError(msg)
+                                                                setVnpayLoading(false)
+                                                            }
+                                                        }}
+                                                        className="flex-1 py-4 px-6 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 font-semibold flex items-center justify-center gap-2 hover:bg-emerald-100 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                                                    >
+                                                        {vnpayLoading ? (
+                                                            <>
+                                                                <Loader2 className="w-5 h-5 animate-spin" />
+                                                                Đang kết nối VNPAY...
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <CreditCard className="w-5 h-5" />
+                                                                Thanh toán qua VNPAY
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
@@ -990,16 +1004,16 @@ function ItineraryContent() {
                             ) : generatingDay ? (
                                 <div className="flex flex-col items-center justify-center h-full py-20">
                                     <div className="relative">
-                                        <div className="w-20 h-20 rounded-full bg-[#5FCBC4]/10 animate-ping absolute" />
-                                        <div className="w-20 h-20 rounded-full bg-[#5FCBC4]/20 flex items-center justify-center relative">
+                                        <div className="w-20 h-20 rounded-full bg-[#5FCBC4]/20 animate-ping absolute" />
+                                        <div className="w-20 h-20 rounded-full bg-[#CCFBF1] flex items-center justify-center relative">
                                             <Loader2 className="w-10 h-10 animate-spin text-[#5FCBC4]" />
                                         </div>
                                     </div>
-                                    <p className="mt-6 text-lg font-semibold">Generating Day {generatingDay}...</p>
-                                    <p className="text-sm text-[#64748B] mt-2">Finding the best places for you</p>
+                                    <p className="mt-6 text-lg font-semibold text-[#0F4C5C]">Generating Day {generatingDay}...</p>
+                                    <p className="text-sm text-[#A1A1AA] mt-2">Finding the best places for you</p>
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-full py-20 text-[#64748B]">
+                                <div className="flex flex-col items-center justify-center h-full py-20 text-[#A1A1AA]">
                                     <MapPin className="w-12 h-12 mb-4 opacity-50" />
                                     <p>Select a day to view the itinerary</p>
                                 </div>
@@ -1010,7 +1024,7 @@ function ItineraryContent() {
             </main>
 
             {/* Footer */}
-            <footer className="mt-auto border-t border-white/10 bg-[#1E293B]/80 backdrop-blur py-6">
+            <footer className="mt-auto border-t border-[#E4E4E7] bg-[#1E293B] py-6">
                 <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#94A3B8]">
                     © 2025 VietJourney. All rights reserved.
                 </div>

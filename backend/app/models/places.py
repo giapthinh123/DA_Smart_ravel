@@ -3,16 +3,21 @@ from datetime import datetime
 class places:
     @staticmethod
     def get_all_places(mongo):
-        return list(
-            mongo.db.places.aggregate([
-                {
-                    "$project": {
-                        "_id": 0,
-                        "place": 1,
-                    }
-                }
-            ])
-        )
+        return list(mongo.db.places.find(
+            {},
+            {
+                "_id": 0,
+                "id": 1,
+                "city":1,
+                "city_id": 1,
+                "displayName_text": 1,
+                "location": 1,
+                "rating": 1,
+                "userRatingCount": 1,
+                "avg_price": 1,
+                "search_type": 1,
+            }
+        ))
     @staticmethod
     def get_all_place_by_city_id(mongo, city_id):
         return list(mongo.db.places.find(
@@ -91,6 +96,25 @@ class places:
             return True
         return False
     
+    @staticmethod
+    def create_place(mongo, data):
+        return mongo.db.places.insert_one(data)
+
+    @staticmethod
+    def place_exists(mongo, place_id):
+        return mongo.db.places.find_one({"id": place_id}, {"_id": 1}) is not None
+
+    @staticmethod
+    def update_place(mongo, place_id, data):
+        return mongo.db.places.update_one(
+            {"id": place_id},
+            {"$set": data}
+        )
+
+    @staticmethod
+    def delete_place(mongo, place_id):
+        return mongo.db.places.delete_one({"id": place_id})
+
     @staticmethod
     def get_preferences(mongo, user_id, city_id):
         return mongo.db.user_preferences.find_one(

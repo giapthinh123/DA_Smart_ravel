@@ -3,8 +3,8 @@ import { Globe, Mail, Phone, MapPin } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-[#1E293B] text-white border-t border-[#334155]">
-      <div className="container px-4 md:px-6 py-12">
+    <footer className="bg-[#1E293B] text-[#94A3B8] border-t border-[#1E293B]">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-4">

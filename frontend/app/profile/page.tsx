@@ -14,7 +14,7 @@ import { useAuthStore } from "@/store/useAuthStore"
 import { Switch } from '@/components/ui/switch'
 import { AuthService } from "@/services/auth.service"
 import { UserMenu } from "@/components/user-menu"
-
+import { Footer } from "@/components/footer"
 function ProfileContent() {
   const { user, logout, updateUser } = useAuthStore()
   const router = useRouter()
@@ -216,63 +216,54 @@ function ProfileContent() {
 
   return (
     <>
-      <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
-        {/* Background Layers */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5]/40 to-transparent" />
-        </div>
-
+      <div className="min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
         <header className="mx-auto max-w-7xl px-6 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
+              <p className="text-sm uppercase tracking-[0.3em] text-[#5FCBC4]">
                 VietJourney
               </p>
-              <p className="text-xl font-semibold text-[#0F172A]">
+              <p className="text-xl font-semibold text-[#0F4C5C]">
                 Mapping Vietnam experiences
               </p>
             </div>
             <nav className="flex items-center gap-2 text-sm font-medium">
-              <Link href="/" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+              <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                 Home
               </Link>
-              <Link href="/planner" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+              <Link href="/planner" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                 Planner
               </Link>
-              <Link href="/tours" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+              <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                 Personalities
               </Link>
-              <Link href="#" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+              <Link href="#" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                 Contact
               </Link>
-              <span className="mx-2 h-4 w-px bg-white/20"></span>
-
-              {/* User Menu Dropdown */}
+              <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
               <UserMenu />
             </nav>
           </div>
         </header>
 
-        <div className="container mx-auto px-4 py-2 md:py-1">
+        <div className="container mx-auto px-4 py-4 pb-12">
           <div className="grid gap-6 md:gap-8 lg:grid-cols-3">
             {/* Left Column - Profile & Password */}
             <div className="space-y-6 lg:col-span-2">
               {/* Profile Information Section */}
-              <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
-                <div className="mb-6 space-y-2">
-                  <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+              <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
+                <div className="mb-6 space-y-1">
+                  <h2 className="text-xl font-semibold text-[#0F4C5C]">
                     Profile Information
                   </h2>
-                  <p className="text-sm text-[#475569]">
+                  <p className="text-sm text-[#A1A1AA]">
                     Update your personal details
                   </p>
                 </div>
 
-                <div className="mb-6 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <Avatar className="h-20 w-20 border-2 border-[#5FCBC4]/30">
-                    <AvatarFallback className="text-xl bg-[#5FCBC4]/20 text-[#5FCBC4]">
+                <div className="mb-6 flex items-center gap-4 rounded-2xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
+                  <Avatar className="h-20 w-20 border-2 border-[#5FCBC4]/40">
+                    <AvatarFallback className="text-xl bg-[#CCFBF1] text-[#0F4C5C]">
                       {(user?.fullname || user?.name || user?.email || "U")
                         .split(" ")
                         .map((n: string) => n[0])
@@ -282,87 +273,76 @@ function ProfileContent() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold text-white text-lg">{user?.fullname || user?.name || user?.email}</h3>
+                    <h3 className="font-semibold text-[#0F4C5C] text-lg">{user?.fullname || user?.name || user?.email}</h3>
                     <p className="text-sm text-[#5FCBC4]">{user?.role}</p>
                   </div>
                 </div>
 
                 <form onSubmit={handleUpdateProfile} className="space-y-5">
                   <div className="grid gap-2">
-                    <label htmlFor="fullName" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
+                    <label htmlFor="fullName" className="text-sm font-medium text-[#0F4C5C]">
                       Full Name
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="fullName"
-                        name="fullName"
-                        type="text"
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        placeholder="Enter your full name…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      placeholder="Enter your full name…"
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="email" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
+                    <label htmlFor="email" className="text-sm font-medium text-[#0F4C5C]">
                       Email
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="email"
-                        type="email"
-                        value={user?.email}
-                        disabled
-                        className="h-12 w-full r  ounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-[#94A3B8] placeholder:text-[#94A3B8] cursor-not-allowed"
-                      />
-                    </div>
-                    <p className="text-xs text-[#94A3B8]">Email cannot be changed</p>
+                    <input
+                      id="email"
+                      type="email"
+                      value={user?.email}
+                      disabled
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-[#F0FDFA] px-4 text-[#A1A1AA] cursor-not-allowed"
+                    />
+                    <p className="text-xs text-[#A1A1AA]">Email cannot be changed</p>
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="phoneNumber" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
+                    <label htmlFor="phoneNumber" className="text-sm font-medium text-[#0F4C5C]">
                       Phone Number
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        type="tel"
-                        value={formData.phoneNumber}
-                        onChange={handleInputChange}
-                        placeholder="Enter your phone number…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      type="tel"
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      placeholder="Enter your phone number…"
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="address" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
+                    <label htmlFor="address" className="text-sm font-medium text-[#0F4C5C]">
                       Address
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="address"
-                        name="address"
-                        type="text"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        placeholder="Enter your address…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="address"
+                      name="address"
+                      type="text"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      placeholder="Enter your address…"
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
+
                   {message && (
                     <div
-                      className={`rounded-2xl border p-4 text-sm ${message.type === "success"
-                        ? "border-green-400/30 bg-green-400/10 text-green-300"
-                        : "border-red-400/30 bg-red-400/10 text-red-300"
+                      className={`rounded-xl border p-4 text-sm ${message.type === "success"
+                        ? "border-green-300 bg-green-50 text-green-700"
+                        : "border-red-300 bg-red-50 text-red-700"
                         }`}
                     >
                       {message.text}
@@ -372,16 +352,9 @@ function ProfileContent() {
                   <button
                     type="submit"
                     disabled={!isProfileFormValid || isUpdatingProfile}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-sm font-semibold text-[#FFFFFF] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A8E6E0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFFFFF] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="h-12 w-full rounded-xl bg-[#5FCBC4] text-sm font-semibold text-white transition-all hover:bg-[#4AB8B0] hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    >
-                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
-                      <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
-                    </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#FFFFFF] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
+                    <span className="flex items-center justify-center gap-2">
                       {isUpdatingProfile ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
@@ -396,76 +369,67 @@ function ProfileContent() {
               </div>
 
               {/* Change Password Section */}
-              <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
-                <div className="mb-6 space-y-2">
-                  <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+              <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
+                <div className="mb-6 space-y-1">
+                  <h2 className="text-xl font-semibold text-[#0F4C5C]">
                     Change Password
                   </h2>
-                  <p className="text-sm text-[#475569]">
+                  <p className="text-sm text-[#A1A1AA]">
                     Update your account password
                   </p>
                 </div>
 
                 <form onSubmit={handleChangePassword} className="space-y-5">
                   <div className="grid gap-2">
-                    <label htmlFor="currentPassword" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
+                    <label htmlFor="currentPassword" className="text-sm font-medium text-[#0F4C5C]">
                       Current Password
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="currentPassword"
-                        name="currentPassword"
-                        type="password"
-                        value={passwordData.currentPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="Enter current password…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="currentPassword"
+                      name="currentPassword"
+                      type="password"
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordChange}
+                      placeholder="Enter current password…"
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="newPassword" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
+                    <label htmlFor="newPassword" className="text-sm font-medium text-[#0F4C5C]">
                       New Password
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="newPassword"
-                        name="newPassword"
-                        type="password"
-                        value={passwordData.newPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="Enter new password (min. 8 characters)…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="newPassword"
+                      name="newPassword"
+                      type="password"
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordChange}
+                      placeholder="Enter new password (min. 8 characters)…"
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="confirmPassword" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4]">
+                    <label htmlFor="confirmNewPassword" className="text-sm font-medium text-[#0F4C5C]">
                       Confirm New Password
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="confirmNewPassword"
-                        name="confirmPassword"
-                        type="password"
-                        value={passwordData.confirmPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="Confirm new password…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="confirmNewPassword"
+                      name="confirmPassword"
+                      type="password"
+                      value={passwordData.confirmPassword}
+                      onChange={handlePasswordChange}
+                      placeholder="Confirm new password…"
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   {passwordMessage && (
                     <div
-                      className={`rounded-2xl border p-4 text-sm ${passwordMessage.type === "success"
-                        ? "border-green-400/30 bg-green-400/10 text-green-300"
-                        : "border-red-400/30 bg-red-400/10 text-red-300"
+                      className={`rounded-xl border p-4 text-sm ${passwordMessage.type === "success"
+                        ? "border-green-300 bg-green-50 text-green-700"
+                        : "border-red-300 bg-red-50 text-red-700"
                         }`}
                     >
                       {passwordMessage.text}
@@ -475,16 +439,9 @@ function ProfileContent() {
                   <button
                     type="submit"
                     disabled={!isPasswordFormValid || isChangingPassword}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-sm font-semibold text-[#FFFFFF] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A8E6E0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFFFFF] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="h-12 w-full rounded-xl bg-[#5FCBC4] text-sm font-semibold text-white transition-all hover:bg-[#4AB8B0] hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    >
-                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
-                      <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
-                    </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#FFFFFF] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
+                    <span className="flex items-center justify-center gap-2">
                       {isChangingPassword ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
@@ -501,22 +458,22 @@ function ProfileContent() {
 
             {/* Right Column - Account Information */}
             <div className="lg:col-span-1 space-y-6">
-              <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
-                <div className="mb-6 space-y-2">
-                  <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+              <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
+                <div className="mb-6 space-y-1">
+                  <h2 className="text-xl font-semibold text-[#0F4C5C]">
                     Account Information
                   </h2>
-                  <p className="text-sm text-[#475569]">
+                  <p className="text-sm text-[#A1A1AA]">
                     Your account details
                   </p>
                 </div>
 
-                <div className="space-y-6">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] mb-2">
+                <div className="space-y-4">
+                  <div className="rounded-2xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
+                    <p className="text-sm font-medium text-[#5FCBC4] mb-1">
                       Account Created
                     </p>
-                    <p className="text-base text-white">
+                    <p className="text-base text-[#3F3F46]">
                       {user?.created_at ? new Date(user?.created_at).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
@@ -525,32 +482,32 @@ function ProfileContent() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] mb-2">
+                  <div className="rounded-2xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
+                    <p className="text-sm font-medium text-[#5FCBC4] mb-1">
                       User Role
                     </p>
-                    <p className="text-base text-white">{user?.role}</p>
+                    <p className="text-base text-[#3F3F46]">{user?.role}</p>
                   </div>
                 </div>
               </div>
 
               {/* Delete Account Section */}
-              <div className="rounded-3xl border border-red-500/30 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(220,38,38,0.3)]">
-                <div className="mb-6 space-y-2">
-                  <h2 className="text-xl font-semibold text-red-400 drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
+              <div className="rounded-3xl border border-red-200 bg-white p-8 shadow-sm">
+                <div className="mb-6 space-y-1">
+                  <h2 className="text-xl font-semibold text-red-600">
                     Danger Zone
                   </h2>
-                  <p className="text-sm text-[#475569]">
+                  <p className="text-sm text-[#A1A1AA]">
                     Permanently delete your account
                   </p>
                 </div>
 
-                <div className="mb-6 rounded-2xl border border-red-500/20 bg-red-500/5 p-4">
+                <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4">
                   <div className="flex gap-3">
-                    <svg className="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <div className="text-sm text-red-300">
+                    <div className="text-sm text-red-600">
                       <p className="font-semibold mb-1">Warning!</p>
                       <p>This action cannot be undone. This will permanently delete your account and remove all your data from our servers.</p>
                     </div>
@@ -559,46 +516,40 @@ function ProfileContent() {
 
                 <form onSubmit={handleDeleteAccount} className="space-y-5">
                   <div className="grid gap-2">
-                    <label htmlFor="confirmPassword" className="text-sm uppercase tracking-[0.25em] text-red-400">
+                    <label htmlFor="confirmPassword" className="text-sm font-medium text-red-600">
                       Confirm Password
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-red-500/20 opacity-65" />
-                      <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        value={deleteAccountData.confirmPassword}
-                        onChange={handleDeleteAccountChange}
-                        placeholder="Enter your password"
-                        className="h-12 w-full rounded-2xl border border-red-500/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus:border-red-400 focus:outline-none focus:ring-0 transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      value={deleteAccountData.confirmPassword}
+                      onChange={handleDeleteAccountChange}
+                      placeholder="Enter your password"
+                      className="h-12 w-full rounded-xl border border-red-200 bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="confirmText" className="text-sm uppercase tracking-[0.25em] text-red-400">
+                    <label htmlFor="confirmText" className="text-sm font-medium text-red-600">
                       Type "DELETE" to confirm
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-red-500/20 opacity-65" />
-                      <input
-                        id="confirmText"
-                        name="confirmText"
-                        type="text"
-                        value={deleteAccountData.confirmText}
-                        onChange={handleDeleteAccountChange}
-                        placeholder="Type DELETE"
-                        className="h-12 w-full rounded-2xl border border-red-500/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#94A3B8] focus:border-red-400 focus:outline-none focus:ring-0 transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="confirmText"
+                      name="confirmText"
+                      type="text"
+                      value={deleteAccountData.confirmText}
+                      onChange={handleDeleteAccountChange}
+                      placeholder="Type DELETE"
+                      className="h-12 w-full rounded-xl border border-red-200 bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors"
+                    />
                   </div>
 
                   {deleteMessage && (
                     <div
-                      className={`rounded-2xl border p-4 text-sm ${deleteMessage.type === "success"
-                        ? "border-green-400/30 bg-green-400/10 text-green-300"
-                        : "border-red-400/30 bg-red-400/10 text-red-300"
+                      className={`rounded-xl border p-4 text-sm ${deleteMessage.type === "success"
+                        ? "border-green-300 bg-green-50 text-green-700"
+                        : "border-red-300 bg-red-50 text-red-700"
                         }`}
                     >
                       {deleteMessage.text}
@@ -608,15 +559,9 @@ function ProfileContent() {
                   <button
                     type="submit"
                     disabled={!isDeleteAccountValid || isDeletingAccount}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-sm font-semibold text-white shadow-[0_25px_70px_-20px_rgba(220,38,38,0.6)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(220,38,38,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFFFFF] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="h-12 w-full rounded-xl bg-red-500 text-sm font-semibold text-white transition-all hover:bg-red-600 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-red-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    >
-                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.3),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.2),transparent_60%)] mix-blend-screen" />
-                    </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] drop-shadow-[0_10px_25px_rgba(0,0,0,0.4)]">
+                    <span className="flex items-center justify-center gap-2">
                       {isDeletingAccount ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
@@ -639,67 +584,7 @@ function ProfileContent() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 border-t border-white/10 bg-[#1E293B]/80 py-10 backdrop-blur">
-          <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 lg:flex-row lg:justify-between">
-            <div className="max-w-sm">
-              <p className="mb-2 text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
-                VietJourney
-              </p>
-              <h3 className="mb-4 text-xl font-semibold text-white">
-                Connect and discover experiences over land
-              </h3>
-              <p className="mb-2 text-sm text-[#475569]">
-                43 Building, 348 Arau They Street,
-              </p>
-              <p className="mb-2 text-sm text-[#475569]">
-                Can Giay District, Ha Noi, Vietnam
-              </p>
-              <p className="text-sm text-[#475569]">
-                help@vietjourneycommander.com
-              </p>
-            </div>
-
-            <div className="grid gap-8 sm:grid-cols-3">
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Platform</h4>
-                <ul className="space-y-2 text-sm text-[#475569]">
-                  <li><a href="#" className="hover:text-[#5FCBC4]">Tailored experiences</a></li>
-                  <li><a href="#" className="hover:text-[#5FCBC4]">Signature journeys</a></li>
-                  <li><a href="#" className="hover:text-[#5FCBC4]">Themed escapes</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Support</h4>
-                <ul className="space-y-2 text-sm text-[#475569]">
-                  <li><a href="#" className="hover:text-[#5FCBC4]">Help centre</a></li>
-                  <li><a href="#" className="hover:text-[#5FCBC4]">Terms of privacy</a></li>
-                  <li><a href="#" className="hover:text-[#5FCBC4]">Legal</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Stay looped</h4>
-                <p className="mb-3 text-sm text-[#475569]">
-                  Receive curated travel moments straight to your inbox
-                </p>
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    placeholder="Your email..."
-                    className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#94A3B8] focus:border-[#5FCBC4] focus:outline-none"
-                  />
-                  <button className="rounded-lg bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] px-4 text-sm font-semibold text-[#FFFFFF] transition hover:scale-105">
-                    Subscribe
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-6 pt-8 text-center text-sm text-[#94A3B8]">
-            <p>© 2025 VietJourney. All rights reserved</p>
-            <p className="mt-2">Design aligned with the Welcome experiences.</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </>
   )

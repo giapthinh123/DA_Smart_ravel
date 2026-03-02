@@ -31,6 +31,20 @@ class Config:
     else:
         MONGO_URI = _base_uri
     
+    # VNPAY Configuration
+    VNPAY_TMN_CODE = os.getenv("VNPAY_TMN_CODE", "CGPNVAII")
+    VNPAY_HASH_SECRET = os.getenv("VNPAY_HASH_SECRET", "RAOEXHYVSDDIIENYWSLDIIZTANXUXZFJ")
+    VNPAY_URL = os.getenv("VNPAY_URL", "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html")
+    VNPAY_RETURN_URL = os.getenv("VNPAY_RETURN_URL", "http://localhost:3000/vnpay-return")
+    VNPAY_RETURN_URL_REGISTER = os.getenv("VNPAY_RETURN_URL_REGISTER", "http://localhost:5000/api/payments/vnpay/return-register")
+    USD_TO_VND_RATE = int(os.getenv("USD_TO_VND_RATE", "25000"))
+    
+    # Registration Plans Configuration
+    REGISTRATION_PLANS = {
+        "monthly": {"price_usd": 7.96, "duration_days": 30, "name": "Gói tháng"},
+        "yearly": {"price_usd": 79.6, "duration_days": 365, "name": "Gói năm"},
+        "lifetime": {"price_usd": 199.6, "duration_days": 36500, "name": "Trọn đời"}
+    }
     # Security Headers (OWASP)
     SECURITY_HEADERS = {
         "X-Content-Type-Options": "nosniff",
