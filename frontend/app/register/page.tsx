@@ -1,7 +1,7 @@
 "use client"
 
-import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { toast } from "@/lib/toast"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { LoaderCircle, CheckCircle2 } from "lucide-react"
@@ -94,9 +94,9 @@ export default function RegisterPage() {
         fullname: formData.fullName,
         phone: formData.phone,
       }
-      
+
       sessionStorage.setItem('registration_data', JSON.stringify(registrationData))
-      
+
       setTimeout(() => {
         setIsLoading(false)
         router.push('/register/payment')
@@ -104,7 +104,7 @@ export default function RegisterPage() {
     } catch (error) {
       console.error('Error saving registration data:', error)
       setIsLoading(false)
-      alert('Có lỗi xảy ra. Vui lòng thử lại.')
+      toast.error('Có lỗi xảy ra. Vui lòng thử lại.', 'Đăng ký thất bại')
     }
   }
 

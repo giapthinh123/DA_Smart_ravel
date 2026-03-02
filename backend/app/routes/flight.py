@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from ..services.flight import information_flight
 
 flight_bp = Blueprint("flight", __name__)
 
 @flight_bp.route("/", methods=["POST"])
+@jwt_required()
 def flight_search():
     """
     Search for flights

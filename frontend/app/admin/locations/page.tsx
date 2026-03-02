@@ -32,6 +32,7 @@ import { City } from '@/types/domain'
 import { PlacesService } from '@/services/places.service'
 import { Place } from '@/types/domain'
 import { ImageUploader, ImageUploaderHandle } from '@/components/ui/image-uploader'
+import { toast } from '@/lib/toast'
 // Location type definition based on the provided schema
 interface Location {
     _id?: { $oid: string }
@@ -416,7 +417,7 @@ function LocationManagementPage() {
             setShowDeleteModal(false)
             setDeletingPlace(null)
         } catch (err: any) {
-            alert(err.message || 'Không thể xóa địa điểm')
+            toast.error(err.message || 'Không thể xóa địa điểm.', 'Lỗi xóa')
         } finally {
             setDeleteLoading(false)
         }

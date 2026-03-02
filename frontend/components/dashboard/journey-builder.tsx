@@ -12,6 +12,7 @@ import FlightsSearch from "@/components/dashboard/flights-search"
 import { CityService } from "@/services/city.service"
 import { useRouter } from "next/navigation"
 import { Checkbox } from 'primereact/checkbox';
+import { toast } from "@/lib/toast"
 
 function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
@@ -127,8 +128,16 @@ export default function JourneyBuilder() {
 
   // Handle form submission
   const handleSubmit = useCallback(async () => {
-    if (!dataBuildTour.departure || !dataBuildTour.destination || !dataBuildTour.departureDate || !dataBuildTour.returnDate || !dataBuildTour.budget || dataBuildTour.adults === 0) {
-      alert("Please fill all required fields")
+    const missing: string[] = []
+    if (!dataBuildTour.departure) missing.push('Điểm xuất phát')
+    if (!dataBuildTour.destination) missing.push('Điểm đến')
+    if (!dataBuildTour.departureDate) missing.push('Ngày đi')
+    if (!dataBuildTour.returnDate) missing.push('Ngày về')
+    if (!dataBuildTour.budget) missing.push('Ngân sách')
+    if (dataBuildTour.adults === 0) missing.push('Số khách (ít nhất 1 người lớn)')
+
+    if (missing.length > 0) {
+      toast.warning(`Vui lòng điền đầy đủ: ${missing.join(', ')}.`, 'Thiếu thông tin')
       return
     }
 

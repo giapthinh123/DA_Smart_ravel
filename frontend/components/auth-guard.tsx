@@ -19,10 +19,10 @@ interface AuthGuardProps {
  * IMPORTANT: This is for UX only. Backend MUST validate permissions.
  * Never trust frontend authorization checks for security.
  */
-export function AuthGuard({ 
-  children, 
+export function AuthGuard({
+  children,
   requiredRoles,
-  fallbackPath = '/login' 
+  fallbackPath = '/login'
 }: AuthGuardProps) {
   const router = useRouter()
   const pathname = usePathname()
@@ -37,15 +37,11 @@ export function AuthGuard({
   useEffect(() => {
     // Wait for hydration to complete before checking auth
     if (!hasHydrated) {
-      console.log('⏳ Waiting for hydration...')
       return
     }
 
-    console.log('✓ Hydration complete, checking auth...', { isAuthenticated, pathname })
-
     // Redirect if not authenticated
     if (!isAuthenticated && isProtectedRoute(pathname)) {
-      console.log('❌ Not authenticated, redirecting to login')
       router.push(`${fallbackPath}`)
       return
     }
@@ -53,7 +49,7 @@ export function AuthGuard({
     // Check role-based access
     if (isAuthenticated && requiredRoles && requiredRoles.length > 0) {
       const hasRequiredRole = user?.role && requiredRoles.includes(user.role)
-      
+
       if (!hasRequiredRole) {
         // Redirect to unauthorized page or dashboard
         router.push('/unauthorized')
@@ -104,7 +100,7 @@ export function withAuthGuard<P extends object>(
  */
 export function usePermissions() {
   const { user } = useAuthStore()
-  
+
   return {
     isAdmin: user?.role === 'admin',
     hasRole: (roles: UserRole[]) => user?.role && roles.includes(user.role),

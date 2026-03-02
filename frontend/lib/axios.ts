@@ -8,7 +8,7 @@ const getBaseURL = () => {
     // Browser: always use relative URL to go through Next.js rewrite
     return ''
   }
-  
+
   // Server-side: use internal Docker DNS or localhost for development
   // INTERNAL_API_URL is set via Docker Compose for server-side calls
   return process.env.INTERNAL_API_URL || 'http://backend:5000'
@@ -34,9 +34,10 @@ export const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    // Get token from localStorage if available
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('auth_token')
+      // Use AuthService for token retrieval (handles expiry check)
+      const { AuthService } = require('@/services/auth.service')
+      const token = AuthService.getStoredToken()
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
       }
@@ -61,17 +62,45 @@ api.interceptors.response.use(
     }
     return response
   },
-  (error) => {
+  async (error) => {
     // Handle 401 unauthorized
     if (error.response?.status === 401) {
-      // Clear auth data
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('auth_token')
-        localStorage.removeItem('user_data')
+        const requestUrl: string = error.config?.url || ''
+
+        // Skip redirect for auth-specific routes (e.g. wrong password → 401)
+        // Only treat 401 as "session expired" for protected data API calls
+        const isAuthRoute = requestUrl.includes('/api/auth/')
+        if (isAuthRoute) {
+          return Promise.reject(error)
+        }
+
+        // Clear storage directly without calling API (token is already invalid)
+        const { AuthService } = require('@/services/auth.service')
+        AuthService.clearStorage()
+
+        // Reset Zustand store state (without calling API logout)
+        import('@/store/useAuthStore').then(({ useAuthStore }) => {
+          useAuthStore.setState({
+            user: null,
+            token: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: null,
+          })
+        }).catch(() => { })
+
+        // Redirect to login page
+        if (window.location.pathname !== '/login' && window.location.pathname !== '/register') {
+          // Show toast before redirect
+          import('@/lib/toast').then(({ toast }) => {
+            toast.warning('Vui lòng đăng nhập lại để tiếp tục.', 'Phiên đăng nhập hết hạn')
+          })
+          setTimeout(() => { window.location.href = '/login' }, 1200)
+        }
       }
     }
-    
-    // Xử lý im lặng - không log ra console
+
     return Promise.reject(error)
   }
 )

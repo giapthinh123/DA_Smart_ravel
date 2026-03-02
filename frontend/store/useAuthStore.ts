@@ -2,8 +2,9 @@
 
 import { create } from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
-import { User, AuthData, LoginCredentials, RegisterData } from '@/types/domain'
+import { User, LoginCredentials, RegisterData } from '@/types/domain'
 import { AuthService } from '@/services/auth.service'
+import { toast } from '@/lib/toast'
 
 interface AuthState {
   user: User | null
@@ -41,10 +42,10 @@ export const useAuthStore = create<AuthStore>()(
         // Actions
         login: async (credentials: LoginCredentials & { remember?: boolean }) => {
           set({ isLoading: true, error: null })
-          
+
           try {
             const authData = await AuthService.login(credentials)
-            console.log('Auth data:', authData)
+            const name = authData.user?.fullname || authData.user?.name || authData.user?.email || 'bạn'
             set({
               user: authData.user,
               token: authData.token,
@@ -52,21 +53,24 @@ export const useAuthStore = create<AuthStore>()(
               isLoading: false,
               error: null,
             })
+            toast.success(`Chào mừng trở lại, ${name}!`, 'Đăng nhập thành công')
           } catch (error) {
+            const msg = error instanceof Error ? error.message : 'Đăng nhập thất bại'
             set({
               isLoading: false,
-              error: error instanceof Error ? error.message : 'Login failed',
+              error: msg,
             })
+            toast.error(msg, 'Đăng nhập thất bại')
             throw error
           }
         },
 
         register: async (userData: RegisterData) => {
           set({ isLoading: true, error: null })
-          
+
           try {
             const authData = await AuthService.register(userData)
-            
+
             set({
               user: authData.user,
               token: authData.token,
@@ -85,7 +89,6 @@ export const useAuthStore = create<AuthStore>()(
 
         logout: async () => {
           set({ isLoading: true })
-          
           try {
             await AuthService.logout()
           } catch (error) {
@@ -98,59 +101,26 @@ export const useAuthStore = create<AuthStore>()(
               isLoading: false,
               error: null,
             })
+            toast.info('Hẹn gặp lại!', 'Đã đăng xuất')
           }
         },
 
         checkAuth: () => {
           if (typeof window === 'undefined') return
-          
-          console.log('🔍 CheckAuth called')
-          
-          const token = localStorage.getItem('auth_token')
-          const userData = localStorage.getItem('user_data')
-          const tokenExpiry = localStorage.getItem('token_expiry')
-          
-          console.log('📊 LocalStorage state:', {
-            hasToken: !!token,
-            hasUserData: !!userData,
-            hasExpiry: !!tokenExpiry,
-            tokenExpiry: tokenExpiry,
-            now: Date.now(),
-            isExpired: tokenExpiry ? Date.now() > parseInt(tokenExpiry) : 'no expiry'
-          })
-          
-          // Check if token is expired
-          if (tokenExpiry && Date.now() > parseInt(tokenExpiry)) {
-            console.log('⏰ Token expired, logging out')
+
+          // Use AuthService as single source of truth for token validity
+          const token = AuthService.getStoredToken()
+          const user = AuthService.getStoredUser()
+
+          if (token && user) {
             set({
-              user: null,
-              token: null,
-              isAuthenticated: false,
+              user,
+              token,
+              isAuthenticated: true,
             })
-            localStorage.clear()
-            return
-          }
-          
-          // Restore session from localStorage
-          if (token && userData) {
-            try {
-              const user = JSON.parse(userData)
-              console.log('✅ Restoring session:', user.email)
-              set({
-                user,
-                token,
-                isAuthenticated: true,
-              })
-            } catch (error) {
-              console.error('❌ Failed to parse user data:', error)
-              set({
-                user: null,
-                token: null,
-                isAuthenticated: false,
-              })
-            }
           } else {
-            console.log('❌ No token or user data found')
+            // Token expired or not found
+            AuthService.clearStorage()
             set({
               user: null,
               token: null,
@@ -160,7 +130,7 @@ export const useAuthStore = create<AuthStore>()(
         },
 
         clearError: () => set({ error: null }),
-        
+
         setLoading: (loading: boolean) => set({ isLoading: loading }),
 
         updateUser: (user: User) => {
@@ -182,65 +152,27 @@ export const useAuthStore = create<AuthStore>()(
         skipHydration: false,
         onRehydrateStorage: () => {
           return (state, error) => {
-            if (error) {
-              console.error('❌ Hydration error:', error)
-              if (state) {
-                state._hasHydrated = true
-              }
+            if (error || typeof window === 'undefined') {
+              if (state) state._hasHydrated = true
               return
             }
-            
-            if (typeof window === 'undefined') {
-              if (state) {
-                state._hasHydrated = true
-              }
-              return
-            }
-            
-            console.log('💧 Rehydration complete, checking auth...')
-            
-            // Check token expiry immediately after rehydration
-            const tokenExpiry = localStorage.getItem('token_expiry')
-            const token = localStorage.getItem('auth_token')
-            const userData = localStorage.getItem('user_data')
-            
-            console.log('📊 Rehydration check:', {
-              hasToken: !!token,
-              hasUserData: !!userData,
-              hasExpiry: !!tokenExpiry,
-              isExpired: tokenExpiry ? Date.now() > parseInt(tokenExpiry) : 'no expiry'
-            })
-            
-            // If token is expired, clear everything
-            if (tokenExpiry && Date.now() > parseInt(tokenExpiry)) {
-              console.log('⏰ Token expired on rehydration')
-              localStorage.clear()
-              if (state) {
-                state.user = null
-                state.token = null
-                state.isAuthenticated = false
-                state._hasHydrated = true
-              }
-              return
-            }
-            
-            // If we have valid token and user data but state is missing, restore it
-            if (token && userData && state) {
-              try {
-                const user = JSON.parse(userData)
-                console.log('✅ Restoring session on rehydration:', user.email)
-                state.user = user
-                state.token = token
-                state.isAuthenticated = true
-                state._hasHydrated = true
-              } catch (error) {
-                console.error('❌ Failed to parse user data:', error)
-                state._hasHydrated = true
-              }
-            } else if (state) {
-              // No session to restore, mark as hydrated anyway
+
+            // Use AuthService as single source of truth
+            const token = AuthService.getStoredToken()
+            const user = AuthService.getStoredUser()
+
+            if (token && user && state) {
+              state.user = user
+              state.token = token
+              state.isAuthenticated = true
               state._hasHydrated = true
-              console.log('ℹ️ No session to restore')
+            } else if (state) {
+              // Token expired or not found, clear everything
+              AuthService.clearStorage()
+              state.user = null
+              state.token = null
+              state.isAuthenticated = false
+              state._hasHydrated = true
             }
           }
         },

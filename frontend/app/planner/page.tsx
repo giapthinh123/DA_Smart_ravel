@@ -13,8 +13,11 @@ import { data_build_tour } from "@/types/domain"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
 import { Footer } from "@/components/footer"
+import { useAuthStore } from "@/store/useAuthStore"
+
 export default function DashboardPage() {
   const router = useRouter()
+  const { isAuthenticated } = useAuthStore()
   const [selectedItem, setSelectedItem] = useState<string | null>(null)
   const [dataBuildTour, setDataBuildTour] = useState<data_build_tour>({
     departure: "",
@@ -94,9 +97,19 @@ export default function DashboardPage() {
               <Link href="/contact" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                 Contact
               </Link>
-              <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
-              {/* User Menu Dropdown */}
-              <UserMenu />
+              <>
+                {isAuthenticated ? (
+                  <>
+                    <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
+                    <UserMenu />
+                  </>
+                ) : (
+                  <Link href="/login" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                    Login
+                  </Link>
+                )}
+              </>
+
             </nav>
           </div>
         </header>
@@ -130,8 +143,52 @@ export default function DashboardPage() {
           </div>
 
           {/* Dynamic Search Section */}
-          <section className="relative mb-12 rounded-[2rem] bg-white shadow-sm z-10">
+          <section className="relative mb-12 rounded-[2rem] bg-white shadow-sm z-10 overflow-hidden">
             {renderSearchSection()}
+
+            {/* Login overlay – shown when not authenticated */}
+            {!isAuthenticated && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[2rem] backdrop-blur-sm bg-white/60">
+                {/* Decorative ring */}
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#5FCBC4] bg-[#CCFBF1] shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-7 w-7 text-[#0F4C5C]"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                </div>
+
+                <h3 className="mb-2 text-xl font-semibold text-[#0F4C5C]">
+                  Đăng nhập để sử dụng chức năng này
+                </h3>
+                <p className="mb-6 max-w-xs text-center text-sm text-[#71717A]">
+                  Vui lòng đăng nhập để truy cập công cụ lập kế hoạch và các tính năng cá nhân hoá.
+                </p>
+
+                <div className="flex gap-3">
+                  <Link
+                    href="/login"
+                    className="rounded-full bg-[#0F4C5C] px-6 py-2.5 text-sm font-medium text-white shadow transition hover:bg-[#0d3f4d] active:scale-95"
+                  >
+                    Đăng nhập
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="rounded-full border border-[#5FCBC4] px-6 py-2.5 text-sm font-medium text-[#0F4C5C] transition hover:bg-[#CCFBF1] active:scale-95"
+                  >
+                    Đăng ký
+                  </Link>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Workflow Section */}

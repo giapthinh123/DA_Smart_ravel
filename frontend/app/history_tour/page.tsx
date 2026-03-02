@@ -161,7 +161,7 @@ export default function HistoryTourPage() {
                                 History Tour
                             </Link>
                             <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                                Personalities
+                                Tours
                             </Link>
                             <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
                             <UserMenu />

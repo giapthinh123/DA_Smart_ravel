@@ -23,6 +23,7 @@ import {
 import { useEffect, useState } from 'react'
 import { UserService, UserStats } from '@/services/user.service'
 import { User as UserType } from '@/types/domain'
+import { toast } from '@/lib/toast'
 
 /**
  * User Management Page - Admin Only
@@ -138,7 +139,7 @@ function UserManagementPage() {
             setShowDeleteModal(false)
             setSelectedUser(null)
         } catch (err: any) {
-            alert(err.message || 'Failed to delete user')
+            toast.error(err.message || 'Không thể xóa người dùng.', 'Lỗi')
         } finally {
             setActionLoading(false)
         }
@@ -155,7 +156,7 @@ function UserManagementPage() {
             setShowRoleModal(false)
             setSelectedUser(null)
         } catch (err: any) {
-            alert(err.message || 'Failed to update role')
+            toast.error(err.message || 'Không thể cập nhật quyền.', 'Lỗi')
         } finally {
             setActionLoading(false)
         }
@@ -178,7 +179,7 @@ function UserManagementPage() {
                 status: 'active'
             })
         } catch (err: any) {
-            alert(err.message || 'Failed to create user')
+            toast.error(err.message || 'Không thể tạo người dùng.', 'Lỗi')
         } finally {
             setActionLoading(false)
         }
@@ -204,7 +205,7 @@ function UserManagementPage() {
                 status: 'active'
             })
         } catch (err: any) {
-            alert(err.message || 'Failed to update user')
+            toast.error(err.message || 'Không thể cập nhật người dùng.', 'Lỗi')
         } finally {
             setActionLoading(false)
         }

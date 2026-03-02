@@ -24,6 +24,7 @@ def _get_place(place_id):
 
 
 @tours_bp.route("/", methods=["GET"])
+@jwt_required()
 def get_tours():
     """Return all tours."""
     try:
@@ -320,6 +321,7 @@ def delete_tour(tour_id):
 
 
 @tours_bp.route("/<string:tour_id>", methods=["GET"])
+@jwt_required()
 def get_tour(tour_id):
     """Get a single tour by tour_id."""
     try:

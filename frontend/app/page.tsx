@@ -88,13 +88,13 @@ export default function Home() {
           ) : (
             <>
               <Link
-                href="/login"
+                href="/planner"
                 className="rounded-full px-4 py-2 text-[#A1A1AA] transition hover:text-[#0F4C5C]"
               >
-                Login
+                Planner
               </Link>
               <Link
-                href="/register"
+                href="/login"
                 className="rounded-full bg-[#5FCBC4] px-5 py-2 text-white font-medium transition hover:bg-[#4AB8B0]"
               >
                 Get Started
@@ -141,7 +141,7 @@ export default function Home() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-3">
               <Link
-                href={isAuthenticated ? "/planner" : "/register"}
+                href={isAuthenticated ? "/planner" : "/login"}
                 className="inline-flex items-center gap-2 rounded-full bg-[#5FCBC4] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#4AB8B0] shadow-lg shadow-[#5FCBC4]/25"
               >
                 {isAuthenticated ? "Go to Dashboard" : "Start Planning Now"}

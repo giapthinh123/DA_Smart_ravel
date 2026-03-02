@@ -33,12 +33,18 @@ export const PROTECTED_ROUTES = {
     '/admin/stats',
     '/admin/reports',
   ],
-  
-  // Authenticated user routes
+
+  // Authenticated user routes (any logged-in user)
   authenticated: [
     '/dashboard',
     '/profile',
     '/flights',
+    '/history_tour',
+    '/payments',
+    '/itinerary',
+    '/full_tour',
+    '/preferences',
+    '/vnpay-return',
   ],
 } as const
 
@@ -50,7 +56,7 @@ export function isProtectedRoute(pathname: string): boolean {
     ...PROTECTED_ROUTES.admin,
     ...PROTECTED_ROUTES.authenticated,
   ]
-  
+
   return allProtectedRoutes.some(route => pathname.startsWith(route))
 }
 
@@ -61,17 +67,17 @@ export function isProtectedRoute(pathname: string): boolean {
 export function canAccessRoute(pathname: string, userRole: UserRole | undefined): boolean {
   // Not authenticated
   if (!userRole) return false
-  
+
   // Check admin routes
   if (PROTECTED_ROUTES.admin.some(route => pathname.startsWith(route))) {
     return isAdmin(userRole)
   }
-  
+
   // Authenticated routes - any logged in user
   if (PROTECTED_ROUTES.authenticated.some(route => pathname.startsWith(route))) {
     return true
   }
-  
+
   // Public route
   return true
 }

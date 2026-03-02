@@ -5,13 +5,10 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { AuthHeader } from "@/components/auth-header"
 import { AuthGuard } from "@/components/auth-guard"
-import { AdminOnly } from "@/components/role-gate"
 import { LoaderCircle } from "lucide-react"
-import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { toast } from "@/lib/toast"
 import { useAuthStore } from "@/store/useAuthStore"
-import { Switch } from '@/components/ui/switch'
 import { AuthService } from "@/services/auth.service"
 import { UserMenu } from "@/components/user-menu"
 import { Footer } from "@/components/footer"
@@ -19,11 +16,6 @@ function ProfileContent() {
   const { user, logout, updateUser } = useAuthStore()
   const router = useRouter()
 
-  // In practice this page is wrapped by AuthGuard, but add a runtime/type guard
-  // so TypeScript knows user is not null for the rest of the component.
-  if (!user) {
-    return null
-  }
   const [formData, setFormData] = useState({
     fullName: user?.fullname || user?.name || "",
     phoneNumber: user?.phone || "",
@@ -41,13 +33,16 @@ function ProfileContent() {
     confirmText: "",
   })
 
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
-  const [passwordMessage, setPasswordMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
-  const [deleteMessage, setDeleteMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+
 
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isDeletingAccount, setIsDeletingAccount] = useState(false)
+
+  // Guard: all hooks must be called before this check
+  if (!user) {
+    return null
+  }
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,19 +68,18 @@ function ProfileContent() {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
-    setMessage(null)
 
     // Validation
     if (!formData.fullName.trim()) {
-      setMessage({ type: "error", text: "Full name is required" })
+      toast.warning('Vui lòng nhập họ tên.', 'Thiếu thông tin')
       return
     }
     if (!formData.phoneNumber.trim()) {
-      setMessage({ type: "error", text: "Phone number is required" })
+      toast.warning('Vui lòng nhập số điện thoại.', 'Thiếu thông tin')
       return
     }
     if (!formData.address.trim()) {
-      setMessage({ type: "error", text: "Address is required" })
+      toast.warning('Vui lòng nhập địa chỉ.', 'Thiếu thông tin')
       return
     }
 
@@ -100,16 +94,9 @@ function ProfileContent() {
 
       // Update user in store
       updateUser(updatedUser)
-
-      setMessage({ type: "success", text: "Profile updated successfully!" })
-
-      // Clear message after 3 seconds
-      setTimeout(() => setMessage(null), 3000)
+      toast.success('Thông tin cá nhân đã được cập nhật!', 'Cập nhật thành công')
     } catch (error: any) {
-      setMessage({
-        type: "error",
-        text: error.message || "Failed to update profile"
-      })
+      toast.error(error.message || 'Không thể cập nhật thông tin. Vui lòng thử lại.', 'Cập nhật thất bại')
     } finally {
       setIsUpdatingProfile(false)
     }
@@ -117,23 +104,22 @@ function ProfileContent() {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault()
-    setPasswordMessage(null)
 
     // Validation
     if (!passwordData.currentPassword) {
-      setPasswordMessage({ type: "error", text: "Current password is required" })
+      toast.warning('Vui lòng nhập mật khẩu hiện tại.', 'Thiếu thông tin')
       return
     }
     if (!passwordData.newPassword) {
-      setPasswordMessage({ type: "error", text: "New password is required" })
+      toast.warning('Vui lòng nhập mật khẩu mới.', 'Thiếu thông tin')
       return
     }
     if (passwordData.newPassword.length < 8) {
-      setPasswordMessage({ type: "error", text: "New password must be at least 8 characters" })
+      toast.warning('Mật khẩu mới phải có ít nhất 8 ký tự.', 'Mật khẩu quá ngắn')
       return
     }
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setPasswordMessage({ type: "error", text: "Passwords do not match" })
+      toast.warning('Mật khẩu xác nhận không khớp.', 'Không khớp')
       return
     }
 
@@ -145,20 +131,14 @@ function ProfileContent() {
         newPassword: passwordData.newPassword,
       })
 
-      setPasswordMessage({ type: "success", text: "Password changed successfully!" })
+      toast.success('Mật khẩu đã được thay đổi thành công!', 'Đổi mật khẩu thành công')
       setPasswordData({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       })
-
-      // Clear message after 3 seconds
-      setTimeout(() => setPasswordMessage(null), 3000)
     } catch (error: any) {
-      setPasswordMessage({
-        type: "error",
-        text: error.message || "Failed to change password"
-      })
+      toast.error(error.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.', 'Đổi mật khẩu thất bại')
     } finally {
       setIsChangingPassword(false)
     }
@@ -166,15 +146,14 @@ function ProfileContent() {
 
   const handleDeleteAccount = async (e: React.FormEvent) => {
     e.preventDefault()
-    setDeleteMessage(null)
 
     // Validation
     if (!deleteAccountData.confirmPassword) {
-      setDeleteMessage({ type: "error", text: "Password is required to delete account" })
+      toast.warning('Vui lòng nhập mật khẩu để xác nhận xóa tài khoản.', 'Thiếu thông tin')
       return
     }
     if (deleteAccountData.confirmText.toLowerCase() !== "delete") {
-      setDeleteMessage({ type: "error", text: "Please type 'DELETE' to confirm" })
+      toast.warning("Vui lòng nhập 'DELETE' để xác nhận.", 'Xác nhận không đúng')
       return
     }
 
@@ -183,7 +162,7 @@ function ProfileContent() {
     try {
       await AuthService.deleteAccount(deleteAccountData.confirmPassword)
 
-      setDeleteMessage({ type: "success", text: "Account deleted successfully" })
+      toast.success('Tài khoản đã được xóa thành công. Đang chuyển hướng...', 'Xóa tài khoản')
 
       // Clear form
       setDeleteAccountData({
@@ -197,10 +176,7 @@ function ProfileContent() {
         router.push("/")
       }, 2000)
     } catch (error: any) {
-      setDeleteMessage({
-        type: "error",
-        text: error.message || "Failed to delete account"
-      })
+      toast.error(error.message || 'Không thể xóa tài khoản. Vui lòng thử lại.', 'Xóa thất bại')
       setIsDeletingAccount(false)
     }
   }
@@ -338,16 +314,7 @@ function ProfileContent() {
                     />
                   </div>
 
-                  {message && (
-                    <div
-                      className={`rounded-xl border p-4 text-sm ${message.type === "success"
-                        ? "border-green-300 bg-green-50 text-green-700"
-                        : "border-red-300 bg-red-50 text-red-700"
-                        }`}
-                    >
-                      {message.text}
-                    </div>
-                  )}
+
 
                   <button
                     type="submit"
@@ -425,16 +392,7 @@ function ProfileContent() {
                     />
                   </div>
 
-                  {passwordMessage && (
-                    <div
-                      className={`rounded-xl border p-4 text-sm ${passwordMessage.type === "success"
-                        ? "border-green-300 bg-green-50 text-green-700"
-                        : "border-red-300 bg-red-50 text-red-700"
-                        }`}
-                    >
-                      {passwordMessage.text}
-                    </div>
-                  )}
+
 
                   <button
                     type="submit"
@@ -545,16 +503,7 @@ function ProfileContent() {
                     />
                   </div>
 
-                  {deleteMessage && (
-                    <div
-                      className={`rounded-xl border p-4 text-sm ${deleteMessage.type === "success"
-                        ? "border-green-300 bg-green-50 text-green-700"
-                        : "border-red-300 bg-red-50 text-red-700"
-                        }`}
-                    >
-                      {deleteMessage.text}
-                    </div>
-                  )}
+
 
                   <button
                     type="submit"

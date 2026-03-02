@@ -7,6 +7,7 @@ import { api } from "@/lib/axios"
 import { City, data_build_tour } from "@/types/domain"
 import { useRouter } from "next/navigation"
 import { CityService } from "@/services/city.service"
+import { toast } from "@/lib/toast"
 
 function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
@@ -46,8 +47,14 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
     return `${year}-${month}-${day}`
   }
   const handleSubmit = useCallback(() => {
-    if (!departure || !destination || !flightDepartureDate || !flightReturnDate) {
-      alert("Please fill all required fields")
+    const missing: string[] = []
+    if (!departure) missing.push('Điểm xuất phát')
+    if (!destination) missing.push('Điểm đến')
+    if (!flightDepartureDate) missing.push('Ngày bay đi')
+    if (!flightReturnDate) missing.push('Ngày bay về')
+
+    if (missing.length > 0) {
+      toast.warning(`Vui lòng điền đầy đủ: ${missing.join(', ')}.`, 'Thiếu thông tin')
       return
     }
     dataBuildTour.flight_departure_date = formattedFlightDepartureDate

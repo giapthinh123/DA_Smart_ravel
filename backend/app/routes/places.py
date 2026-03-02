@@ -1,5 +1,6 @@
 from ..extensions import mongo
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from ..models.places import places
 import hashlib
 import hmac
@@ -10,6 +11,7 @@ import os
 places_bp = Blueprint("places", __name__)
 
 @places_bp.route("/imagekit-auth", methods=["GET"])
+@jwt_required()
 def imagekit_auth():
     """Generate ImageKit upload authentication signature for client-side uploads."""
     try:
@@ -37,11 +39,13 @@ def imagekit_auth():
         return jsonify({"error": str(e)}), 500
 
 @places_bp.route("/", methods=["GET"])
+@jwt_required()
 def get_places():
     places_list = places.get_all_places(mongo)
     return jsonify({"place": places_list})
 
 @places_bp.route("/<string:city_id>", methods=["GET"])
+@jwt_required()
 def get_places_by_city_id(city_id):
     places_list = places.get_all_place_by_city_id(mongo, city_id)
     
@@ -60,6 +64,7 @@ def get_places_by_city_id(city_id):
     return jsonify(categorized_places)
 
 @places_bp.route("/place", methods=["POST"])
+@jwt_required()
 def create_place():
     try:
         data = request.get_json()
@@ -106,11 +111,13 @@ def create_place():
         return jsonify({"error": str(e)}), 500
 
 @places_bp.route("/place/<string:place_id>", methods=["GET"])
+@jwt_required()
 def get_place_by_id(place_id):
     place = places.get_place_by_id(mongo, place_id)
     return jsonify(place)
 
 @places_bp.route("/place/<string:place_id>", methods=["PUT"])
+@jwt_required()
 def update_place(place_id):
     try:
         data = request.get_json()
@@ -136,6 +143,7 @@ def update_place(place_id):
         return jsonify({"error": str(e)}), 500
 
 @places_bp.route("/place/<string:place_id>", methods=["DELETE"])
+@jwt_required()
 def delete_place(place_id):
     try:
         result = places.delete_place(mongo, place_id)
@@ -146,6 +154,7 @@ def delete_place(place_id):
         return jsonify({"error": str(e)}), 500
 
 @places_bp.route("/preferences", methods=["POST"])
+@jwt_required()
 def set_preferences():
     try:
         data = request.get_json()
@@ -211,6 +220,7 @@ def set_preferences():
         return jsonify({"error": str(e)}), 500
 
 @places_bp.route("/preferences/<string:user_id>/<string:city_id>", methods=["GET"])
+@jwt_required()
 def get_preferences(user_id, city_id):
     """Get user preferences for a specific city"""
     try:

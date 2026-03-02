@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { 
-  CheckCircle2, 
-  Crown, 
-  Sparkles, 
-  Shield, 
-  Gift, 
+import {
+  CheckCircle2,
+  Crown,
+  Sparkles,
+  Shield,
+  Gift,
   Star,
   CreditCard,
   Loader2,
@@ -17,6 +17,7 @@ import {
   MapPin,
   Zap
 } from "lucide-react"
+import { toast } from "@/lib/toast"
 
 // ========================================
 // MEMBERSHIP BENEFITS DATA
@@ -111,13 +112,13 @@ export default function RegisterPaymentPage() {
 
   const handlePayment = async () => {
     if (!registrationData) {
-      alert('Không tìm thấy thông tin đăng ký. Vui lòng thử lại.')
+      toast.warning('Không tìm thấy thông tin đăng ký. Vui lòng thử lại.', 'Thiếu dữ liệu')
       router.push('/register')
       return
     }
 
     setIsProcessing(true)
-    
+
     try {
       const plan = PRICING_PLANS.find(p => p.id === selectedPlan)
       if (!plan) {
@@ -146,7 +147,7 @@ export default function RegisterPaymentPage() {
       }
 
       const data = await response.json()
-      
+
       if (data.payment_url) {
         sessionStorage.removeItem('registration_data')
         window.location.href = data.payment_url
@@ -156,7 +157,7 @@ export default function RegisterPaymentPage() {
     } catch (error) {
       console.error('Payment error:', error)
       setIsProcessing(false)
-      alert(error instanceof Error ? error.message : 'Có lỗi xảy ra. Vui lòng thử lại.')
+      toast.error(error instanceof Error ? error.message : 'Có lỗi xảy ra. Vui lòng thử lại.', 'Thanh toán thất bại')
     }
   }
 
@@ -203,7 +204,7 @@ export default function RegisterPaymentPage() {
 
         {/* Two Column Layout */}
         <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          
+
           {/* Left Column - Benefits (2/3 width) */}
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10 p-8">
@@ -249,23 +250,22 @@ export default function RegisterPaymentPage() {
 
           {/* Right Column - Payment (1/3 width) */}
           <div className="lg:col-span-1 space-y-6">
-            
+
             {/* Plan Selection */}
             <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10 p-6">
               <h3 className="text-lg font-bold text-[#0F172A] mb-4">
                 Chọn gói thành viên
               </h3>
-              
+
               <div className="space-y-3">
                 {PRICING_PLANS.map((plan) => (
                   <button
                     key={plan.id}
                     onClick={() => setSelectedPlan(plan.id)}
-                    className={`w-full text-left rounded-2xl border-2 p-4 transition-all ${
-                      selectedPlan === plan.id
+                    className={`w-full text-left rounded-2xl border-2 p-4 transition-all ${selectedPlan === plan.id
                         ? "border-[#5FCBC4] bg-[#5FCBC4]/5 shadow-lg"
                         : "border-gray-200 bg-white hover:border-[#5FCBC4]/30"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
@@ -283,23 +283,22 @@ export default function RegisterPaymentPage() {
                           {plan.duration}
                         </p>
                       </div>
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                        selectedPlan === plan.id
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === plan.id
                           ? "border-[#5FCBC4] bg-[#5FCBC4]"
                           : "border-gray-300"
-                      }`}>
+                        }`}>
                         {selectedPlan === plan.id && (
                           <div className="w-2 h-2 rounded-full bg-white" />
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="flex items-baseline gap-1">
                       <span className="text-2xl font-bold text-[#0F172A]">
                         {plan.price.toLocaleString('vi-VN')}đ
                       </span>
                     </div>
-                    
+
                     {plan.savings && (
                       <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-green-50 border border-green-200">
                         <Gift className="h-3 w-3 text-green-600" />
@@ -318,7 +317,7 @@ export default function RegisterPaymentPage() {
               <h3 className="text-lg font-bold text-[#0F172A] mb-4">
                 Thông tin thanh toán
               </h3>
-              
+
               {registrationData && (
                 <div className="mb-4 p-3 rounded-xl bg-gray-50 border border-gray-200">
                   <p className="text-xs text-[#64748B] mb-1">Email đăng ký</p>
@@ -335,7 +334,7 @@ export default function RegisterPaymentPage() {
                     {currentPlan?.name}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center py-2">
                   <span className="text-sm text-[#64748B]">Thời hạn</span>
                   <span className="text-sm font-medium text-[#0F172A]">
@@ -344,7 +343,7 @@ export default function RegisterPaymentPage() {
                 </div>
 
                 <div className="h-px bg-gray-200 my-2" />
-                
+
                 <div className="flex justify-between items-center py-2">
                   <span className="text-base font-semibold text-[#0F172A]">
                     Tổng thanh toán
