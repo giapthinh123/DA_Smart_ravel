@@ -22,12 +22,18 @@ import {
     ChevronLeft,
     ChevronRight,
     AlertCircle,
-    CheckCircle2
+    CheckCircle2,
+    Pencil,
+    MoreHorizontal
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { CityService } from '@/services/city.service'
 import { City } from '@/types/domain'
-
+import { PlacesService } from '@/services/places.service'
+import { Place } from '@/types/domain'
+import { ImageUploader, ImageUploaderHandle } from '@/components/ui/image-uploader'
+import { toast } from '@/lib/toast'
 // Location type definition based on the provided schema
 interface Location {
     _id?: { $oid: string }
@@ -61,9 +67,24 @@ const SEARCH_TYPES = [
  * Features: Create, list locations with full form fields
  */
 function LocationManagementPage() {
+    const t = useTranslations('AdminLocations')
+    // ImageUploader refs (to call uploadAll on save)
+    const createUploaderRef = useRef<ImageUploaderHandle>(null)
+    const editUploaderRef = useRef<ImageUploaderHandle>(null)
+
     // City data
     const [cities, setCities] = useState<City[]>([])
     const [loadingCities, setLoadingCities] = useState(true)
+    const [places, setPlaces] = useState<Place[]>([])
+    const [loadingPlaces, setLoadingPlaces] = useState(true)
+
+    // Search & filter
+    const [searchQuery, setSearchQuery] = useState('')
+    const [filterType, setFilterType] = useState<string>('all')
+
+    // Pagination
+    const ITEMS_PER_PAGE = 10
+    const [currentPage, setCurrentPage] = useState(1)
 
     // Modal states
     const [showCreateModal, setShowCreateModal] = useState(false)
@@ -71,7 +92,32 @@ function LocationManagementPage() {
     const [successMessage, setSuccessMessage] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
 
-    // Form data
+    // Edit modal
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [editingPlaceId, setEditingPlaceId] = useState<string | null>(null)
+    const [editLoading, setEditLoading] = useState(false)
+
+    // Delete modal
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [deletingPlace, setDeletingPlace] = useState<Place | null>(null)
+    const [deleteLoading, setDeleteLoading] = useState(false)
+
+    // Edit form data (separate from create form)
+    const [editFormData, setEditFormData] = useState<Omit<Location, '_id'>>({
+        id: '',
+        city: '',
+        city_id: '',
+        displayName_text: '',
+        editorialSummary_text: '',
+        location: { latitude: 0, longitude: 0 },
+        rating: 0,
+        types: [],
+        avg_price: 0,
+        search_type: 'restaurant',
+        filter_criteria: '',
+        image_url: []
+    })
+    // Create form data
     const [formData, setFormData] = useState<Omit<Location, '_id'>>({
         id: '',
         city: '',
@@ -87,15 +133,13 @@ function LocationManagementPage() {
         avg_price: 0,
         search_type: 'restaurant',
         filter_criteria: '',
-        image_url: ['']
+        image_url: []
     })
-
-    // New image URL input
-    const [newImageUrl, setNewImageUrl] = useState('')
 
     // Fetch cities on mount
     useEffect(() => {
         fetchCities()
+        fetchPlace()
     }, [])
 
     const fetchCities = async () => {
@@ -107,6 +151,59 @@ function LocationManagementPage() {
             console.error('Failed to load cities:', err)
         } finally {
             setLoadingCities(false)
+        }
+    }
+
+    const fetchPlace = async () => {
+        try {
+            setLoadingPlaces(true)
+            const data = await PlacesService.getAllPlaces()
+            setPlaces(data.place)
+        } catch (err) {
+            console.error('Failed to load places:', err)
+        } finally {
+            setLoadingPlaces(false)
+        }
+    }
+
+    // Filtered & paginated places
+    const filteredPlaces = places.filter(p => {
+        const matchSearch = p.displayName_text.toLowerCase().includes(searchQuery.toLowerCase())
+        const matchType = filterType === 'all' || p.search_type === filterType
+        return matchSearch && matchType
+    })
+
+    const totalPages = Math.max(1, Math.ceil(filteredPlaces.length / ITEMS_PER_PAGE))
+    const paginatedPlaces = filteredPlaces.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    )
+
+    const handleSearchChange = (value: string) => {
+        setSearchQuery(value)
+        setCurrentPage(1)
+    }
+
+    const handleFilterChange = (value: string) => {
+        setFilterType(value)
+        setCurrentPage(1)
+    }
+
+    const getTypeLabel = (type: string) => {
+        switch (type) {
+            case 'restaurant': return 'Nhà hàng'
+            case 'hotel': return 'Khách sạn'
+            case 'attraction': return 'Điểm tham quan'
+            default: return type
+        }
+    }
+
+    const getTypeBadgeClass = (type: string) => {
+        switch (type) {
+            case 'restaurant': return 'bg-orange-100 text-orange-700'
+            case 'hotel': return 'bg-purple-100 text-purple-700'
+            case 'attraction': return 'bg-green-100 text-green-700'
+            default: return 'bg-gray-100 text-gray-700'
         }
     }
 
@@ -138,25 +235,6 @@ function LocationManagementPage() {
         }
     }
 
-    // Handle add image URL
-    const handleAddImageUrl = () => {
-        if (newImageUrl.trim()) {
-            setFormData({
-                ...formData,
-                image_url: [...formData.image_url, newImageUrl.trim()]
-            })
-            setNewImageUrl('')
-        }
-    }
-
-    // Handle remove image URL
-    const handleRemoveImageUrl = (index: number) => {
-        setFormData({
-            ...formData,
-            image_url: formData.image_url.filter((_, i) => i !== index)
-        })
-    }
-
     // Reset form
     const resetForm = () => {
         setFormData({
@@ -174,9 +252,8 @@ function LocationManagementPage() {
             avg_price: 0,
             search_type: 'restaurant',
             filter_criteria: '',
-            image_url: ['']
+            image_url: []
         })
-        setNewImageUrl('')
     }
 
     // Handle form submission
@@ -185,22 +262,48 @@ function LocationManagementPage() {
             setActionLoading(true)
             setErrorMessage('')
 
-            // Validate required fields
-            if (!formData.city || !formData.displayName_text) {
+            if (!formData.city_id || !formData.displayName_text) {
                 setErrorMessage('Vui lòng điền đầy đủ các trường bắt buộc (Thành phố, Tên)')
                 return
             }
 
-            // TODO: Call API to create location
-            // For now, just show success message
-            console.log('Creating location:', formData)
+            // Upload pending images first
+            let uploadedUrls: string[] = []
+            if (createUploaderRef.current?.hasPending()) {
+                try {
+                    uploadedUrls = await createUploaderRef.current.uploadAll()
+                } catch (err: any) {
+                    setErrorMessage('Upload ảnh thất bại: ' + (err.message || ''))
+                    return
+                }
+            }
+
+            const allImages = [...formData.image_url.filter(u => u.trim()), ...uploadedUrls]
+
+            const payload: Record<string, unknown> = {
+                id: formData.id.trim() || undefined,
+                city: formData.city,
+                city_id: formData.city_id,
+                displayName_text: formData.displayName_text,
+                editorialSummary_text: formData.editorialSummary_text,
+                location: formData.location,
+                rating: formData.rating,
+                avg_price: formData.avg_price,
+                search_type: formData.search_type,
+                types: formData.types,
+                image_url: allImages,
+                filter_criteria: formData.filter_criteria,
+            }
+
+            const newPlace = await PlacesService.createPlace(payload)
+            setPlaces(prev => [newPlace, ...prev])
 
             setSuccessMessage('Tạo địa điểm thành công!')
             setTimeout(() => {
                 setSuccessMessage('')
                 setShowCreateModal(false)
                 resetForm()
-            }, 2000)
+            }, 1500)
 
         } catch (err: any) {
             setErrorMessage(err.message || 'Không thể tạo địa điểm')
@@ -209,61 +312,188 @@ function LocationManagementPage() {
         }
     }
 
+    // Open edit modal: load full place details
+    const handleOpenEdit = async (place: Place) => {
+        setEditLoading(true)
+        setShowEditModal(true)
+        setEditingPlaceId(place.id)
+        try {
+            const detail = await PlacesService.getPlaceById(place.id)
+            const city = cities.find(c => c.id === place.city_id)
+            setEditFormData({
+                id: place.id,
+                city: city?.city ?? '',
+                city_id: place.city_id ?? '',
+                displayName_text: detail.displayName_text ?? place.displayName_text,
+                editorialSummary_text: detail.editorialSummary_text ?? '',
+                location: {
+                    latitude: place.location?.latitude ?? 0,
+                    longitude: place.location?.longitude ?? 0
+                },
+                rating: detail.rating ?? place.rating ?? 0,
+                types: [],
+                avg_price: detail.avg_price ?? place.avg_price ?? 0,
+                search_type: place.search_type,
+                filter_criteria: '',
+                image_url: detail.image_url ?? []
+            })
+        } catch {
+            setEditFormData({
+                id: place.id,
+                city: '',
+                city_id: place.city_id ?? '',
+                displayName_text: place.displayName_text,
+                editorialSummary_text: '',
+                location: { latitude: place.location?.latitude ?? 0, longitude: place.location?.longitude ?? 0 },
+                rating: place.rating ?? 0,
+                types: [],
+                avg_price: place.avg_price ?? 0,
+                search_type: place.search_type,
+                filter_criteria: '',
+                image_url: []
+            })
+        } finally {
+            setEditLoading(false)
+        }
+    }
+
+    // Save edit
+    const handleUpdateLocation = async () => {
+        if (!editingPlaceId) return
+        try {
+            setActionLoading(true)
+            setErrorMessage('')
+            if (!editFormData.displayName_text) {
+                setErrorMessage('Vui lòng điền tên địa điểm')
+                return
+            }
+
+            // Upload pending images first
+            let uploadedUrls: string[] = []
+            if (editUploaderRef.current?.hasPending()) {
+                try {
+                    uploadedUrls = await editUploaderRef.current.uploadAll()
+                } catch (err: any) {
+                    setErrorMessage('Upload ảnh thất bại: ' + (err.message || ''))
+                    return
+                }
+            }
+
+            const allImages = [...editFormData.image_url.filter(u => u), ...uploadedUrls]
+
+            await PlacesService.updatePlace(editingPlaceId, {
+                displayName_text: editFormData.displayName_text,
+                editorialSummary_text: editFormData.editorialSummary_text,
+                city: editFormData.city,
+                city_id: editFormData.city_id,
+                location: editFormData.location,
+                avg_price: editFormData.avg_price,
+                search_type: editFormData.search_type,
+                image_url: allImages,
+            })
+            setPlaces(prev => prev.map(p =>
+                p.id === editingPlaceId
+                    ? { ...p, displayName_text: editFormData.displayName_text, avg_price: editFormData.avg_price, search_type: editFormData.search_type as Place['search_type'] }
+                    : p
+            ))
+            setSuccessMessage('Cập nhật địa điểm thành công!')
+            setTimeout(() => {
+                setSuccessMessage('')
+                setShowEditModal(false)
+                setEditingPlaceId(null)
+            }, 1500)
+        } catch (err: any) {
+            setErrorMessage(err.message || 'Không thể cập nhật địa điểm')
+        } finally {
+            setActionLoading(false)
+        }
+    }
+
+    // Confirm delete
+    const handleDeleteLocation = async () => {
+        if (!deletingPlace) return
+        try {
+            setDeleteLoading(true)
+            await PlacesService.deletePlace(deletingPlace.id)
+            setPlaces(prev => prev.filter(p => p.id !== deletingPlace.id))
+            setShowDeleteModal(false)
+            setDeletingPlace(null)
+        } catch (err: any) {
+            toast.error(err.message || 'Không thể xóa địa điểm.', 'Lỗi xóa')
+        } finally {
+            setDeleteLoading(false)
+        }
+    }
+
+    // City change for edit form
+    const handleEditCityChange = (cityName: string) => {
+        const selected = cities.find(c => c.city === cityName)
+        if (selected) {
+            setEditFormData({ ...editFormData, city: selected.city, city_id: selected.id })
+        }
+    }
+
     return (
-        <AdminLayout title="Quản lý Địa điểm" description="Tạo và quản lý các địa điểm du lịch">
+        <AdminLayout title={t('pageTitle')} description={t('pageDesc')}>
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Tổng địa điểm</p>
-                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white">0</h3>
+                                <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.totalLocations')}</p>
+                                <h3 className="text-3xl font-bold text-gray-900">{places.length}</h3>
                             </div>
-                            <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-500/20">
-                                <MapPin className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                            <div className="p-3 rounded-xl bg-blue-100">
+                                <MapPin className="h-6 w-6 text-blue-600" />
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Nhà hàng</p>
-                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white">0</h3>
+                                <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.restaurants')}</p>
+                                <h3 className="text-3xl font-bold text-gray-900">
+                                    {places.filter(p => p.search_type === 'restaurant').length}
+                                </h3>
                             </div>
-                            <div className="p-3 rounded-xl bg-orange-100 dark:bg-orange-500/20">
-                                <Globe className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                            <div className="p-3 rounded-xl bg-orange-100">
+                                <Globe className="h-6 w-6 text-orange-600" />
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Khách sạn</p>
-                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white">0</h3>
+                                <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.hotels')}</p>
+                                <h3 className="text-3xl font-bold text-gray-900">
+                                    {places.filter(p => p.search_type === 'hotel').length}
+                                </h3>
                             </div>
-                            <div className="p-3 rounded-xl bg-purple-100 dark:bg-purple-500/20">
-                                <MapPinned className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                            <div className="p-3 rounded-xl bg-purple-100">
+                                <MapPinned className="h-6 w-6 text-purple-600" />
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Điểm tham quan</p>
-                                <h3 className="text-3xl font-bold text-gray-900 dark:text-white">0</h3>
+                                <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.attractions')}</p>
+                                <h3 className="text-3xl font-bold text-gray-900">
+                                    {places.filter(p => p.search_type === 'attraction').length}
+                                </h3>
                             </div>
-                            <div className="p-3 rounded-xl bg-green-100 dark:bg-green-500/20">
-                                <Star className="h-6 w-6 text-green-600 dark:text-green-400" />
+                            <div className="p-3 rounded-xl bg-green-100">
+                                <Star className="h-6 w-6 text-green-600" />
                             </div>
                         </div>
                     </CardContent>
@@ -271,18 +501,35 @@ function LocationManagementPage() {
             </div>
 
             {/* Action Bar */}
-            <Card className="mb-6 bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700">
+            <Card className="mb-6 bg-white border-gray-200">
                 <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                         {/* Search */}
                         <div className="flex-1 w-full md:w-auto">
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4" />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                                 <Input
-                                    placeholder="Tìm kiếm địa điểm..."
-                                    className="pl-10 bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-gray-700"
+                                    placeholder={t('actions.searchPlaceholder')}
+                                    value={searchQuery}
+                                    onChange={(e) => handleSearchChange(e.target.value)}
+                                    className="pl-10 bg-gray-50 border-gray-200"
                                 />
                             </div>
+                        </div>
+
+                        {/* Filter by type */}
+                        <div className="flex items-center gap-2">
+                            <Filter className="h-4 w-4 text-gray-400" />
+                            <select
+                                value={filterType}
+                                onChange={(e) => handleFilterChange(e.target.value)}
+                                className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            >
+                                <option value="all">{t('actions.allTypes')}</option>
+                                {SEARCH_TYPES.map(t => (
+                                    <option key={t.value} value={t.value}>{t.label}</option>
+                                ))}
+                            </select>
                         </div>
 
                         {/* Add Button */}
@@ -291,38 +538,216 @@ function LocationManagementPage() {
                             className="bg-blue-600 hover:bg-blue-700 text-white"
                         >
                             <Plus className="h-4 w-4 mr-2" />
-                            Thêm địa điểm
+                            {t('actions.addLocation')}
                         </Button>
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Locations List - Empty State */}
-            <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700">
-                <CardHeader className="border-b border-gray-200 dark:border-gray-700">
-                    <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
-                        Danh sách địa điểm
-                    </CardTitle>
+            {/* Locations List */}
+            <Card className="bg-white border-gray-200">
+                <CardHeader className="border-b border-gray-200">
+                    <div className="flex items-center justify-between">
+                        <CardTitle className="text-xl font-bold text-gray-900">
+                            {t('list.title')}
+                        </CardTitle>
+                        <span className="text-sm text-gray-500">
+                            {filteredPlaces.length} {t('list.countSuffix')}
+                        </span>
+                    </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <div className="flex items-center justify-center py-16">
-                        <div className="text-center">
-                            <MapPin className="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-                            <p className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">Chưa có địa điểm nào</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-500">Bắt đầu bằng cách thêm địa điểm mới</p>
+                    {loadingPlaces ? (
+                        <div className="flex items-center justify-center py-16">
+                            <div className="flex flex-col items-center gap-3">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+                                <p className="text-sm text-gray-500">{t('list.loading')}</p>
+                            </div>
                         </div>
-                    </div>
+                    ) : paginatedPlaces.length === 0 ? (
+                        <div className="flex items-center justify-center py-16">
+                            <div className="text-center">
+                                <MapPin className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                                <p className="text-lg font-medium text-gray-600 mb-2">
+                                    {searchQuery || filterType !== 'all' ? t('list.noDataSearch') : t('list.noData')}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    {searchQuery || filterType !== 'all' ? t('list.tryChangeFilter') : t('list.startByAdding')}
+                                </p>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            {/* Table */}
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead>
+                                        <tr className="border-b border-gray-200 bg-gray-50">
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.name')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.type')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.rating')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.avgPrice')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.coordinates')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.cityName')}</th>
+                                            <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.actions')}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {paginatedPlaces.map((place, idx) => (
+                                            <tr
+                                                key={place.id}
+                                                className="hover:bg-gray-50 transition-colors"
+                                            >
+                                                <td className="py-3 px-4 text-sm text-gray-500">
+                                                    {(currentPage - 1) * ITEMS_PER_PAGE + idx + 1}
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
+                                                            <MapPin className="h-4 w-4 text-blue-600" />
+                                                        </div>
+                                                        <span className="text-sm font-medium text-gray-900 line-clamp-1">
+                                                            {place.displayName_text}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeBadgeClass(place.search_type)}`}>
+                                                        {getTypeLabel(place.search_type)}
+                                                    </span>
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <div className="flex items-center gap-1">
+                                                        <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
+                                                        <span className="text-sm text-gray-700">
+                                                            {place.rating?.toFixed(1) ?? '—'}
+                                                        </span>
+                                                        {place.userRatingCount > 0 && (
+                                                            <span className="text-xs text-gray-400">
+                                                                ({place.userRatingCount.toLocaleString()})
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <div className="flex items-center gap-1">
+                                                        <DollarSign className="h-3.5 w-3.5 text-gray-400" />
+                                                        <span className="text-sm text-gray-700">
+                                                            {place.avg_price > 0 ? place.avg_price.toFixed(0) : '—'}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <span className="text-xs text-gray-500 font-mono">
+                                                        {place.location?.latitude?.toFixed(4)}, {place.location?.longitude?.toFixed(4)}
+                                                    </span>
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <span className="text-xs text-gray-500 font-mono truncate max-w-[100px] block">
+                                                        {cities.find(c => c.id === place.city_id)?.city ?? place.city_id ?? '—'}
+                                                    </span>
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => handleOpenEdit(place)}
+                                                            className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-50"
+                                                            title={t('actions.edit')}
+                                                        >
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            onClick={() => { setDeletingPlace(place); setShowDeleteModal(true) }}
+                                                            className="h-8 w-8 p-0 text-red-600 hover:bg-red-50"
+                                                            title={t('actions.delete')}
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Pagination */}
+                            <div className="flex items-center justify-between px-4 py-4 border-t border-gray-200">
+                                <p className="text-sm text-gray-500">
+                                    {t('pagination.showing')} <span className="font-medium text-gray-700">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span>
+                                    {' '}–{' '}
+                                    <span className="font-medium text-gray-700">
+                                        {Math.min(currentPage * ITEMS_PER_PAGE, filteredPlaces.length)}
+                                    </span>
+                                    {' '}{t('pagination.of')}{' '}
+                                    <span className="font-medium text-gray-700">{filteredPlaces.length}</span> {t('list.countSuffix')}
+                                </p>
+                                <div className="flex items-center gap-1">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                        disabled={currentPage === 1}
+                                        className="h-8 w-8 p-0 border-gray-200"
+                                    >
+                                        <ChevronLeft className="h-4 w-4" />
+                                    </Button>
+
+                                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                                        .filter(page => page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1)
+                                        .reduce<(number | string)[]>((acc, page, i, arr) => {
+                                            if (i > 0 && (page as number) - (arr[i - 1] as number) > 1) acc.push('…')
+                                            acc.push(page)
+                                            return acc
+                                        }, [])
+                                        .map((item, i) =>
+                                            item === '…' ? (
+                                                <span key={`ellipsis-${i}`} className="px-1 text-gray-400 text-sm">…</span>
+                                            ) : (
+                                                <Button
+                                                    key={item}
+                                                    variant={currentPage === item ? 'default' : 'outline'}
+                                                    size="sm"
+                                                    onClick={() => setCurrentPage(item as number)}
+                                                    className={`h-8 w-8 p-0 text-sm ${currentPage === item
+                                                        ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600'
+                                                        : 'border-gray-200'
+                                                        }`}
+                                                >
+                                                    {item}
+                                                </Button>
+                                            )
+                                        )}
+
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className="h-8 w-8 p-0 border-gray-200"
+                                    >
+                                        <ChevronRight className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </CardContent>
             </Card>
 
             {/* Create Location Modal */}
             {showCreateModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <Card className="w-full max-w-4xl bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
-                        <CardHeader className="border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-[#242b3d] z-10">
+                    <Card className="w-full max-w-4xl bg-white border-gray-200 max-h-[90vh] overflow-y-auto">
+                        <CardHeader className="border-b border-gray-200 sticky top-0 bg-white z-10">
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
-                                    Tạo địa điểm mới
+                                <CardTitle className="text-xl font-bold text-gray-900">
+                                    {t('createModal.title')}
                                 </CardTitle>
                                 <Button
                                     variant="ghost"
@@ -332,7 +757,7 @@ function LocationManagementPage() {
                                         resetForm()
                                         setErrorMessage('')
                                     }}
-                                    className="text-gray-500 dark:text-gray-400"
+                                    className="text-gray-500"
                                 >
                                     <X className="h-5 w-5" />
                                 </Button>
@@ -341,15 +766,15 @@ function LocationManagementPage() {
                         <CardContent className="p-6">
                             {/* Success/Error Messages */}
                             {successMessage && (
-                                <div className="mb-6 p-4 bg-green-100 dark:bg-green-500/20 border border-green-200 dark:border-green-500/30 rounded-lg flex items-center gap-3">
-                                    <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
-                                    <span className="text-green-700 dark:text-green-400">{successMessage}</span>
+                                <div className="mb-6 p-4 bg-green-100 border border-green-200 rounded-lg flex items-center gap-3">
+                                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                    <span className="text-green-700">{successMessage}</span>
                                 </div>
                             )}
                             {errorMessage && (
-                                <div className="mb-6 p-4 bg-red-100 dark:bg-red-500/20 border border-red-200 dark:border-red-500/30 rounded-lg flex items-center gap-3">
-                                    <AlertCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
-                                    <span className="text-red-700 dark:text-red-400">{errorMessage}</span>
+                                <div className="mb-6 p-4 bg-red-100 border border-red-200 rounded-lg flex items-center gap-3">
+                                    <AlertCircle className="h-5 w-5 text-red-600" />
+                                    <span className="text-red-700">{errorMessage}</span>
                                 </div>
                             )}
 
@@ -357,44 +782,44 @@ function LocationManagementPage() {
                             <div className="space-y-6">
                                 {/* Basic Info Section */}
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <FileText className="h-5 w-5 text-blue-500" />
-                                        Thông tin cơ bản
+                                        {t('form.basicInfo')}
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
                                                 ID <span className="text-red-500">*</span>
                                             </label>
                                             <Input
                                                 value={formData.id}
                                                 onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                                                className="bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-gray-700"
+                                                className="bg-gray-50 border-gray-200"
                                                 disabled
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Tên địa điểm <span className="text-red-500">*</span>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                {t('form.locationName')} <span className="text-red-500">*</span>
                                             </label>
                                             <Input
                                                 value={formData.displayName_text}
                                                 onChange={(e) => setFormData({ ...formData, displayName_text: e.target.value })}
-                                                placeholder="VD: Wangbijib Myeongdong Central"
-                                                className="bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-gray-700"
+                                                placeholder={t('form.locationNamePlaceholder')}
+                                                className="bg-gray-50 border-gray-200"
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Thành phố <span className="text-red-500">*</span>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                {t('form.city')} <span className="text-red-500">*</span>
                                             </label>
                                             <select
                                                 value={formData.city}
                                                 onChange={(e) => handleCityChange(e.target.value)}
-                                                className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                                 disabled={loadingCities}
                                             >
-                                                <option value="">Chọn thành phố</option>
+                                                <option value="">{t('form.selectCity')}</option>
                                                 {cities.map((city) => (
                                                     <option key={city.id} value={city.city}>
                                                         {city.city}
@@ -403,26 +828,26 @@ function LocationManagementPage() {
                                             </select>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
                                                 City ID
                                             </label>
                                             <Input
                                                 value={formData.city_id}
                                                 readOnly
-                                                placeholder="Tự động điền khi chọn thành phố"
-                                                className="bg-gray-100 dark:bg-slate-900 border-gray-200 dark:border-gray-700 cursor-not-allowed"
+                                                placeholder={t('form.cityIdPlaceholder')}
+                                                className="bg-gray-100 border-gray-200 cursor-not-allowed"
                                             />
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Mô tả
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                {t('form.description')}
                                             </label>
                                             <textarea
                                                 value={formData.editorialSummary_text}
                                                 onChange={(e) => setFormData({ ...formData, editorialSummary_text: e.target.value })}
-                                                placeholder="Mô tả ngắn về địa điểm..."
+                                                placeholder={t('form.descPlaceholder')}
                                                 rows={3}
-                                                className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                                                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
                                             />
                                         </div>
                                     </div>
@@ -430,14 +855,14 @@ function LocationManagementPage() {
 
                                 {/* Location Section */}
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <MapPinned className="h-5 w-5 text-green-500" />
-                                        Vị trí
+                                        {t('form.locationSection')}
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Vĩ độ (Latitude)
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                {t('form.latitude')}
                                             </label>
                                             <Input
                                                 type="number"
@@ -448,12 +873,12 @@ function LocationManagementPage() {
                                                     location: { ...formData.location, latitude: parseFloat(e.target.value) || 0 }
                                                 })}
                                                 placeholder="VD: 37.5610364"
-                                                className="bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-gray-700"
+                                                className="bg-gray-50 border-gray-200"
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Kinh độ (Longitude)
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                {t('form.longitude')}
                                             </label>
                                             <Input
                                                 type="number"
@@ -464,7 +889,7 @@ function LocationManagementPage() {
                                                     location: { ...formData.location, longitude: parseFloat(e.target.value) || 0 }
                                                 })}
                                                 placeholder="VD: 126.98238710000001"
-                                                className="bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-gray-700"
+                                                className="bg-gray-50 border-gray-200"
                                             />
                                         </div>
                                     </div>
@@ -472,19 +897,19 @@ function LocationManagementPage() {
 
                                 {/* Category Section */}
                                 <div className="gap-4 ">
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <Tag className="h-5 w-5 text-purple-500" />
-                                        Phân loại
+                                        {t('form.categorySection')}
                                     </h3>
                                     <div className="gap-4 mb-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Loại tìm kiếm (Search Type)
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                {t('form.searchType')}
                                             </label>
                                             <select
                                                 value={formData.search_type}
                                                 onChange={(e) => setFormData({ ...formData, search_type: e.target.value })}
-                                                className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                             >
                                                 {SEARCH_TYPES.map((type) => (
                                                     <option key={type.value} value={type.value}>
@@ -496,14 +921,14 @@ function LocationManagementPage() {
                                     </div>
 
                                     {/* Rating & Price Section */}
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <Star className="h-5 w-5 text-yellow-500" />
-                                        Giá
+                                        {t('form.priceSection')}
                                     </h3>
                                     <div className="gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                Giá trung bình ($)
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                {t('form.avgPrice')}
                                             </label>
                                             <Input
                                                 type="number"
@@ -511,7 +936,7 @@ function LocationManagementPage() {
                                                 value={formData.avg_price}
                                                 onChange={(e) => setFormData({ ...formData, avg_price: parseFloat(e.target.value) || 0 })}
                                                 placeholder="VD: 20"
-                                                className="bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-gray-700"
+                                                className="bg-gray-50 border-gray-200"
                                             />
                                         </div>
                                     </div>
@@ -519,71 +944,51 @@ function LocationManagementPage() {
 
                                 {/* Images Section */}
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <ImageIcon className="h-5 w-5 text-pink-500" />
-                                        Hình ảnh
+                                        {t('form.images')}
+                                        {formData.image_url.filter(u => u).length > 0 && (
+                                            <span className="ml-1 text-xs font-normal text-gray-500">
+                                                ({formData.image_url.filter(u => u).length} {t('form.imagesSuffix')})
+                                            </span>
+                                        )}
                                     </h3>
 
-                                    {/* Add new image URL */}
-                                    <div className="flex gap-2 mb-4">
-                                        <Input
-                                            value={newImageUrl}
-                                            onChange={(e) => setNewImageUrl(e.target.value)}
-                                            placeholder="Nhập URL hình ảnh..."
-                                            className="flex-1 bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-gray-700"
-                                        />
-                                        <Button
-                                            type="button"
-                                            onClick={handleAddImageUrl}
-                                            className="bg-green-600 hover:bg-green-700 text-white"
-                                        >
-                                            <Plus className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                    <ImageUploader
+                                        ref={createUploaderRef}
+                                        folder="/places"
+                                    />
 
-                                    {/* Image URLs list */}
-                                    <div className="space-y-2">
-                                        {formData.image_url.filter(url => url).map((url, index) => (
-                                            <div key={index} className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-slate-950 rounded-lg border border-gray-200 dark:border-gray-700">
-                                                <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0">
+                                    {/* Saved URL list */}
+                                    {formData.image_url.filter(u => u).length > 0 && (
+                                        <div className="mt-4 grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                            {formData.image_url.filter(u => u).map((url, index) => (
+                                                <div key={index} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-200">
                                                     <img
                                                         src={url}
-                                                        alt={`Preview ${index + 1}`}
+                                                        alt=""
                                                         className="w-full h-full object-cover"
-                                                        onError={(e) => {
-                                                            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/48?text=Error'
-                                                        }}
+                                                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/80?text=Err' }}
                                                     />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setFormData(prev => ({ ...prev, image_url: prev.image_url.filter((_, i) => i !== index) }))}
+                                                        className="absolute top-1 right-1 bg-black/60 hover:bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-all"
+                                                    >
+                                                        <X className="h-3.5 w-3.5" />
+                                                    </button>
                                                 </div>
-                                                <span className="flex-1 text-sm text-gray-600 dark:text-gray-400 truncate">
-                                                    {url}
-                                                </span>
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => handleRemoveImageUrl(index)}
-                                                    className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
-                                            </div>
-                                        ))}
-                                        {formData.image_url.filter(url => url).length === 0 && (
-                                            <div className="text-center py-8 text-gray-500 dark:text-gray-500">
-                                                <ImageIcon className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                                                <p className="text-sm">Chưa có hình ảnh nào</p>
-                                            </div>
-                                        )}
-                                    </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 
                             {/* Action Buttons */}
-                            <div className="flex gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <div className="flex gap-3 mt-8 pt-6 border-t border-gray-200">
                                 <Button
                                     variant="outline"
-                                    className="flex-1 border-gray-200 dark:border-gray-700"
+                                    className="flex-1 border-gray-200"
                                     onClick={() => {
                                         setShowCreateModal(false)
                                         resetForm()
@@ -591,14 +996,284 @@ function LocationManagementPage() {
                                     }}
                                     disabled={actionLoading}
                                 >
-                                    Hủy
+                                    {t('actions.cancel')}
                                 </Button>
                                 <Button
                                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                                     onClick={handleCreateLocation}
                                     disabled={actionLoading}
                                 >
-                                    {actionLoading ? 'Đang tạo…' : 'Tạo địa điểm'}
+                                    {actionLoading ? t('actions.creating') : t('actions.createLocation')}
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+            {/* Edit Location Modal */}
+            {showEditModal && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <Card className="w-full max-w-4xl bg-white border-gray-200 max-h-[90vh] overflow-y-auto">
+                        <CardHeader className="border-b border-gray-200 sticky top-0 bg-white z-10">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                                    <Pencil className="h-5 w-5 text-blue-500" />
+                                    {t('editModal.title')}
+                                </CardTitle>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => { setShowEditModal(false); setEditingPlaceId(null); setErrorMessage(''); setSuccessMessage('') }}
+                                    className="text-gray-500"
+                                >
+                                    <X className="h-5 w-5" />
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                            {editLoading ? (
+                                <div className="flex items-center justify-center py-16">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+                                        <p className="text-sm text-gray-500">{t('editModal.loading')}</p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    {successMessage && (
+                                        <div className="mb-6 p-4 bg-green-100 border border-green-200 rounded-lg flex items-center gap-3">
+                                            <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                            <span className="text-green-700">{successMessage}</span>
+                                        </div>
+                                    )}
+                                    {errorMessage && (
+                                        <div className="mb-6 p-4 bg-red-100 border border-red-200 rounded-lg flex items-center gap-3">
+                                            <AlertCircle className="h-5 w-5 text-red-600" />
+                                            <span className="text-red-700">{errorMessage}</span>
+                                        </div>
+                                    )}
+                                    <div className="space-y-6">
+                                        {/* Basic Info */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                                <FileText className="h-5 w-5 text-blue-500" />
+                                                {t('form.basicInfo')}
+                                            </h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">ID</label>
+                                                    <Input value={editFormData.id} readOnly className="bg-gray-100 border-gray-200 cursor-not-allowed" />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        {t('form.locationName')} <span className="text-red-500">*</span>
+                                                    </label>
+                                                    <Input
+                                                        value={editFormData.displayName_text}
+                                                        onChange={(e) => setEditFormData({ ...editFormData, displayName_text: e.target.value })}
+                                                        className="bg-gray-50 border-gray-200"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.city')}</label>
+                                                    <select
+                                                        value={editFormData.city}
+                                                        onChange={(e) => handleEditCityChange(e.target.value)}
+                                                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                                        disabled={loadingCities}
+                                                    >
+                                                        <option value="">{t('form.selectCity')}</option>
+                                                        {cities.map((city) => (
+                                                            <option key={city.id} value={city.city}>{city.city}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">City ID</label>
+                                                    <Input value={editFormData.city_id} readOnly className="bg-gray-100 border-gray-200 cursor-not-allowed" />
+                                                </div>
+                                                <div className="md:col-span-2">
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.description')}</label>
+                                                    <textarea
+                                                        value={editFormData.editorialSummary_text}
+                                                        onChange={(e) => setEditFormData({ ...editFormData, editorialSummary_text: e.target.value })}
+                                                        rows={3}
+                                                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Location */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                                <MapPinned className="h-5 w-5 text-green-500" />
+                                                {t('form.locationSection')}
+                                            </h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.latitude')}</label>
+                                                    <Input
+                                                        type="number" step="any"
+                                                        value={editFormData.location.latitude}
+                                                        onChange={(e) => setEditFormData({ ...editFormData, location: { ...editFormData.location, latitude: parseFloat(e.target.value) || 0 } })}
+                                                        className="bg-gray-50 border-gray-200"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.longitude')}</label>
+                                                    <Input
+                                                        type="number" step="any"
+                                                        value={editFormData.location.longitude}
+                                                        onChange={(e) => setEditFormData({ ...editFormData, location: { ...editFormData.location, longitude: parseFloat(e.target.value) || 0 } })}
+                                                        className="bg-gray-50 border-gray-200"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Category & Price */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                                                <Tag className="h-5 w-5 text-purple-500" />
+                                                {t('form.categoryPrice')}
+                                            </h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('table.type')}</label>
+                                                    <select
+                                                        value={editFormData.search_type}
+                                                        onChange={(e) => setEditFormData({ ...editFormData, search_type: e.target.value })}
+                                                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                                    >
+                                                        {SEARCH_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.avgPrice')}</label>
+                                                    <Input
+                                                        type="number" min="0"
+                                                        value={editFormData.avg_price}
+                                                        onChange={(e) => setEditFormData({ ...editFormData, avg_price: parseFloat(e.target.value) || 0 })}
+                                                        className="bg-gray-50 border-gray-200"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Images */}
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                                                <ImageIcon className="h-5 w-5 text-pink-500" />
+                                                {t('form.images')}
+                                                {editFormData.image_url.filter(u => u).length > 0 && (
+                                                    <span className="ml-1 text-xs font-normal text-gray-500">
+                                                        ({editFormData.image_url.filter(u => u).length} {t('form.imagesSuffix')})
+                                                    </span>
+                                                )}
+                                            </h3>
+                                            <p className="text-xs text-blue-600 mb-4 flex items-center gap-1">
+                                                <CheckCircle2 className="h-3.5 w-3.5" />
+                                                {t('editModal.imageNotice')}
+                                            </p>
+
+                                            <ImageUploader
+                                                ref={editUploaderRef}
+                                                folder="/places"
+                                            />
+
+                                            {/* Existing image grid */}
+                                            {editFormData.image_url.filter(u => u).length > 0 && (
+                                                <div className="mt-4">
+                                                    <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">{t('editModal.currentImages')}</p>
+                                                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                                        {editFormData.image_url.filter(u => u).map((url, idx) => (
+                                                            <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-200">
+                                                                <img
+                                                                    src={url}
+                                                                    alt=""
+                                                                    className="w-full h-full object-cover"
+                                                                    onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/80?text=Err' }}
+                                                                />
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setEditFormData(prev => ({ ...prev, image_url: prev.image_url.filter((_, i) => i !== idx) }))
+                                                                    }}
+                                                                    className="absolute top-1 right-1 bg-black/60 hover:bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-all"
+                                                                >
+                                                                    <X className="h-3.5 w-3.5" />
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-3 mt-8 pt-6 border-t border-gray-200">
+                                        <Button
+                                            variant="outline"
+                                            className="flex-1 border-gray-200"
+                                            onClick={() => { setShowEditModal(false); setEditingPlaceId(null); setErrorMessage(''); setSuccessMessage('') }}
+                                            disabled={actionLoading}
+                                        >
+                                            {t('actions.cancel')}
+                                        </Button>
+                                        <Button
+                                            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                                            onClick={handleUpdateLocation}
+                                            disabled={actionLoading}
+                                        >
+                                            {actionLoading ? t('actions.saving') : t('actions.saveChanges')}
+                                        </Button>
+                                    </div>
+                                </>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && deletingPlace && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+                    <Card className="w-full max-w-md bg-white border-gray-200">
+                        <CardContent className="p-6">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                                    <Trash2 className="h-6 w-6 text-red-600" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold text-gray-900">{t('deleteModal.title')}</h3>
+                                    <p className="text-sm text-gray-500 mt-0.5">{t('deleteModal.warning')}</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
+                                <p className="text-sm text-gray-600 mb-1">{t('deleteModal.deletingTarget')}</p>
+                                <p className="font-semibold text-gray-900">{deletingPlace.displayName_text}</p>
+                                <span className={`inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeBadgeClass(deletingPlace.search_type)}`}>
+                                    {getTypeLabel(deletingPlace.search_type)}
+                                </span>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <Button
+                                    variant="outline"
+                                    className="flex-1 border-gray-200"
+                                    onClick={() => { setShowDeleteModal(false); setDeletingPlace(null) }}
+                                    disabled={deleteLoading}
+                                >
+                                    {t('actions.cancel')}
+                                </Button>
+                                <Button
+                                    className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+                                    onClick={handleDeleteLocation}
+                                    disabled={deleteLoading}
+                                >
+                                    {deleteLoading ? t('actions.deleting') : t('actions.delete')}
                                 </Button>
                             </div>
                         </CardContent>

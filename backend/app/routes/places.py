@@ -1,15 +1,51 @@
 from ..extensions import mongo
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required
 from ..models.places import places
+import hashlib
+import hmac
+import time
+import uuid
+import os
 
 places_bp = Blueprint("places", __name__)
 
+@places_bp.route("/imagekit-auth", methods=["GET"])
+@jwt_required()
+def imagekit_auth():
+    """Generate ImageKit upload authentication signature for client-side uploads."""
+    try:
+        private_key = os.getenv("IMAGEKIT_PRIVATE_KEY", "")
+        if not private_key:
+            return jsonify({"error": "ImageKit not configured"}), 500
+
+        token = str(uuid.uuid4())
+        expire = int(time.time()) + 600  # valid for 10 minutes
+        sig_string = token + str(expire)
+        signature = hmac.new(
+            private_key.encode("utf-8"),
+            sig_string.encode("utf-8"),
+            hashlib.sha1
+        ).hexdigest()
+
+        return jsonify({
+            "token": token,
+            "expire": expire,
+            "signature": signature,
+            "publicKey": os.getenv("IMAGEKIT_PUBLIC_KEY", ""),
+            "urlEndpoint": os.getenv("IMAGEKIT_URL_ENDPOINT", ""),
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @places_bp.route("/", methods=["GET"])
+@jwt_required()
 def get_places():
     places_list = places.get_all_places(mongo)
-    return jsonify(places_list)
+    return jsonify({"place": places_list})
 
 @places_bp.route("/<string:city_id>", methods=["GET"])
+@jwt_required()
 def get_places_by_city_id(city_id):
     places_list = places.get_all_place_by_city_id(mongo, city_id)
     
@@ -27,12 +63,98 @@ def get_places_by_city_id(city_id):
     
     return jsonify(categorized_places)
 
+@places_bp.route("/place", methods=["POST"])
+@jwt_required()
+def create_place():
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        required = ["displayName_text", "city_id", "search_type"]
+        for field in required:
+            if not data.get(field):
+                return jsonify({"error": f"'{field}' is required"}), 400
+
+        # Check duplicate by id if provided
+        place_id = data.get("id", "").strip()
+        if place_id and places.place_exists(mongo, place_id):
+            return jsonify({"error": f"Place with id '{place_id}' already exists"}), 409
+
+        import uuid
+        from datetime import datetime
+
+        new_place = {
+            "id": place_id or str(uuid.uuid4()),
+            "city": data.get("city", ""),
+            "city_id": data.get("city_id", ""),
+            "displayName_text": data.get("displayName_text", ""),
+            "editorialSummary_text": data.get("editorialSummary_text", ""),
+            "location": data.get("location", {"latitude": 0, "longitude": 0}),
+            "rating": float(data.get("rating", 0)),
+            "userRatingCount": 0,
+            "avg_price": float(data.get("avg_price", 0)),
+            "search_type": data.get("search_type", "restaurant"),
+            "types": data.get("types", []),
+            "image_url": data.get("image_url", []),
+            "filter_criteria": data.get("filter_criteria", ""),
+            "filtered_at": {"$date": datetime.utcnow().isoformat()},
+        }
+
+        result = places.create_place(mongo, new_place)
+        if result.inserted_id:
+            new_place.pop("_id", None)
+            return jsonify({"message": "Place created successfully", "place": new_place}), 201
+        return jsonify({"error": "Failed to create place"}), 500
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @places_bp.route("/place/<string:place_id>", methods=["GET"])
+@jwt_required()
 def get_place_by_id(place_id):
     place = places.get_place_by_id(mongo, place_id)
     return jsonify(place)
 
+@places_bp.route("/place/<string:place_id>", methods=["PUT"])
+@jwt_required()
+def update_place(place_id):
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+
+        allowed_fields = [
+            "displayName_text", "editorialSummary_text",
+            "city", "city_id", "location", "rating",
+            "avg_price", "search_type", "types", "image_url"
+        ]
+        update_data = {k: v for k, v in data.items() if k in allowed_fields}
+
+        if not update_data:
+            return jsonify({"error": "No valid fields to update"}), 400
+
+        result = places.update_place(mongo, place_id, update_data)
+        if result.matched_count == 0:
+            return jsonify({"error": "Place not found"}), 404
+
+        return jsonify({"message": "Place updated successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@places_bp.route("/place/<string:place_id>", methods=["DELETE"])
+@jwt_required()
+def delete_place(place_id):
+    try:
+        result = places.delete_place(mongo, place_id)
+        if result.deleted_count == 0:
+            return jsonify({"error": "Place not found"}), 404
+        return jsonify({"message": "Place deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @places_bp.route("/preferences", methods=["POST"])
+@jwt_required()
 def set_preferences():
     try:
         data = request.get_json()
@@ -98,6 +220,7 @@ def set_preferences():
         return jsonify({"error": str(e)}), 500
 
 @places_bp.route("/preferences/<string:user_id>/<string:city_id>", methods=["GET"])
+@jwt_required()
 def get_preferences(user_id, city_id):
     """Get user preferences for a specific city"""
     try:

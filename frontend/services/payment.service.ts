@@ -37,7 +37,7 @@ export interface Payment {
     amount: number
     currency: string
     payment_method: string
-    payment_status: 'pending' | 'completed' | 'failed' | 'refunded'
+    payment_status: 'pending' | 'completed' | 'failed' | 'cancelled' | 'refunded'
     transaction_id: string
     payment_gateway: string
     payment_time?: string
@@ -60,6 +60,22 @@ export interface UserPaymentsResponse {
 export interface PaymentStatsResponse {
     total_payments: number
     total_spent: number
+}
+
+export interface AdminPaymentsResponse {
+    count: number
+    payments: Payment[]
+}
+
+export interface AdminPaymentStats {
+    total: number
+    completed: number
+    pending: number
+    failed: number
+    cancelled: number
+    refunded: number
+    total_revenue_usd: number
+    total_revenue_vnd: number
 }
 
 export class PaymentService {
@@ -152,6 +168,77 @@ export class PaymentService {
             return response.data
         } catch (error: any) {
             throw new Error(error.response?.data?.error || error.message || 'Failed to get payment stats')
+        }
+    }
+
+    /**
+     * Get all payments (admin only)
+     */
+    static async getAllPayments(options?: {
+        limit?: number
+        skip?: number
+        status?: string
+    }): Promise<AdminPaymentsResponse> {
+        try {
+            const params = new URLSearchParams()
+            if (options?.limit) params.append('limit', options.limit.toString())
+            if (options?.skip) params.append('skip', options.skip.toString())
+            if (options?.status && options.status !== 'all') params.append('status', options.status)
+
+            const queryString = params.toString()
+            const url = `/api/payments/admin/all${queryString ? `?${queryString}` : ''}`
+            const response = await api.get<AdminPaymentsResponse>(url)
+            return response.data
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || error.message || 'Failed to get all payments')
+        }
+    }
+
+    /**
+     * Create a VNPAY payment URL and redirect the browser to it.
+     * Returns the payment URL from the backend.
+     */
+    static async createVnpayPaymentUrl(data: {
+        itinerary_id: string
+        amount_usd: number
+        order_info?: string
+        language?: 'vn' | 'en'
+    }): Promise<{ payment_url: string; payment_id: string; amount_vnd: number }> {
+        try {
+            const response = await api.post<{
+                payment_url: string
+                payment_id: string
+                txn_ref: string
+                amount_vnd: number
+            }>('/api/payments/vnpay/create-payment-url', data)
+            return response.data
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || error.message || 'Failed to create VNPAY payment URL')
+        }
+    }
+
+    /**
+     * Create a VNPAY payment URL for user registration.
+     * No JWT required - this is for new user registration.
+     */
+    static async createRegistrationPaymentUrl(data: {
+        email: string
+        password: string
+        fullname: string
+        phone: string
+        plan_id: string
+        order_info?: string
+    }): Promise<{ payment_url: string; registration_id: string; payment_id: string; amount_vnd: number }> {
+        try {
+            const response = await api.post<{
+                payment_url: string
+                registration_id: string
+                payment_id: string
+                amount_vnd: number
+            }>('/api/payments/vnpay/create-payment-url-register', data)
+            return response.data
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || error.message || 'Failed to create registration payment URL')
         }
     }
 }

@@ -1,26 +1,20 @@
 "use client"
 
-import type React from "react"
 import { useState } from "react"
+import { toast } from "@/lib/toast"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { LoaderCircle, CheckCircle2 } from "lucide-react"
 import { EyeIcon, EyeCloseIcon } from "@/components/icon/icon"
-import { AuthService } from "@/services/auth.service"
+import { useTranslations } from "next-intl"
+import { LanguageSwitcher } from "@/components/i18n/language-switcher"
+
 // ========================================
 // INPUT ERROR COMPONENT
 // ========================================
-function InputError({
-  message,
-  className = '',
-}: {
-  message?: string
-  className?: string
-}) {
+function InputError({ message, className = "" }: { message?: string; className?: string }) {
   return message ? (
-    <p className={`text-sm text-red-400 mt-1 ${className}`}>
-      {message}
-    </p>
+    <p className={`text-sm text-red-500 mt-1 ${className}`}>{message}</p>
   ) : null
 }
 
@@ -28,6 +22,8 @@ type ErrorMap = Record<string, string | undefined>
 
 export default function RegisterPage() {
   const router = useRouter()
+  const t = useTranslations("RegisterPage")
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -45,33 +41,33 @@ export default function RegisterPage() {
     const newErrors: ErrorMap = {}
 
     if (!formData.fullName) {
-      newErrors.fullName = "Full name is required"
+      newErrors.fullName = t("validFullName")
     } else if (formData.fullName.length < 2) {
-      newErrors.fullName = "Name must be at least 2 characters"
+      newErrors.fullName = t("validFullNameLength")
     }
 
     if (!formData.email) {
-      newErrors.email = "Email is required"
+      newErrors.email = t("validEmail")
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email"
+      newErrors.email = t("validEmailFormat")
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required"
+      newErrors.password = t("validPassword")
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters"
+      newErrors.password = t("validPasswordLength")
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password"
+      newErrors.confirmPassword = t("validConfirmPassword")
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
+      newErrors.confirmPassword = t("validPasswordMatch")
     }
 
     if (!formData.phone) {
-      newErrors.phone = "Phone number is required"
+      newErrors.phone = t("validPhone")
     } else if (!/^\+?[\d\s-()]+$/.test(formData.phone)) {
-      newErrors.phone = "Please enter a valid phone number"
+      newErrors.phone = t("validPhoneFormat")
     }
 
     setErrors(newErrors)
@@ -80,24 +76,24 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
-
+    if (!validateForm()) return
     setIsLoading(true)
-
     try {
-      await AuthService.register(formData)
-      setShowSuccess(true)
+      const registrationData = {
+        email: formData.email,
+        password: formData.password,
+        fullname: formData.fullName,
+        phone: formData.phone,
+      }
+      sessionStorage.setItem("registration_data", JSON.stringify(registrationData))
       setTimeout(() => {
-        router.push("/")
-      }, 2000)
+        setIsLoading(false)
+        router.push("/register/payment")
+      }, 500)
     } catch (error) {
-      console.error("Registration error:", error)
-      setErrors({ email: "Registration failed. Please try again." })
-    } finally {
+      console.error("Error saving registration data:", error)
       setIsLoading(false)
+      toast.error(t("errorGeneric"), t("errorTitle"))
     }
   }
 
@@ -116,30 +112,24 @@ export default function RegisterPage() {
     formData.password === formData.confirmPassword &&
     /^\+?[\d\s-()]+$/.test(formData.phone)
 
+  // ── Success Screen ──
   if (showSuccess) {
     return (
-      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7] overflow-hidden">
-        {/* Background Layers */}
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B] overflow-hidden">
         <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(224,247,250,0.9),rgba(240,253,250,0.6)_42%,rgba(236,253,245,0.8))]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(95,203,196,0.08)_0%,rgba(255,255,255,0)_70%)]" />
         </div>
-
         <div className="w-full max-w-lg z-10">
-          <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)] text-center space-y-6">
+          <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 p-8 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10 text-center space-y-6">
             <div className="flex justify-center">
-              <div className="rounded-full bg-green-500/20 p-4">
-                <CheckCircle2 className="h-16 w-16 text-green-400" />
+              <div className="rounded-full bg-[#5FCBC4]/15 p-4">
+                <CheckCircle2 className="h-16 w-16 text-[#5FCBC4]" />
               </div>
             </div>
             <div className="space-y-3">
-              <h2 className="text-3xl font-bold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
-                Registration Successful!
-              </h2>
-              <p className="text-[#D0D7D8] text-base">
-                Your account has been created successfully. Redirecting to login...
-              </p>
+              <h2 className="text-3xl font-bold text-[#0F172A]">{t("successTitle")}</h2>
+              <p className="text-[#64748B] text-base">{t("successDesc")}</p>
             </div>
           </div>
         </div>
@@ -147,122 +137,97 @@ export default function RegisterPage() {
     )
   }
 
+  // ── Main Form ──
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7] overflow-hidden">
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B] overflow-hidden">
       {/* Background Layers */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(224,247,250,0.9),rgba(240,253,250,0.6)_42%,rgba(236,253,245,0.8))]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(95,203,196,0.08)_0%,rgba(255,255,255,0)_70%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-white/60 via-white/20 to-transparent" />
+      </div>
+
+      {/* Language Switcher — top right */}
+      <div className="absolute top-6 right-6 z-20">
+        <LanguageSwitcher />
       </div>
 
       <div className="w-full max-w-lg z-10">
-        {/* Title and Description */}
+        {/* Title */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
-            Create Account
-          </h1>
-          <p className="text-base text-[#A5ABA3] mt-2 max-w-md mx-auto">
-            Join us to explore amazing tours and destinations
-          </p>
+          <h1 className="text-4xl font-semibold text-[#0F172A]">{t("title")}</h1>
+          <p className="text-base text-[#64748B] mt-2 max-w-md mx-auto">{t("subtitle")}</p>
         </div>
 
         {/* Register Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           <div className="grid gap-6">
-            <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-6 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
+            <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 p-6 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10">
               <div className="mb-6 space-y-2 text-center">
-                <h2 className="text-lg font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
-                  Sign Up
-                </h2>
-                <p className="text-sm text-[#D0D7D8]">
-                  Fill in your information to get started
-                </p>
+                <h2 className="text-lg font-semibold text-[#0F172A]">{t("cardTitle")}</h2>
               </div>
 
               <div className="grid gap-5">
-                {/* Full Name Field */}
+                {/* Full Name */}
                 <div className="grid gap-2">
-                  <label
-                    htmlFor="fullName"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
-                  >
-                    Full Name
+                  <label htmlFor="fullName" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium">
+                    {t("fullNameLabel")}
                   </label>
-                  <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                    <input
-                      id="fullName"
-                      type="text"
-                      value={formData.fullName}
-                      onChange={(e) => handleInputChange("fullName", e.target.value)}
-                      required
-                      autoComplete="name"
-                      placeholder="Enter your full name…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                    />
-                  </div>
+                  <input
+                    id="fullName"
+                    type="text"
+                    value={formData.fullName}
+                    onChange={(e) => handleInputChange("fullName", e.target.value)}
+                    required
+                    autoComplete="name"
+                    placeholder={t("fullNamePlaceholder")}
+                    className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
+                  />
                   <InputError message={errors.fullName} />
                 </div>
 
-                {/* Email Field */}
+                {/* Email */}
                 <div className="grid gap-2">
-                  <label
-                    htmlFor="email"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
-                  >
-                    Email
+                  <label htmlFor="email" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium">
+                    {t("emailLabel")}
                   </label>
-                  <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                    <input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      required
-                      autoComplete="email"
-                      placeholder="info@example.com…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                    />
-                  </div>
+                  <input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    required
+                    autoComplete="email"
+                    placeholder={t("emailPlaceholder")}
+                    className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
+                  />
                   <InputError message={errors.email} />
                 </div>
 
-                {/* Phone Number Field */}
+                {/* Phone */}
                 <div className="grid gap-2">
-                  <label
-                    htmlFor="phone"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
-                  >
-                    Phone Number
+                  <label htmlFor="phone" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium">
+                    {t("phoneLabel")}
                   </label>
-                  <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                    <input
-                      id="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
-                      required
-                      autoComplete="tel"
-                      placeholder="+1 (555) 000-0000…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                    />
-                  </div>
+                  <input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                    required
+                    autoComplete="tel"
+                    placeholder={t("phonePlaceholder")}
+                    className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
+                  />
                   <InputError message={errors.phone} />
                 </div>
 
-                {/* Password Field */}
+                {/* Password */}
                 <div className="grid gap-2">
-                  <label
-                    htmlFor="password"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
-                  >
-                    Password
+                  <label htmlFor="password" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium">
+                    {t("passwordLabel")}
                   </label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                     <input
                       id="password"
                       type={showPassword ? "text" : "password"}
@@ -270,36 +235,28 @@ export default function RegisterPage() {
                       onChange={(e) => handleInputChange("password", e.target.value)}
                       required
                       autoComplete="new-password"
-                      placeholder="Create a strong password…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                      placeholder={t("passwordPlaceholder")}
+                      className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 pr-12 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                     />
                     <button
                       type="button"
                       tabIndex={-1}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
-                      onClick={() => setShowPassword(prev => !prev)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#B6C2C6] hover:text-[#FFE5B4] transition-colors cursor-pointer"
+                      aria-label={showPassword ? t("hidePassword") : t("showPassword")}
+                      onClick={() => setShowPassword((p) => !p)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#5FCBC4] transition-colors cursor-pointer"
                     >
-                      {showPassword ? (
-                        <EyeIcon className="size-5" />
-                      ) : (
-                        <EyeCloseIcon className="size-5" />
-                      )}
+                      {showPassword ? <EyeIcon className="size-5" /> : <EyeCloseIcon className="size-5" />}
                     </button>
                   </div>
                   <InputError message={errors.password} />
                 </div>
 
-                {/* Confirm Password Field */}
+                {/* Confirm Password */}
                 <div className="grid gap-2">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]"
-                  >
-                    Confirm Password
+                  <label htmlFor="confirmPassword" className="text-sm uppercase tracking-[0.25em] text-[#5FCBC4] font-medium">
+                    {t("confirmPasswordLabel")}
                   </label>
                   <div className="relative">
-                    <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
                     <input
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
@@ -307,62 +264,47 @@ export default function RegisterPage() {
                       onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
                       required
                       autoComplete="new-password"
-                      placeholder="Confirm your password…"
-                      className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 pr-12 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
+                      placeholder={t("confirmPasswordPlaceholder")}
+                      className="h-12 w-full rounded-2xl border border-gray-200 bg-[#F8FFFE] px-4 pr-12 text-[#1E293B] placeholder:text-[#94A3B8] focus-visible:border-[#5FCBC4] focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/30 focus-visible:outline-none transition-colors"
                     />
                     <button
                       type="button"
                       tabIndex={-1}
-                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                      onClick={() => setShowConfirmPassword(prev => !prev)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#B6C2C6] hover:text-[#FFE5B4] transition-colors cursor-pointer"
+                      aria-label={showConfirmPassword ? t("hidePassword") : t("showPassword")}
+                      onClick={() => setShowConfirmPassword((p) => !p)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#5FCBC4] transition-colors cursor-pointer"
                     >
-                      {showConfirmPassword ? (
-                        <EyeIcon className="size-5" />
-                      ) : (
-                        <EyeCloseIcon className="size-5" />
-                      )}
+                      {showConfirmPassword ? <EyeIcon className="size-5" /> : <EyeCloseIcon className="size-5" />}
                     </button>
                   </div>
                   <InputError message={errors.confirmPassword} />
                 </div>
 
-                {/* Submit Button */}
+                {/* Submit */}
                 <button
                   type="submit"
-                  className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.04] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFEED0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-[#5FCBC4] text-sm font-semibold text-white shadow-lg shadow-[#5FCBC4]/30 transition-all hover:bg-[#4AB8B0] hover:shadow-xl hover:shadow-[#5FCBC4]/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5FCBC4]/80 focus-visible:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed"
                   disabled={!isFormValid || isLoading}
                 >
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  >
-                    <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
-                    <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
-                  </span>
-                  <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#2B1200] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
-                    {isLoading && (
-                      <LoaderCircle className="h-4 w-4 animate-spin text-[#2B1200]" />
-                    )}
-                    {isLoading ? "Creating account..." : "Register"}
+                  <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em]">
+                    {isLoading && <LoaderCircle className="h-4 w-4 animate-spin" />}
+                    {isLoading ? t("creatingAccount") : t("registerButton")}
                   </span>
                 </button>
               </div>
             </div>
 
             {/* Login Card */}
-            <div className="rounded-3xl border border-white/15 bg-[rgba(8,23,31,0.75)] p-6 text-center text-sm text-[#D0D7D8] backdrop-blur-2xl shadow-[0_28px_90px_-55px_rgba(0,0,0,0.62)]">
-              <p className="mb-3 text-xs uppercase tracking-[0.25em] text-[#FFE5B4]">
-                Already Have an Account?
+            <div className="rounded-3xl border border-[#5FCBC4]/15 bg-white/80 p-6 text-center text-sm text-[#64748B] backdrop-blur-2xl shadow-md">
+              <p className="mb-3 text-xs uppercase tracking-[0.25em] text-[#5FCBC4] font-medium">
+                {t("alreadyHaveAccount")}
               </p>
-              <p className="mb-4 text-sm">
-                Sign in to continue your journey
-              </p>
+              <p className="mb-4 text-sm">{t("signInDesc")}</p>
               <Link
                 href="/login"
-                className="inline-flex items-center gap-2 text-sm text-[#7EE0FF] transition hover:text-[#FFE5B4] underline decoration-[#7EE0FF]/30 underline-offset-4 hover:decoration-[#FFE5B4]/50"
+                className="inline-flex items-center gap-2 text-sm text-[#5FCBC4] transition hover:text-[#4AB8B0] underline decoration-[#5FCBC4]/30 underline-offset-4 hover:decoration-[#4AB8B0]/50"
               >
-                Sign In
+                {t("signIn")}
                 <span aria-hidden>→</span>
               </Link>
             </div>

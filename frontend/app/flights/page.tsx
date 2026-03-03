@@ -21,9 +21,12 @@ import { useRouter } from "next/navigation"
 import api from "@/lib/axios"
 import { TravelService } from "@/services/travel.service"
 import { UserMenu } from "@/components/user-menu"
+import { Footer } from "@/components/footer"
+import { useTranslations } from "next-intl"
 function FlightsContent() {
   const router = useRouter()
   const { user, logout } = useAuthStore()
+  const t = useTranslations("FlightsPage")
   const [step, setStep] = useState<1 | 2>(1)
   const [selectedOutbound, setSelectedOutbound] = useState<any>(null)
   const [selectedReturn, setSelectedReturn] = useState<any>(null)
@@ -355,7 +358,7 @@ function FlightsContent() {
 
   const totalPrice = (selectedOutbound?.price || 0) + (selectedReturn?.price || 0)
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
+    <div className="relative min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5] text-[#1E293B]">
       <style dangerouslySetInnerHTML={{
         __html: `
           .custom-scrollbar::-webkit-scrollbar {
@@ -366,11 +369,11 @@ function FlightsContent() {
             border-radius: 10px;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(255, 229, 180, 0.3);
+            background: rgba(95, 203, 196, 0.3);
             border-radius: 10px;
           }
           .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 229, 180, 0.5);
+            background: rgba(95, 203, 196, 0.5);
           }
         `
       }} />
@@ -378,83 +381,84 @@ function FlightsContent() {
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#F5F5F5] via-[#F5F5F5]/40 to-transparent" />
       </div>
 
       {/* Header */}
       <header className="mx-auto max-w-7xl px-6 py-8">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-[#7D837A]">
-              VietJourney
+            <p className="text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
+              {t("brand")}
             </p>
-            <p className="text-xl font-semibold text-[#F3F0E9]">
-              Mapping Vietnam experiences
+            <p className="text-xl font-semibold text-[#0F172A]">
+              {t("tagline")}
             </p>
           </div>
-          <nav className="flex items-center gap-2 text-sm font-medium">
-            <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-              Home
-            </Link>
-            <Link href="/planner" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-              Dashboard
-            </Link>
-            <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-              Personalities
-            </Link>
-            <Link href="#" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-              Contact
-            </Link>
-            <span className="mx-2 h-4 w-px bg-white/20"></span>
-
-            {/* User Menu Dropdown */}
-            <UserMenu />
-          </nav>
         </div>
-      </header>
+        <nav className="flex items-center gap-2 text-sm font-medium">
+          <Link href="/" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+            {t("home")}
+          </Link>
+          <Link href="/planner" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+            {t("dashboard")}
+          </Link>
+          <Link href="/tours" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+            {t("tours")}
+          </Link>
+          <Link href="#" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+            {t("contact")}
+          </Link>
+          <span className="mx-2 h-4 w-px bg-white/20"></span>
+
+          {/* User Menu Dropdown */}
+          <UserMenu />
+        </nav>
+
+      </header >
 
       <main className="mx-auto max-w-[1600px] px-6 ">
         {/* Page Title Section */}
         <section className="mb-12 text-center">
-          <p className="mb-3 text-xs uppercase tracking-[0.4em] text-[#7D837A]">
-            Flight Booking
+          <p className="mb-3 text-xs uppercase tracking-[0.4em] text-[#94A3B8]">
+            {t("flightBookingLabel")}
           </p>
-          <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-white drop-shadow-[0_12px_24px_rgba(255,199,128,0.45)]">
-            Đặt Vé Máy Bay
+          <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-[#5FCBC4] drop-shadow-[0_12px_24px_rgba(95,203,196,1)]">
+            {t("heroTitle")}
           </h1>
-          <p className="text-base text-[#A5ABA3] max-w-2xl mx-auto leading-relaxed mb-8">
-            Tìm kiếm và đặt vé máy bay với giá tốt nhất cho chuyến đi của bạn
+          <p className="text-base text-[#64748B] max-w-2xl mx-auto leading-relaxed mb-8">
+            {t("heroDesc")}
           </p>
           <div className="flex items-center justify-center gap-4 mb-8">
             <div
               onClick={() => setStep(1)}
               className={`flex items-center gap-3 px-6 py-3 rounded-2xl cursor-pointer transition-all border backdrop-blur ${step === 1
-                ? "bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-[#2B1200] border-[#FFE5B4] shadow-lg shadow-[#FFE5B4]/30"
-                : "bg-white/5 text-[#D0D7D8] border-white/10 hover:bg-white/10 hover:border-[#FFE5B4]/40"
+                ? "bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-[#0F172A] border-[#5FCBC4] shadow-lg shadow-[#5FCBC4]/30"
+                : "bg-white/5 text-[#475569] border-white/10 hover:bg-white/10 hover:border-[#5FCBC4]/40"
                 }`}
             >
               <div
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 ${step === 1 ? "bg-white text-[#2B1200] border-[#FFB56D]" : "bg-white/10 text-[#FFE5B4] border-[#FFE5B4]/50"
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 ${step === 1 ? "bg-white text-[#0F172A] border-[#4AB8B0]" : "bg-white/10 text-[#5FCBC4] border-[#5FCBC4]/50"
                   }`}
               >
                 1
               </div>
-              <span className="font-bold">Chiều đi: {dataBuildTour?.departure} → {dataBuildTour?.destination}</span>
+              <span className="font-bold">Outbound: {dataBuildTour?.departure} → {dataBuildTour?.destination}</span>
               {selectedOutbound && <CheckCircle2 className={`w-4 h-4 ${step === 1 ? "text-emerald-600" : "text-emerald-400"}`} />}
             </div>
-            <ArrowRight className="text-[#7D837A]" />
+            <ArrowRight className="text-[#94A3B8]" />
             <div
               onClick={() => selectedOutbound && setStep(2)}
-              className={`flex items-center gap-3 px-6 py-3 rounded-2xl transition-all border backdrop-blur ${!selectedOutbound ? "opacity-50 cursor-not-allowed bg-white/5 text-[#7D837A] border-white/10" : "cursor-pointer"
-                } ${step === 2 ? "bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-[#2B1200] border-[#FFE5B4] shadow-lg shadow-[#FFE5B4]/30" : "bg-white/5 text-[#D0D7D8] border-white/10 hover:bg-white/10 hover:border-[#FFE5B4]/40"}`}
+              className={`flex items-center gap-3 px-6 py-3 rounded-2xl transition-all border backdrop-blur ${!selectedOutbound ? "opacity-50 cursor-not-allowed bg-white/5 text-[#94A3B8] border-white/10" : "cursor-pointer"
+                } ${step === 2 ? "bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-[#0F172A] border-[#5FCBC4] shadow-lg shadow-[#5FCBC4]/30" : "bg-white/5 text-[#475569] border-white/10 hover:bg-white/10 hover:border-[#5FCBC4]/40"}`}
             >
               <div
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 ${step === 2 ? "bg-white text-[#2B1200] border-[#FFB56D]" : "bg-white/10 text-[#FFE5B4] border-[#FFE5B4]/50"
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 ${step === 2 ? "bg-white text-[#0F172A] border-[#4AB8B0]" : "bg-white/10 text-[#5FCBC4] border-[#5FCBC4]/50"
                   }`}
               >
                 2
               </div>
-              <span className="font-bold">Chiều về: {dataBuildTour?.destination} → {dataBuildTour?.departure}</span>
+              <span className="font-bold">Return: {dataBuildTour?.destination} → {dataBuildTour?.departure}</span>
               {selectedReturn && <CheckCircle2 className={`w-4 h-4 ${step === 2 ? "text-emerald-600" : "text-emerald-400"}`} />}
             </div>
           </div>
@@ -468,7 +472,7 @@ function FlightsContent() {
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 mb-6 p-4 rounded-xl bg-white/5 border border-white/10">
               {/* Time Sort */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full lg:w-auto">
-                <span className="text-sm text-[#A5ABA3] font-medium whitespace-nowrap">Thời gian:</span>
+                <span className="text-sm text-[#64748B] font-medium whitespace-nowrap">{t("departureTime")}</span>
                 <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={() => {
@@ -476,11 +480,11 @@ function FlightsContent() {
                       setPriceSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${timeSort === 'default'
-                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#5FCBC4] text-[#FFFFFF] shadow-lg'
+                      : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Mặc định
+                    {t("default")}
                   </button>
                   <button
                     onClick={() => {
@@ -488,11 +492,11 @@ function FlightsContent() {
                       setPriceSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${timeSort === 'lowest'
-                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#5FCBC4] text-[#FFFFFF] shadow-lg'
+                      : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Sớm nhất
+                    {t("earliest")}
                   </button>
                   <button
                     onClick={() => {
@@ -500,18 +504,18 @@ function FlightsContent() {
                       setPriceSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${timeSort === 'highest'
-                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#5FCBC4] text-[#FFFFFF] shadow-lg'
+                      : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Muộn nhất
+                    {t("latest")}
                   </button>
                 </div>
               </div>
 
               {/* Price Sort */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full lg:w-auto">
-                <span className="text-sm text-[#A5ABA3] font-medium whitespace-nowrap">Giá:</span>
+                <span className="text-sm text-[#64748B] font-medium whitespace-nowrap">{t("price")}</span>
                 <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={() => {
@@ -519,11 +523,11 @@ function FlightsContent() {
                       setTimeSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${priceSort === 'default'
-                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#5FCBC4] text-[#FFFFFF] shadow-lg'
+                      : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Mặc định
+                    {t("default")}
                   </button>
                   <button
                     onClick={() => {
@@ -531,11 +535,11 @@ function FlightsContent() {
                       setTimeSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${priceSort === 'lowest'
-                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#5FCBC4] text-[#FFFFFF] shadow-lg'
+                      : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Thấp nhất
+                    {t("lowest")}
                   </button>
                   <button
                     onClick={() => {
@@ -543,11 +547,11 @@ function FlightsContent() {
                       setTimeSort('default')
                     }}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${priceSort === 'highest'
-                      ? 'bg-[#FFE5B4] text-[#2B1200] shadow-lg'
-                      : 'bg-white/5 text-[#D0D7D8] hover:bg-white/10 border border-white/10'
+                      ? 'bg-[#5FCBC4] text-[#FFFFFF] shadow-lg'
+                      : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Cao nhất
+                    {t("highest")}
                   </button>
                 </div>
               </div>
@@ -558,7 +562,7 @@ function FlightsContent() {
               className="max-h-[calc(100vh)] overflow-y-auto pr-2 custom-scrollbar"
               style={{
                 scrollbarWidth: 'thin',
-                scrollbarColor: 'rgba(255, 229, 180, 0.3) rgba(255, 255, 255, 0.05)'
+                scrollbarColor: 'rgba(95, 203, 196, 0.3) rgba(255, 255, 255, 0.05)'
               }}
             >
               {error ? (
@@ -571,14 +575,14 @@ function FlightsContent() {
                     onClick={() => window.location.reload()}
                     className="px-6 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all"
                   >
-                    Thử lại
+                    Try again
                   </button>
                 </div>
               ) : isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
-                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#FFE5B4]"></div>
-                  <p className="text-[#A5ABA3] text-lg">Đang tìm kiếm chuyến bay tốt nhất cho bạn...</p>
-                  <p className="text-[#7D837A] text-sm">Vui lòng đợi, quá trình này có thể mất 20-30 giây</p>
+                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#5FCBC4]"></div>
+                  <p className="text-[#64748B] text-lg">{t("searchingFlights")}</p>
+                  <p className="text-[#94A3B8] text-sm">{t("searchingDesc")}</p>
                 </div>
               ) : (
                 <div className="grid gap-4">
@@ -586,8 +590,8 @@ function FlightsContent() {
                     <Card
                       key={flight.id}
                       className={`overflow-hidden transition-all duration-300 border backdrop-blur ${selectedCurrentId === flight.id
-                        ? "border-[#FFE5B4] bg-white/10 shadow-[0_20px_60px_-20px_rgba(255,229,180,0.4)]"
-                        : "border-white/10 bg-white/5 hover:border-[#FFE5B4]/50 hover:bg-white/8"
+                        ? "border-[#5FCBC4] bg-white/10]"
+                        : "border-white/10 bg-white/5 hover:border-[#5FCBC4]/50 hover:bg-white/8"
                         }`}
                     >
                       <CardContent className="p-0">
@@ -595,51 +599,51 @@ function FlightsContent() {
                           {/* Airline Info */}
                           <div className="flex flex-col w-full md:w-40">
                             <div className="flex items-center gap-2">
-                              <Plane className="w-4 h-4 text-[#FFE5B4]" />
-                              <span className="font-semibold text-sm text-white">{flight.airline}</span>
+                              <Plane className="w-4 h-4 text-[#5FCBC4]" />
+                              <span className="font-semibold text-sm text-[#5FCBC4]">{flight.airline}</span>
                             </div>
-                            <div className="text-xs text-[#A5ABA3] mt-1">{flight.class}</div>
+                            <div className="text-xs text-[#64748B] mt-1">{flight.class}</div>
                           </div>
 
                           {/* Flight Times */}
                           <div className="flex-1 flex items-center justify-between gap-6 w-full">
                             <div className="text-center">
-                              <div className="text-xl font-bold text-white">{flight.departureTime}</div>
-                              <div className="text-xs font-semibold text-[#A5ABA3] uppercase tracking-wider">
+                              <div className="text-xl font-bold text-[#5FCBC4]">{flight.departureTime}</div>
+                              <div className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
                                 {(flight as any).departureCode || (step === 1 ? dataBuildTour?.departure : dataBuildTour?.destination)}
                               </div>
                             </div>
 
                             <div className="flex-1 flex flex-col items-center gap-2">
-                              <div className="text-xs text-[#A5ABA3] flex items-center gap-1">
+                              <div className="text-xs text-[#64748B] flex items-center gap-1">
                                 <Clock className="w-3 h-3" /> {flight.duration}
                               </div>
                               <div className="relative w-full h-px bg-white/20 flex items-center justify-center">
                                 <div className="absolute h-1.5 w-1.5 rounded-full bg-white/30 -left-0.5" />
                                 <div className="absolute h-1.5 w-1.5 rounded-full bg-white/30 -right-0.5" />
-                                <div className="bg-[#0D1820] px-1">
-                                  <Plane className="w-4 h-4 text-[#FFE5B4] rotate-90" />
+                                <div className="bg-[#FFFFFF] px-1">
+                                  <Plane className="w-4 h-4 text-[#5FCBC4] rotate-90" />
                                 </div>
                               </div>
                               {flight.isDirect ? (
                                 <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-tight bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded">
-                                  Bay thẳng
+                                  Direct
                                 </div>
                               ) : (
                                 <div className="flex flex-col items-center">
                                   <div className="text-[10px] font-bold text-orange-400 uppercase tracking-tight bg-orange-500/20 border border-orange-500/30 px-2 py-0.5 rounded">
-                                    {(flight as any).stops} Điểm dừng
+                                    {(flight as any).stops} Stop{(flight as any).stops > 1 ? 's' : ''}
                                   </div>
                                   {(flight as any).stopover && (
-                                    <div className="text-[9px] text-[#A5ABA3] mt-0.5">{(flight as any).stopover}</div>
+                                    <div className="text-[9px] text-[#64748B] mt-0.5">{(flight as any).stopover}</div>
                                   )}
                                 </div>
                               )}
                             </div>
 
                             <div className="text-center">
-                              <div className="text-xl font-bold text-white">{flight.arrivalTime}</div>
-                              <div className="text-xs font-semibold text-[#A5ABA3] uppercase tracking-wider">
+                              <div className="text-xl font-bold text-[#5FCBC4]">{flight.arrivalTime}</div>
+                              <div className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
                                 {(flight as any).arrivalCode || (step === 1 ? dataBuildTour?.destination : dataBuildTour?.departure)}
                               </div>
                             </div>
@@ -648,24 +652,24 @@ function FlightsContent() {
                           {/* Price & Action */}
                           <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4 w-full md:w-48 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-white/10 md:pl-8">
                             <div className="text-right">
-                              <div className="text-2xl font-bold text-[#FFE5B4]">{flight.price}$</div>
-                              <div className="text-[10px] text-[#A5ABA3] uppercase tracking-tighter">
-                                Giá đã bao gồm thuế
+                              <div className="text-2xl font-bold text-[#5FCBC4]">{flight.price}$</div>
+                              <div className="text-[10px] text-[#64748B] uppercase tracking-tighter">
+                                {t("taxIncluded")}
                               </div>
                             </div>
                             <Button
                               onClick={() => handleSelect(flight)}
                               className={`rounded-xl px-8 h-12 font-semibold transition-all border ${selectedCurrentId === flight.id
                                 ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 scale-105 shadow-lg shadow-emerald-500/30"
-                                : "bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] hover:shadow-lg hover:shadow-[#FFB56D]/30 text-[#2B1200] border-[#FFE5B4]"
+                                : "bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] hover:shadow-lg hover:shadow-[#4AB8B0]/30 text-[#FFFFFF] border-[#5FCBC4]"
                                 }`}
                             >
                               {selectedCurrentId === flight.id ? (
                                 <span className="flex items-center gap-2">
-                                  <ShieldCheck className="w-4 h-4" /> Đã chọn
+                                  <ShieldCheck className="w-4 h-4" /> {t("selected")}
                                 </span>
                               ) : (
-                                "Chọn vé"
+                                t("select")
                               )}
                             </Button>
                           </div>
@@ -677,9 +681,9 @@ function FlightsContent() {
                   {/* Loading more indicator */}
                   {isLoadingMore && (
                     <div className="flex justify-center mt-8 py-4">
-                      <div className="flex items-center gap-3 text-[#A5ABA3]">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#FFE5B4]"></div>
-                        <span>Đang tải thêm...</span>
+                      <div className="flex items-center gap-3 text-[#64748B]">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#5FCBC4]"></div>
+                        <span>{t("loadingMore")}</span>
                       </div>
                     </div>
                   )}
@@ -689,9 +693,9 @@ function FlightsContent() {
                     <div className="flex justify-center mt-8">
                       <button
                         onClick={loadMore}
-                        className="px-8 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 hover:border-[#FFE5B4]/50 text-white font-semibold transition-all flex items-center gap-2 group"
+                        className="px-8 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 hover:border-[#5FCBC4]/50 text-white font-semibold transition-all flex items-center gap-2 group"
                       >
-                        <span>Xem thêm {Math.min(ITEMS_PER_PAGE, allCurrentFlights.length - displayCount)} chuyến bay</span>
+                        <span>Load {Math.min(ITEMS_PER_PAGE, allCurrentFlights.length - displayCount)} more flights</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform rotate-90" />
                       </button>
                     </div>
@@ -699,10 +703,10 @@ function FlightsContent() {
 
                   {/* Showing count */}
                   {!isLoading && !error && (
-                    <div className="text-center mt-6 text-sm text-[#7D837A]">
-                      Đang hiển thị {currentFlights.length} / {allCurrentFlights.length} chuyến bay
+                    <div className="text-center mt-6 text-sm text-[#94A3B8]">
+                      Showing {currentFlights.length} / {allCurrentFlights.length} flights
                       {allCurrentFlights.length === currentFlights.length && allCurrentFlights.length > ITEMS_PER_PAGE && (
-                        <span className="ml-2 text-[#FFE5B4]">• Đã hiển thị tất cả</span>
+                        <span className="ml-2 text-[#5FCBC4]">• All flights shown</span>
                       )}
                     </div>
                   )}
@@ -712,52 +716,52 @@ function FlightsContent() {
             {/* End Scrollable Container */}
           </div>
           <div className="w-full lg:w-[420px] shrink-0">
-            <div className="lg:sticky lg:top-8 bg-gradient-to-br from-[#1A2F3A] to-[#0D1820] rounded-3xl shadow-2xl border border-white/10 animate-in slide-in-from-right duration-500">
+            <div className="lg:sticky lg:top-8 bg-white rounded-3xl border border-[#E4E4E7] animate-in slide-in-from-right duration-500 shadow-sm">
               {/* Header */}
-              <div className="px-8 pt-8 pb-6 border-b border-white/10">
-                <h2 className="text-2xl font-bold text-white">Booking Summary</h2>
+              <div className="px-8 pt-8 pb-6 border-b border-[#E4E4E7]">
+                <h2 className="text-2xl font-bold text-[#0F4C5C]">{t("bookingSummary")}</h2>
               </div>
 
               {/* Content */}
               <div className="px-8 py-6 space-y-6">
                 {/* Selected Flights */}
                 <div>
-                  <h3 className="text-xs uppercase tracking-wider text-[#7D837A] font-bold mb-4">Selected Flights</h3>
+                  <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">{t("selectedFlights")}</h3>
 
                   {/* Departure */}
                   {selectedOutbound ? (
-                    <div className="mb-4 p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div className="mb-4 p-4 rounded-xl bg-[#F0FDFA] border border-[#5FCBC4]/30">
                       <div className="flex justify-between items-start mb-2">
-                        <span className="text-xs text-[#A5ABA3]">Departure • {formatBookingDate(dataBuildTour?.flight_departure_date || null)}</span>
+                        <span className="text-xs text-[#A1A1AA]">Departure • {formatBookingDate(dataBuildTour?.flight_departure_date || null)}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-sm font-bold text-white uppercase">{selectedOutbound.airline}</span>
-                        <span className="text-sm font-bold text-[#FFE5B4]">{selectedOutbound.departureTime}</span>
+                        <span className="text-sm font-bold text-[#0F4C5C] uppercase">{selectedOutbound.airline}</span>
+                        <span className="text-sm font-bold text-[#5FCBC4]">{selectedOutbound.departureTime}</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="mb-4 p-4 rounded-xl bg-white/5 border border-white/10 border-dashed">
+                    <div className="mb-4 p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7] border-dashed">
                       <div className="text-center py-4">
-                        <p className="text-sm text-[#7D837A]">No departure flight selected</p>
+                        <p className="text-sm text-[#A1A1AA]">{t("noDepartureFlight")}</p>
                       </div>
                     </div>
                   )}
 
                   {/* Return */}
                   {selectedReturn ? (
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#5FCBC4]/30">
                       <div className="flex justify-between items-start mb-2">
-                        <span className="text-xs text-[#A5ABA3]">Return • {formatBookingDate(dataBuildTour?.flight_return_date || null)}</span>
+                        <span className="text-xs text-[#A1A1AA]">Return • {formatBookingDate(dataBuildTour?.flight_return_date || null)}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-sm font-bold text-white uppercase">{selectedReturn.airline}</span>
-                        <span className="text-sm font-bold text-[#FFE5B4]">{selectedReturn.departureTime}</span>
+                        <span className="text-sm font-bold text-[#0F4C5C] uppercase">{selectedReturn.airline}</span>
+                        <span className="text-sm font-bold text-[#5FCBC4]">{selectedReturn.departureTime}</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 border-dashed">
+                    <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7] border-dashed">
                       <div className="text-center py-4">
-                        <p className="text-sm text-[#7D837A]">No return flight selected</p>
+                        <p className="text-sm text-[#A1A1AA]">{t("noReturnFlight")}</p>
                       </div>
                     </div>
                   )}
@@ -765,28 +769,28 @@ function FlightsContent() {
 
                 {/* Price Details */}
                 <div>
-                  <h3 className="text-xs uppercase tracking-wider text-[#7D837A] font-bold mb-4">Price Details</h3>
+                  <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">{t("priceDetails")}</h3>
 
                   <div className="space-y-3">
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-[#D0D7D8]">Departure flight</span>
-                      <span className="text-white font-semibold">
+                      <span className="text-[#3F3F46]">{t("departureFlight")}</span>
+                      <span className="text-[#0F4C5C] font-semibold">
                         {selectedOutbound ? `${(selectedOutbound.price)}$` : '-'}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-[#D0D7D8]">Return flight</span>
-                      <span className="text-white font-semibold">
+                      <span className="text-[#3F3F46]">{t("returnFlight")}</span>
+                      <span className="text-[#0F4C5C] font-semibold">
                         {selectedReturn ? `${(selectedReturn.price)}$` : '-'}
                       </span>
                     </div>
 
                     {/* Total */}
-                    <div className="pt-4 border-t border-white/10">
-                      <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-[#FFE5B4]/10 to-[#FFB56D]/10 border border-[#FFE5B4]/20">
-                        <span className="text-lg font-bold text-white">Total</span>
-                        <span className="text-2xl font-bold text-[#FFE5B4]">{(totalPrice)}$</span>
+                    <div className="pt-4 border-t border-[#E4E4E7]">
+                      <div className="flex justify-between items-center p-4 rounded-xl bg-[#CCFBF1] border border-[#5FCBC4]/30">
+                        <span className="text-lg font-bold text-[#0F4C5C]">{t("total")}</span>
+                        <span className="text-2xl font-bold text-[#5FCBC4]">{(totalPrice)}$</span>
                       </div>
                     </div>
                   </div>
@@ -799,8 +803,8 @@ function FlightsContent() {
                   onClick={handleConfirmBooking}
                   disabled={!selectedOutbound || !selectedReturn}
                   className={`w-full py-4 rounded-2xl font-bold text-lg transition-all ${selectedOutbound && selectedReturn
-                    ? 'bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] hover:shadow-xl hover:shadow-[#FFB56D]/40 text-[#2B1200] hover:scale-[1.02] cursor-pointer'
-                    : 'bg-white/10 text-[#7D837A] cursor-not-allowed opacity-50'
+                    ? 'bg-[#5FCBC4] hover:bg-[#4AB8B0] text-white hover:scale-[1.02] cursor-pointer shadow-sm'
+                    : 'bg-[#E4E4E7] text-[#A1A1AA] cursor-not-allowed opacity-60'
                     }`}
                 >
                   Confirm Booking & Continue to Tour
@@ -813,68 +817,8 @@ function FlightsContent() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-[#061017]/80 py-10 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 lg:flex-row lg:justify-between">
-          <div className="max-w-sm">
-            <p className="mb-2 text-sm uppercase tracking-[0.3em] text-[#7D837A]">
-              VietJourney
-            </p>
-            <h3 className="mb-4 text-xl font-semibold text-white">
-              Connect and discover experiences over land
-            </h3>
-            <p className="mb-2 text-sm text-[#D0D7D8]">
-              43 Building, 348 Arau They Street,
-            </p>
-            <p className="mb-2 text-sm text-[#D0D7D8]">
-              Can Giay District, Ha Noi, Vietnam
-            </p>
-            <p className="text-sm text-[#D0D7D8]">
-              help@vietjourneycommander.com
-            </p>
-          </div>
-
-          <div className="grid gap-8 sm:grid-cols-3">
-            <div>
-              <h4 className="mb-4 text-sm font-semibold text-white">Platform</h4>
-              <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                <li><a href="#" className="hover:text-[#FFE5B4]">Tailored experiences</a></li>
-                <li><a href="#" className="hover:text-[#FFE5B4]">Signature journeys</a></li>
-                <li><a href="#" className="hover:text-[#FFE5B4]">Themed escapes</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="mb-4 text-sm font-semibold text-white">Support</h4>
-              <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                <li><a href="#" className="hover:text-[#FFE5B4]">Help centre</a></li>
-                <li><a href="#" className="hover:text-[#FFE5B4]">Terms of privacy</a></li>
-                <li><a href="#" className="hover:text-[#FFE5B4]">Legal</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="mb-4 text-sm font-semibold text-white">Stay looped</h4>
-              <p className="mb-3 text-sm text-[#D0D7D8]">
-                Receive curated travel moments straight to your inbox
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Your email..."
-                  className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none"
-                />
-                <button className="rounded-lg bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] px-4 text-sm font-semibold text-[#2B1200] transition hover:scale-105">
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-6 pt-8 text-center text-sm text-[#7D837A]">
-          <p>© 2025 VietJourney. All rights reserved</p>
-          <p className="mt-2">Design aligned with the Welcome experiences.</p>
-        </div>
-      </footer>
-    </div>
+      <Footer />
+    </div >
   )
 }
 

@@ -1,7 +1,10 @@
 import Link from "next/link"
 import { Globe } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 export function DashboardFooter() {
+  const t = useTranslations("Dashboard.Footer")
+
   return (
     <footer className="border-t border-white/10 bg-slate-950/50 backdrop-blur-xl py-12">
       <div className="container mx-auto px-4 md:px-6">
@@ -13,19 +16,19 @@ export function DashboardFooter() {
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
             <Link href="#privacy" className="hover:text-white transition-colors">
-              Privacy Policy
+              {t("privacy")}
             </Link>
             <span className="text-gray-600">|</span>
             <Link href="#terms" className="hover:text-white transition-colors">
-              Terms of Use
+              {t("terms")}
             </Link>
             <span className="text-gray-600">|</span>
             <Link href="#support" className="hover:text-white transition-colors">
-              Support Center
+              {t("supportCenter")}
             </Link>
           </div>
 
-          <p className="text-sm text-gray-400">© 2025 Smart Travel. All rights reserved.</p>
+          <p className="text-sm text-gray-400">{t("copyright")}</p>
         </div>
       </div>
     </footer>

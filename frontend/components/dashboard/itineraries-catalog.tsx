@@ -1,44 +1,47 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Clock } from "lucide-react"
-
-const itineraries = [
-  {
-    id: 1,
-    destination: "Bali Island Paradise",
-    description: "Experience tropical beaches, ancient temples, and vibrant culture",
-    duration: "8 days",
-    price: "$1,299",
-    image: "/bali-beach-paradise.jpg",
-  },
-  {
-    id: 2,
-    destination: "European Heritage Tour",
-    description: "Discover the art, architecture, and history of Europe's finest cities",
-    duration: "12 days",
-    price: "$2,899",
-    image: "/europe-historic-cities.jpg",
-  },
-  {
-    id: 3,
-    destination: "Japan Cherry Blossom",
-    description: "Witness stunning sakura season and explore traditional Japanese culture",
-    duration: "10 days",
-    price: "$2,199",
-    image: "/japan-cherry-blossom.jpg",
-  },
-]
+import { useTranslations } from "next-intl"
 
 export function ItinerariesCatalog() {
+  const t = useTranslations("Dashboard.Catalog")
+
+  const itineraries = [
+    {
+      id: 1,
+      destination: t("d1Title"),
+      description: t("d1Desc"),
+      duration: t("d1Dur"),
+      price: "$1,299",
+      image: "/bali-beach-paradise.jpg",
+    },
+    {
+      id: 2,
+      destination: t("d2Title"),
+      description: t("d2Desc"),
+      duration: t("d2Dur"),
+      price: "$2,899",
+      image: "/europe-historic-cities.jpg",
+    },
+    {
+      id: 3,
+      destination: t("d3Title"),
+      description: t("d3Desc"),
+      duration: t("d3Dur"),
+      price: "$2,199",
+      image: "/japan-cherry-blossom.jpg",
+    },
+  ]
+
   return (
     <section id="featured" className="py-20 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-balance">
-            Personalized itinerary catalog based on your goals
+            {t("title")}
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto text-balance">
-            Carefully curated journeys designed to match your travel dreams
+            {t("description")}
           </p>
         </div>
 
@@ -75,7 +78,7 @@ export function ItinerariesCatalog() {
 
         <div className="text-center">
           <Button size="lg" className="bg-cyan-500 hover:bg-cyan-600 text-white">
-            Get a free consultation
+            {t("consultation")}
           </Button>
         </div>
       </div>

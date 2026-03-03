@@ -7,77 +7,25 @@ import { api } from "@/lib/axios"
 import { City, data_build_tour } from "@/types/domain"
 import { useRouter } from "next/navigation"
 import { CityService } from "@/services/city.service"
+import { toast } from "@/lib/toast"
+import { useTranslations } from "next-intl"
 
 function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
 }
 
-export default function FlightsSearch({ data_build_tour, check_required_fields }: { data_build_tour: data_build_tour, check_required_fields?: boolean }) {
+export default function FlightsSearch({ data_build_tour }: { data_build_tour: data_build_tour }) {
   const router = useRouter()
-
-  // Format date to YYYY-MM-DD for backend API
-  const formatDate = (date: Date): string => {
-    const day = String(date.getDate()).padStart(2, '0')
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const year = date.getFullYear()
-    return `${year}-${month}-${day}`
-  }
-
-  // Parse date string (dd/mm/yyyy or YYYY-MM-DD) to Date
-  const parseDateStringToDate = (dateStr?: string | null): Date | null => {
-    if (!dateStr) return null
-    const trimmed = dateStr.trim()
-    if (!trimmed) return null
-
-    let day: number
-    let month: number
-    let year: number
-
-    if (trimmed.includes('/')) {
-      const [d, m, y] = trimmed.split('/')
-      day = Number(d)
-      month = Number(m)
-      year = Number(y)
-    } else if (trimmed.includes('-')) {
-      const [y, m, d] = trimmed.split('-')
-      day = Number(d)
-      month = Number(m)
-      year = Number(y)
-    } else {
-      return null
-    }
-
-    if (!day || !month || !year) return null
-    return new Date(year, month - 1, day)
-  }
-
-  // Ưu tiên dùng ngày bay đã lưu, nếu chưa có thì dùng ngày chuyến đi
-  const initialFlightDepartureDate = parseDateStringToDate(
-    data_build_tour.flight_departure_date || data_build_tour.departureDate
-  )
-  const initialFlightReturnDate = parseDateStringToDate(
-    data_build_tour.flight_return_date || data_build_tour.returnDate
-  )
-
+  const t = useTranslations("FlightsSearch")
   const [departure, setDeparture] = useState<string | null>(data_build_tour.departure)
   const [destination, setDestination] = useState<string | null>(data_build_tour.destination)
   const [isLoading, setIsLoading] = useState(false)
   const [cities, setCities] = useState<City[]>([])
-  const [flightDepartureDate, setFlightDepartureDate] = useState<Date | null>(initialFlightDepartureDate)
-  const [flightReturnDate, setFlightReturnDate] = useState<Date | null>(initialFlightReturnDate)
-  const [formattedFlightDepartureDate, setFormattedFlightDepartureDate] = useState<string>(
-    initialFlightDepartureDate ? formatDate(initialFlightDepartureDate) : ''
-  )
-  const [formattedFlightReturnDate, setFormattedFlightReturnDate] = useState<string>(
-    initialFlightReturnDate ? formatDate(initialFlightReturnDate) : ''
-  )
+  const [flightDepartureDate, setFlightDepartureDate] = useState<Date | null>(null)
+  const [flightReturnDate, setFlightReturnDate] = useState<Date | null>(null)
+  const [formattedFlightDepartureDate, setFormattedFlightDepartureDate] = useState<string>('')
+  const [formattedFlightReturnDate, setFormattedFlightReturnDate] = useState<string>('')
   const [dataBuildTour, setDataBuildTour] = useState<data_build_tour>(data_build_tour)
-
-  useEffect(() => {
-    console.log('FlightsSearch data_build_tour:', data_build_tour)
-  }, [data_build_tour])
-
-
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -92,13 +40,23 @@ export default function FlightsSearch({ data_build_tour, check_required_fields }
     }
     fetchCities()
   }, [])
+
+  // Format date to YYYY-MM-DD for backend API
+  const formatDate = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+    return `${year}-${month}-${day}`
+  }
   const handleSubmit = useCallback(() => {
-    if (!departure || !destination || !flightDepartureDate || !flightReturnDate) {
-      alert("Please fill all required fields")
-      return
-    }
-    if (check_required_fields === true && (dataBuildTour.budget === 0 || dataBuildTour.adults === 0)) {
-      alert("Please fill in all required fields and uncheck, then reselect to update. ")
+    const missing: string[] = []
+    if (!departure) missing.push(t("valDeparture"))
+    if (!destination) missing.push(t("valDestination"))
+    if (!flightDepartureDate) missing.push(t("valFlightDeparture"))
+    if (!flightReturnDate) missing.push(t("valFlightReturn"))
+
+    if (missing.length > 0) {
+      toast.warning(`${t("pleaseFillAll")} ${missing.join(', ')}.`, t("missingInfo"))
       return
     }
     dataBuildTour.flight_departure_date = formattedFlightDepartureDate
@@ -127,16 +85,16 @@ export default function FlightsSearch({ data_build_tour, check_required_fields }
   }, [dataBuildTour, departure, destination, flightDepartureDate, flightReturnDate, formattedFlightDepartureDate, formattedFlightReturnDate, router])
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/3 p-8 backdrop-blur">
+    <div className="p-8">
       <div className="mb-6">
-        <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#FFE5B4]">
-          Flight Navigator
+        <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
+          {t("navigator")}
         </p>
-        <h3 className="text-2xl font-semibold text-white">
-          Search flights for departure and destination
+        <h3 className="text-2xl font-semibold text-[#0F4C5C]">
+          {t("title")}
         </h3>
-        <p className="mt-2 text-sm text-[#D0D7D8]">
-          Find the best flight options connecting your journey endpoints with flexible schedules.
+        <p className="mt-2 text-sm text-[#3F3F46]">
+          {t("description")}
         </p>
       </div>
 
@@ -144,18 +102,18 @@ export default function FlightsSearch({ data_build_tour, check_required_fields }
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Departure <span className="text-red-400">*</span>
+              {t("departure")} <span className="text-red-400">*</span>
             </label>
             <Dropdown
               value={departure || ""}
               onChange={(e) => setDeparture(e.value)}
               options={cities.map((city) => ({
                 label: city.city + ", " + city.country,
-                value: city.city
+                value: city.id
               }))}
               optionLabel="label"
               optionValue="value"
-              placeholder="Search departure..."
+              placeholder={t("searchDeparture")}
               filter
               showClear={false}
               className="dashboard-form__prime"
@@ -165,17 +123,17 @@ export default function FlightsSearch({ data_build_tour, check_required_fields }
 
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Destination <span className="text-red-400">*</span>
+              {t("destination")} <span className="text-red-400">*</span>
             </label>
             <Dropdown
               value={destination || ""}
               onChange={(e) => setDestination(e.value)}
               options={cities.map((city) => ({
                 label: city.city + ", " + city.country,
-                value: city.city
-              }))}              optionLabel="label"
+                value: city.id
+              }))} optionLabel="label"
               optionValue="value"
-              placeholder="Search destination..."
+              placeholder={t("searchDestination")}
               filter
               showClear={false}
               className="dashboard-form__prime"
@@ -186,10 +144,10 @@ export default function FlightsSearch({ data_build_tour, check_required_fields }
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Flight departure time <span className="text-red-400">*</span>
+              {t("flightDeparture")} <span className="text-red-400">*</span>
             </label>
             <Calendar
-              placeholder={'Select departure date...'}
+              placeholder={t("selectDeparture")}
               selectionMode="single"
               value={flightDepartureDate}
               onChange={(event) => {
@@ -212,10 +170,10 @@ export default function FlightsSearch({ data_build_tour, check_required_fields }
           </div>
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Flight return time <span className="text-red-400">*</span>
+              {t("flightReturn")} <span className="text-red-400">*</span>
             </label>
             <Calendar
-              placeholder={'Select return date...'}
+              placeholder={t("selectReturn")}
               selectionMode="single"
               value={flightReturnDate}
               onChange={(event) => {
@@ -249,8 +207,8 @@ export default function FlightsSearch({ data_build_tour, check_required_fields }
           onClick={handleSubmit}
           disabled={isLoading}
           className={cn(
-            "h-12 w-full rounded-xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_20px_60px_-20px_rgba(255,186,102,0.85)] transition-all",
-            isLoading ? "opacity-50 cursor-not-allowed" : "hover:scale-[1.02] hover:shadow-[0_20px_70px_-20px_rgba(255,186,102,0.95)]"
+            "h-12 w-full rounded-xl bg-[#5FCBC4] text-sm font-semibold text-white transition-all",
+            isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-[#4AB8B0] hover:scale-[1.02]"
           )}
         >
           {isLoading ? (
@@ -259,10 +217,10 @@ export default function FlightsSearch({ data_build_tour, check_required_fields }
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Processing...
+              {t("processing")}
             </span>
           ) : (
-            "Search flights"
+            t("searchFlights")
           )}
         </button>
       </div>

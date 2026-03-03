@@ -7,10 +7,13 @@ export interface User {
   email: string
   phone?: string
   address?: string
-  role: UserRole  // ✅ Added role
+  role: UserRole
   status: 'active' | 'inactive'
   gender?: 'Male' | 'Female' | 'Other'
   birthYear?: number
+  premium_plan?: 'monthly' | 'yearly' | 'lifetime' | null
+  premium_status?: 'active' | 'expired' | 'none'
+  premium_expiry_date?: string | null
   created_at: string
   updated_at: string
 }
@@ -203,6 +206,8 @@ export interface PlaceLocation {
 
 export interface Place {
   id: string
+  city: string
+  city_id: string
   displayName_text: string
   location: PlaceLocation
   rating: number
@@ -215,6 +220,9 @@ export interface CategorizedPlaces {
   hotel: Place[]
   restaurant: Place[]
   attraction: Place[]
+}
+export interface AllPlaces {
+  place: Place[]
 }
 
 export interface PreferencesData {

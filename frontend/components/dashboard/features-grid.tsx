@@ -1,39 +1,42 @@
 import { Card } from "@/components/ui/card"
 import { Plane, MapPin, Calendar, Users } from "lucide-react"
-
-const features = [
-  {
-    icon: Plane,
-    title: "Flight Ticket Integration",
-    description: "Seamless booking integration with major airlines for the best fares and convenient scheduling.",
-  },
-  {
-    icon: MapPin,
-    title: "Smart Location Suggestions",
-    description: "AI-powered recommendations based on your interests, budget, and travel style preferences.",
-  },
-  {
-    icon: Calendar,
-    title: "Detailed Daily Itinerary",
-    description: "Hour-by-hour planning with activities, dining, and transportation all organized for you.",
-  },
-  {
-    icon: Users,
-    title: "Budget & Group Sync",
-    description: "Coordinate travel plans with friends and family while staying within your budget.",
-  },
-]
+import { useTranslations } from "next-intl"
 
 export function FeaturesGrid() {
+  const t = useTranslations("Dashboard.Features")
+
+  const features = [
+    {
+      icon: Plane,
+      title: t("f1Title"),
+      description: t("f1Desc"),
+    },
+    {
+      icon: MapPin,
+      title: t("f2Title"),
+      description: t("f2Desc"),
+    },
+    {
+      icon: Calendar,
+      title: t("f3Title"),
+      description: t("f3Desc"),
+    },
+    {
+      icon: Users,
+      title: t("f4Title"),
+      description: t("f4Desc"),
+    },
+  ]
+
   return (
     <section id="experiences" className="py-20 md:py-32 bg-gradient-to-b from-transparent to-blue-950/30">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-balance">
-            Journey quality meticulously built at every stage
+            {t("title")}
           </h2>
           <p className="text-lg text-gray-300 max-w-2xl mx-auto text-balance">
-            Every detail matters when crafting your perfect travel experience
+            {t("subtitle")}
           </p>
         </div>
 

@@ -19,10 +19,10 @@ interface AuthGuardProps {
  * IMPORTANT: This is for UX only. Backend MUST validate permissions.
  * Never trust frontend authorization checks for security.
  */
-export function AuthGuard({ 
-  children, 
+export function AuthGuard({
+  children,
   requiredRoles,
-  fallbackPath = '/login' 
+  fallbackPath = '/login'
 }: AuthGuardProps) {
   const router = useRouter()
   const pathname = usePathname()
@@ -37,15 +37,11 @@ export function AuthGuard({
   useEffect(() => {
     // Wait for hydration to complete before checking auth
     if (!hasHydrated) {
-      console.log('⏳ Waiting for hydration...')
       return
     }
 
-    console.log('✓ Hydration complete, checking auth...', { isAuthenticated, pathname })
-
     // Redirect if not authenticated
     if (!isAuthenticated && isProtectedRoute(pathname)) {
-      console.log('❌ Not authenticated, redirecting to login')
       router.push(`${fallbackPath}`)
       return
     }
@@ -53,7 +49,7 @@ export function AuthGuard({
     // Check role-based access
     if (isAuthenticated && requiredRoles && requiredRoles.length > 0) {
       const hasRequiredRole = user?.role && requiredRoles.includes(user.role)
-      
+
       if (!hasRequiredRole) {
         // Redirect to unauthorized page or dashboard
         router.push('/unauthorized')
@@ -71,10 +67,10 @@ export function AuthGuard({
   // Show loading state while waiting for hydration
   if (!hasHydrated) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B]">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#E0F7FA] via-[#F0FDFA] to-[#ECFDF5]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FFE5B4] mx-auto"></div>
-          <p className="mt-4 text-[#F6F1E7]">Đang tải...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#5FCBC4] mx-auto"></div>
+          <p className="mt-4 text-[#1E293B]">Đang tải...</p>
         </div>
       </div>
     )
@@ -104,7 +100,7 @@ export function withAuthGuard<P extends object>(
  */
 export function usePermissions() {
   const { user } = useAuthStore()
-  
+
   return {
     isAdmin: user?.role === 'admin',
     hasRole: (roles: UserRole[]) => user?.role && roles.includes(user.role),

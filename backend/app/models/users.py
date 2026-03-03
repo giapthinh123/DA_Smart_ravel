@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 from flask_jwt_extended import verify_jwt_in_request, get_jwt
 from flask import jsonify
@@ -16,8 +16,11 @@ class Users:
             "fullname": data.get("fullname", ""),
             "phone": data.get("phone", ""),
             "address": data.get("address", ""),
-            "role": data.get("role", "user"),  # Default: user
+            "role": data.get("role", "user"),
             "status": "active",
+            "premium_plan": data.get("premium_plan", None),
+            "premium_status": data.get("premium_status", "none"),
+            "premium_expiry_date": data.get("premium_expiry_date", None),
             "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
@@ -183,3 +186,54 @@ class Users:
             "jti": jti,
             "created_at": datetime.now()
         })
+    
+    # ========== PREMIUM MEMBERSHIP FUNCTIONS ==========
+    
+    @staticmethod
+    def is_premium_active(user):
+        """Kiểm tra premium có còn active không"""
+        if not user or user.get("premium_status") != "active":
+            return False
+        
+        expiry_date = user.get("premium_expiry_date")
+        if not expiry_date:
+            return False
+        
+        if isinstance(expiry_date, str):
+            expiry_date = datetime.strptime(expiry_date, "%Y-%m-%d %H:%M:%S")
+        
+        return datetime.now() < expiry_date
+    
+    @staticmethod
+    def calculate_expiry_date(plan_id, payment_date=None):
+        """Tính ngày hết hạn premium dựa trên plan_id"""
+        if payment_date is None:
+            payment_date = datetime.now()
+        elif isinstance(payment_date, str):
+            payment_date = datetime.strptime(payment_date, "%Y-%m-%d %H:%M:%S")
+        
+        plan_durations = {
+            "monthly": 30,
+            "yearly": 365,
+            "lifetime": 36500
+        }
+        
+        duration_days = plan_durations.get(plan_id, 30)
+        expiry_date = payment_date + timedelta(days=duration_days)
+        
+        return expiry_date.strftime("%Y-%m-%d %H:%M:%S")
+    
+    @staticmethod
+    def update_premium_status(mongo, user_id, plan_id, payment_date=None):
+        """Cập nhật premium status sau khi thanh toán"""
+        expiry_date = Users.calculate_expiry_date(plan_id, payment_date)
+        
+        return mongo.db.users.update_one(
+            {"id": user_id},
+            {"$set": {
+                "premium_plan": plan_id,
+                "premium_status": "active",
+                "premium_expiry_date": expiry_date,
+                "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }}
+        )

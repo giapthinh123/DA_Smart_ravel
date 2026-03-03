@@ -17,7 +17,7 @@ def create_app():
     # CORS Configuration
     cors.init_app(app, resources={
         r"/api/*": {
-            "origins": ["http://a36a0a125b14.sn.mynetname.net:8116"],  
+            "origins": ["http://localhost:3000", "http://a36a0a125b14.sn.mynetname.net:8116"],  
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
             "expose_headers": ["Content-Type", "Authorization"],
@@ -79,6 +79,7 @@ def create_app():
     from .routes.places import places_bp
     from .routes.itinerary import itinerary_bp
     from .routes.payments import payments_bp
+    from .routes.tours import tours_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(users_bp, url_prefix="/api/users")
@@ -87,5 +88,6 @@ def create_app():
     app.register_blueprint(places_bp, url_prefix="/api/places")
     app.register_blueprint(itinerary_bp, url_prefix="/api/itinerary")
     app.register_blueprint(payments_bp, url_prefix="/api/payments")
+    app.register_blueprint(tours_bp, url_prefix="/api/tours")
 
     return app

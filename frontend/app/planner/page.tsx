@@ -12,9 +12,15 @@ import FoodSearch from "@/components/dashboard/food-search"
 import { data_build_tour } from "@/types/domain"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
+import { LanguageSwitcher } from "@/components/i18n/language-switcher"
+import { Footer } from "@/components/footer"
+import { useAuthStore } from "@/store/useAuthStore"
+import { useTranslations } from "next-intl"
 
 export default function DashboardPage() {
   const router = useRouter()
+  const { isAuthenticated } = useAuthStore()
+  const t = useTranslations("PlannerPage")
   const [selectedItem, setSelectedItem] = useState<string | null>(null)
   const [dataBuildTour, setDataBuildTour] = useState<data_build_tour>({
     departure: "",
@@ -36,12 +42,11 @@ export default function DashboardPage() {
   })
 
   const quickAccessItems = [
-    { title: "Personal tours", subtitle: "Craft bespoke travel stories with personal imprints" },
-    { title: "Flights", subtitle: "Search flights for the departure and destination" },
-    { title: "Hotels", subtitle: "Find curated and budget-aligned accommodation" },
-    { title: "Food", subtitle: "Find restaurants and cafes" },
-    { title: "Activities", subtitle: "Find curated and budget-aligned activities" },
-
+    { title: t("personalTours"), subtitle: t("personalToursDesc") },
+    { title: t("flights"), subtitle: t("flightsDesc") },
+    { title: t("hotels"), subtitle: t("hotelsDesc") },
+    { title: t("food"), subtitle: t("foodDesc") },
+    { title: t("activities"), subtitle: t("activitiesDesc") },
   ]
 
   useEffect(() => {
@@ -54,15 +59,15 @@ export default function DashboardPage() {
 
   const renderSearchSection = () => {
     switch (selectedItem) {
-      case "Personal tours":
+      case t("personalTours"):
         return <JourneyBuilder />
-      case "Hotels":
+      case t("hotels"):
         return <HotelsSearch />
-      case "Flights":
-        return <FlightsSearch data_build_tour={dataBuildTour}/>
-      case "Food":
+      case t("flights"):
+        return <FlightsSearch data_build_tour={dataBuildTour} />
+      case t("food"):
         return <FoodSearch />
-      case "Activities":
+      case t("activities"):
         return <ActivitiesSearch />
       default:
         return <JourneyBuilder />
@@ -71,67 +76,69 @@ export default function DashboardPage() {
 
   return (
     <AuthGuard>
-      <div className="relative min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
-        {/* Background Layers */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
-        </div>
+      <div className="min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
 
         {/* Header */}
-        <header className="mx-auto max-w-7xl px-6 py-8">
+        <header className="mx-auto max-w-7xl px-6 py-8 bg-[#F0FDFA]">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-[#7D837A]">
-                VietJourney
+              <p className="text-sm uppercase tracking-[0.3em] text-[#A1A1AA]">
+                {t("brand")}
               </p>
-              <p className="text-xl font-semibold text-[#F3F0E9]">
-                Mapping Vietnam experiences
+              <p className="text-xl font-semibold text-[#0F4C5C]">
+                {t("tagline")}
               </p>
             </div>
             <nav className="flex items-center gap-2 text-sm font-medium">
-              <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Home
+              <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                {t("home")}
               </Link>
-              <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Tours
+              <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                {t("tours")}
               </Link>
-              <Link href="/contact" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Contact
+              <Link href="/contact" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                {t("contact")}
               </Link>
-              <span className="mx-2 h-4 w-px bg-white/20"></span>
+              <>
+                <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
+                <LanguageSwitcher />
+                {isAuthenticated ? (
+                  <>
+                    <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
+                    <UserMenu />
+                  </>
+                ) : (
+                  <Link href="/login" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                    {t("login")}
+                  </Link>
+                )}
+              </>
 
-              {/* User Menu Dropdown */}
-              <UserMenu />
             </nav>
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="mx-auto max-w-7xl px-6 pb-8">
+        <main className="mx-auto max-w-7xl px-6 py-10 pb-8">
           {/* Quick Access Cards */}
-          <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mb-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {quickAccessItems.map((item, index) => (
               <button
                 key={item.title}
                 type="button"
                 aria-pressed={selectedItem === item.title}
-                className={`group text-left rounded-2xl border p-5 backdrop-blur transition-[background-color,border-color,box-shadow] duration-300 motion-reduce:transition-none touch-action-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFE5B4] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1820] ${selectedItem === item.title
-                  ? 'border-[#FFE5B4] bg-gradient-to-br from-[#FFE5B4]/20 to-[#FFB56D]/10 shadow-[0_8px_32px_rgba(255,229,180,0.3)]'
-                  : 'border-white/10 bg-white/5 hover:border-[#FFE5B4]/40 hover:bg-white/[0.08]'
+                className={`group text-left rounded-2xl border p-5 transition-[background-color,border-color,box-shadow] duration-300 motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5FCBC4] focus-visible:ring-offset-2 ${selectedItem === item.title
+                  ? 'border-[#5FCBC4] bg-[#CCFBF1] shadow-[0_4px_16px_rgba(95,203,196,0.25)]'
+                  : 'bg-white border-[#E4E4E7] hover:bg-[#CCFBF1] hover:border-[#5FCBC4]'
                   }`}
                 onClick={() => handleItemClick(index)}
               >
-                <span className={`mb-2 block font-semibold transition-colors motion-reduce:transition-none ${selectedItem === item.title
-                  ? 'text-[#FFE5B4]'
-                  : 'text-white group-hover:text-[#FFE5B4]'
-                  }`}>
+                <span className="mb-2 block font-semibold text-[#0F4C5C] transition-colors motion-reduce:transition-none">
                   {item.title}
                 </span>
                 <p className={`text-xs leading-relaxed transition-colors motion-reduce:transition-none ${selectedItem === item.title
-                  ? 'text-[#F3F0E9]'
-                  : 'text-[#D0D7D8]'
+                  ? 'text-[#3F3F46]'
+                  : 'text-[#A1A1AA]'
                   }`}>
                   {item.subtitle}
                 </p>
@@ -140,102 +147,146 @@ export default function DashboardPage() {
           </div>
 
           {/* Dynamic Search Section */}
-          <section className="relative mb-16 rounded-[2.5rem] border border-white/10 bg-[#0D1820]/90 p-12 backdrop-blur overflow-visible z-10">
+          <section className="relative mb-12 rounded-[2rem] bg-white shadow-sm z-10 overflow-hidden">
             {renderSearchSection()}
+
+            {/* Login overlay – shown when not authenticated */}
+            {!isAuthenticated && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[2rem] backdrop-blur-sm bg-white/60">
+                {/* Decorative ring */}
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#5FCBC4] bg-[#CCFBF1] shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-7 w-7 text-[#0F4C5C]"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                </div>
+
+                <h3 className="mb-2 text-xl font-semibold text-[#0F4C5C]">
+                  {t("loginRequired")}
+                </h3>
+                <p className="mb-6 max-w-xs text-center text-sm text-[#71717A]">
+                  {t("loginRequiredDesc")}
+                </p>
+
+                <div className="flex gap-3">
+                  <Link
+                    href="/login"
+                    className="rounded-full bg-[#0F4C5C] px-6 py-2.5 text-sm font-medium text-white shadow transition hover:bg-[#0d3f4d] active:scale-95"
+                  >
+                    {t("loginBtn")}
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="rounded-full border border-[#5FCBC4] px-6 py-2.5 text-sm font-medium text-[#0F4C5C] transition hover:bg-[#CCFBF1] active:scale-95"
+                  >
+                    {t("registerBtn")}
+                  </Link>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Workflow Section */}
-          <section className="mb-16 rounded-[2.5rem] border border-white/10 bg-white/6 p-12 backdrop-blur">
+          <section className="mb-12 rounded-[2rem] border border-[#E4E4E7] bg-white p-10 shadow-sm">
             <div className="mb-10 text-center">
-              <p className="mb-3 text-xs uppercase tracking-[0.4em] text-[#7D837A]">
-                Personalised Tour Workflow
+              <p className="mb-3 text-xs uppercase tracking-[0.4em] text-[#A1A1AA]">
+                {t("workflowLabel")}
               </p>
-              <h2 className="text-4xl font-semibold text-white drop-shadow-[0_12px_24px_rgba(255,199,128,0.45)]">
-                Step-by-step to optimise every personalised journey
+              <h2 className="text-3xl font-semibold text-[#0F4C5C]">
+                {t("workflowTitle")}
               </h2>
-              <p className="mx-auto mt-3 max-w-3xl text-base text-[#A5ABA3]">
-                Complete the stages below once you choose a venue in the curated builder. Every detail is stored in a single dashboard so you can refine with complete control.
+              <p className="mx-auto mt-3 max-w-3xl text-base text-[#3F3F46]">
+                {t("workflowDesc")}
               </p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
               {/* Step 01 */}
-              <div className="group rounded-3xl border border-white/10 bg-white/6 p-8 backdrop-blur transition hover:border-[#FFE5B4]/45 hover:bg-white/10">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#FFE5B4]/70 bg-white/5 text-lg font-bold text-[#FFE5B4]">
+              <div className="rounded-3xl border border-[#E4E4E7] p-8 transition hover:border-[#5FCBC4] hover:bg-[#F0FDFA]">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#5FCBC4] bg-[#CCFBF1] text-lg font-bold text-[#0F4C5C]">
                   01
                 </div>
-                <h3 className="mb-3 text-xl font-semibold text-white group-hover:text-[#FFE5B4]">
-                  Clarify your travel goals
+                <h3 className="mb-3 text-xl font-semibold text-[#0F4C5C]">
+                  {t("step1Title")}
                 </h3>
-                <p className="mb-4 text-sm text-[#D0D7D8] leading-relaxed">
-                  Choose traveller types, inspirations and budget so the system captures your core preferences first:
+                <p className="mb-4 text-sm text-[#3F3F46] leading-relaxed">
+                  {t("step1Desc")}
                 </p>
-                <ul className="space-y-2 text-sm text-[#D0D7D8]">
+                <ul className="space-y-2 text-sm text-[#3F3F46]">
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    State the place and exploration
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step1Item1")}
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    Pick top memories (culture or nature)
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step1Item2")}
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    Set trip length and budget
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step1Item3")}
                   </li>
                 </ul>
               </div>
 
               {/* Step 02 */}
-              <div className="group rounded-3xl border border-white/10 bg-white/6 p-8 backdrop-blur transition hover:border-[#FFE5B4]/45 hover:bg-white/10">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#FFE5B4]/70 bg-white/5 text-lg font-bold text-[#FFE5B4]">
+              <div className="rounded-3xl border border-[#E4E4E7] p-8 transition hover:border-[#5FCBC4] hover:bg-[#F0FDFA]">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#5FCBC4] bg-[#CCFBF1] text-lg font-bold text-[#0F4C5C]">
                   02
                 </div>
-                <h3 className="mb-3 text-xl font-semibold text-white group-hover:text-[#FFE5B4]">
-                  Provide itinerary details
+                <h3 className="mb-3 text-xl font-semibold text-[#0F4C5C]">
+                  {t("step2Title")}
                 </h3>
-                <p className="mb-4 text-sm text-[#D0D7D8] leading-relaxed">
-                  Specify departure, destination, dates, and headcount to build the base schedule:
+                <p className="mb-4 text-sm text-[#3F3F46] leading-relaxed">
+                  {t("step2Desc")}
                 </p>
-                <ul className="space-y-2 text-sm text-[#D0D7D8]">
+                <ul className="space-y-2 text-sm text-[#3F3F46]">
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    Select the relevant venues (via dates)
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step2Item1")}
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    Provide precise travel dates
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step2Item2")}
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    Upload any fragment or add link
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step2Item3")}
                   </li>
                 </ul>
               </div>
 
               {/* Step 03 */}
-              <div className="group md:col-span-2 rounded-3xl border border-white/10 bg-white/6 p-8 backdrop-blur transition hover:border-[#FFE5B4]/45 hover:bg-white/10">
-                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#FFE5B4]/70 bg-white/5 text-lg font-bold text-[#FFE5B4]">
+              <div className="md:col-span-2 rounded-3xl border border-[#E4E4E7] p-8 transition hover:border-[#5FCBC4] hover:bg-[#F0FDFA]">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#5FCBC4] bg-[#CCFBF1] text-lg font-bold text-[#0F4C5C]">
                   03
                 </div>
-                <h3 className="mb-3 text-xl font-semibold text-white group-hover:text-[#FFE5B4]">
-                  Receive and refine suggestions
+                <h3 className="mb-3 text-xl font-semibold text-[#0F4C5C]">
+                  {t("step3Title")}
                 </h3>
-                <p className="mb-4 text-sm text-[#D0D7D8] leading-relaxed max-w-3xl">
-                  Review automated suggestions and tune destinations, activities, and stays before finalising:
+                <p className="mb-4 text-sm text-[#3F3F46] leading-relaxed max-w-3xl">
+                  {t("step3Desc")}
                 </p>
-                <ul className="grid gap-2 text-sm text-[#D0D7D8] sm:grid-cols-2 max-w-4xl">
+                <ul className="grid gap-2 text-sm text-[#3F3F46] sm:grid-cols-2 max-w-4xl">
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    Compare accommodation tickets
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step3Item1")}
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    Tune AI drag-and-drop logic
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step3Item2")}
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#FFE5B4]" />
-                    View personalised journey for booking
+                    <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
+                    {t("step3Item3")}
                   </li>
                 </ul>
               </div>
@@ -244,69 +295,7 @@ export default function DashboardPage() {
         </main>
 
         {/* Footer */}
-        <footer className="mt-8 border-t border-white/10 bg-[#061017]/80 py-10 backdrop-blur">
-          <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 lg:flex-row lg:justify-between">
-            <div className="max-w-sm">
-              <p className="mb-2 text-sm uppercase tracking-[0.3em] text-[#7D837A]">
-                VietJourney
-              </p>
-              <h3 className="mb-4 text-xl font-semibold text-white">
-                Connect and discover experiences over land
-              </h3>
-              <p className="mb-2 text-sm text-[#D0D7D8]">
-                43 Building, 348 Arau They Street,
-              </p>
-              <p className="mb-2 text-sm text-[#D0D7D8]">
-                Can Giay District, Ha Noi, Vietnam
-              </p>
-              <p className="text-sm text-[#D0D7D8]">
-                help@vietjourneycommander.com
-              </p>
-            </div>
-
-            <div className="grid gap-8 sm:grid-cols-3">
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Platform</h4>
-                <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Tailored experiences</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Signature journeys</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Themed escapes</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Support</h4>
-                <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Help centre</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Terms of privacy</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Legal</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Stay looped</h4>
-                <p className="mb-3 text-sm text-[#D0D7D8]">
-                  Receive curated travel moments straight to your inbox
-                </p>
-                <div className="flex gap-2">
-                  <label htmlFor="subscribe-email" className="sr-only">Email address</label>
-                  <input
-                    id="subscribe-email"
-                    type="email"
-                    placeholder="Your email…"
-                    className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none"
-                  />
-                  <button className="rounded-lg bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] px-4 text-sm font-semibold text-[#2B1200] transition-transform hover:scale-105">
-                    Subscribe
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-6 pt-8 text-center text-sm text-[#7D837A]">
-            <p>© 2025 VietJourney. All rights reserved</p>
-            <p className="mt-2">Design aligned with the Welcome experiences.</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </AuthGuard>
   )

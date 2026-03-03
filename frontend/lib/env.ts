@@ -3,6 +3,7 @@ export const env = {
   // Empty string for browser = same-origin requests through Next.js rewrites
   API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || '',
   NODE_ENV: process.env.NODE_ENV || 'development',
+  IMAGEKIT_URL_ENDPOINT: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || 'https://ik.imagekit.io/lafy0hoch',
 } as const
 
 // Type-safe environment validation

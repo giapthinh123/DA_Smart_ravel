@@ -5,25 +5,19 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { AuthHeader } from "@/components/auth-header"
 import { AuthGuard } from "@/components/auth-guard"
-import { AdminOnly } from "@/components/role-gate"
 import { LoaderCircle } from "lucide-react"
-import { DropdownMenu, DropdownMenuItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { toast } from "@/lib/toast"
 import { useAuthStore } from "@/store/useAuthStore"
-import { Switch } from '@/components/ui/switch'
 import { AuthService } from "@/services/auth.service"
 import { UserMenu } from "@/components/user-menu"
-
+import { Footer } from "@/components/footer"
+import { useTranslations } from "next-intl"
 function ProfileContent() {
   const { user, logout, updateUser } = useAuthStore()
   const router = useRouter()
+  const t = useTranslations("ProfilePage")
 
-  // In practice this page is wrapped by AuthGuard, but add a runtime/type guard
-  // so TypeScript knows user is not null for the rest of the component.
-  if (!user) {
-    return null
-  }
   const [formData, setFormData] = useState({
     fullName: user?.fullname || user?.name || "",
     phoneNumber: user?.phone || "",
@@ -41,13 +35,16 @@ function ProfileContent() {
     confirmText: "",
   })
 
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
-  const [passwordMessage, setPasswordMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
-  const [deleteMessage, setDeleteMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
+
 
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false)
   const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [isDeletingAccount, setIsDeletingAccount] = useState(false)
+
+  // Guard: all hooks must be called before this check
+  if (!user) {
+    return null
+  }
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,19 +70,18 @@ function ProfileContent() {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
-    setMessage(null)
 
     // Validation
     if (!formData.fullName.trim()) {
-      setMessage({ type: "error", text: "Full name is required" })
+      toast.warning('Vui lòng nhập họ tên.', 'Thiếu thông tin')
       return
     }
     if (!formData.phoneNumber.trim()) {
-      setMessage({ type: "error", text: "Phone number is required" })
+      toast.warning('Vui lòng nhập số điện thoại.', 'Thiếu thông tin')
       return
     }
     if (!formData.address.trim()) {
-      setMessage({ type: "error", text: "Address is required" })
+      toast.warning('Vui lòng nhập địa chỉ.', 'Thiếu thông tin')
       return
     }
 
@@ -100,16 +96,9 @@ function ProfileContent() {
 
       // Update user in store
       updateUser(updatedUser)
-
-      setMessage({ type: "success", text: "Profile updated successfully!" })
-
-      // Clear message after 3 seconds
-      setTimeout(() => setMessage(null), 3000)
+      toast.success('Thông tin cá nhân đã được cập nhật!', 'Cập nhật thành công')
     } catch (error: any) {
-      setMessage({
-        type: "error",
-        text: error.message || "Failed to update profile"
-      })
+      toast.error(error.message || 'Không thể cập nhật thông tin. Vui lòng thử lại.', 'Cập nhật thất bại')
     } finally {
       setIsUpdatingProfile(false)
     }
@@ -117,23 +106,22 @@ function ProfileContent() {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault()
-    setPasswordMessage(null)
 
     // Validation
     if (!passwordData.currentPassword) {
-      setPasswordMessage({ type: "error", text: "Current password is required" })
+      toast.warning('Vui lòng nhập mật khẩu hiện tại.', 'Thiếu thông tin')
       return
     }
     if (!passwordData.newPassword) {
-      setPasswordMessage({ type: "error", text: "New password is required" })
+      toast.warning('Vui lòng nhập mật khẩu mới.', 'Thiếu thông tin')
       return
     }
     if (passwordData.newPassword.length < 8) {
-      setPasswordMessage({ type: "error", text: "New password must be at least 8 characters" })
+      toast.warning('Mật khẩu mới phải có ít nhất 8 ký tự.', 'Mật khẩu quá ngắn')
       return
     }
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setPasswordMessage({ type: "error", text: "Passwords do not match" })
+      toast.warning('Mật khẩu xác nhận không khớp.', 'Không khớp')
       return
     }
 
@@ -145,20 +133,14 @@ function ProfileContent() {
         newPassword: passwordData.newPassword,
       })
 
-      setPasswordMessage({ type: "success", text: "Password changed successfully!" })
+      toast.success('Mật khẩu đã được thay đổi thành công!', 'Đổi mật khẩu thành công')
       setPasswordData({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       })
-
-      // Clear message after 3 seconds
-      setTimeout(() => setPasswordMessage(null), 3000)
     } catch (error: any) {
-      setPasswordMessage({
-        type: "error",
-        text: error.message || "Failed to change password"
-      })
+      toast.error(error.message || 'Không thể đổi mật khẩu. Vui lòng thử lại.', 'Đổi mật khẩu thất bại')
     } finally {
       setIsChangingPassword(false)
     }
@@ -166,15 +148,14 @@ function ProfileContent() {
 
   const handleDeleteAccount = async (e: React.FormEvent) => {
     e.preventDefault()
-    setDeleteMessage(null)
 
     // Validation
     if (!deleteAccountData.confirmPassword) {
-      setDeleteMessage({ type: "error", text: "Password is required to delete account" })
+      toast.warning('Vui lòng nhập mật khẩu để xác nhận xóa tài khoản.', 'Thiếu thông tin')
       return
     }
     if (deleteAccountData.confirmText.toLowerCase() !== "delete") {
-      setDeleteMessage({ type: "error", text: "Please type 'DELETE' to confirm" })
+      toast.warning("Vui lòng nhập 'DELETE' để xác nhận.", 'Xác nhận không đúng')
       return
     }
 
@@ -183,7 +164,7 @@ function ProfileContent() {
     try {
       await AuthService.deleteAccount(deleteAccountData.confirmPassword)
 
-      setDeleteMessage({ type: "success", text: "Account deleted successfully" })
+      toast.success('Tài khoản đã được xóa thành công. Đang chuyển hướng...', 'Xóa tài khoản')
 
       // Clear form
       setDeleteAccountData({
@@ -197,10 +178,7 @@ function ProfileContent() {
         router.push("/")
       }, 2000)
     } catch (error: any) {
-      setDeleteMessage({
-        type: "error",
-        text: error.message || "Failed to delete account"
-      })
+      toast.error(error.message || 'Không thể xóa tài khoản. Vui lòng thử lại.', 'Xóa thất bại')
       setIsDeletingAccount(false)
     }
   }
@@ -216,63 +194,54 @@ function ProfileContent() {
 
   return (
     <>
-      <div className="relative min-h-screen bg-gradient-to-br from-[#09131A] via-[#12303B] to-[#1A3D4B] text-[#F6F1E7]">
-        {/* Background Layers */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(11,24,31,0.92),rgba(14,31,41,0.55)_42%,rgba(26,61,75,0.75))]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.16)_0%,rgba(255,255,255,0)_70%)] mix-blend-overlay opacity-75" />
-          <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#0B1217] via-[#0B1217]/40 to-transparent" />
-        </div>
-
+      <div className="min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
         <header className="mx-auto max-w-7xl px-6 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-[#7D837A]">
-                VietJourney
+              <p className="text-sm uppercase tracking-[0.3em] text-[#5FCBC4]">
+                {t("brand")}
               </p>
-              <p className="text-xl font-semibold text-[#F3F0E9]">
-                Mapping Vietnam experiences
+              <p className="text-xl font-semibold text-[#0F4C5C]">
+                {t("tagline")}
               </p>
             </div>
             <nav className="flex items-center gap-2 text-sm font-medium">
-              <Link href="/" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Home
+              <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                {t("home")}
               </Link>
-              <Link href="/planner" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Planner
+              <Link href="/planner" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                {t("planner")}
               </Link>
-              <Link href="/tours" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Personalities
+              <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                {t("tours")}
               </Link>
-              <Link href="#" className="rounded-full px-4 py-2 text-[#A5ABA3] transition hover:text-[#F3F0E9]">
-                Contact
+              <Link href="#" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                {t("contact")}
               </Link>
-              <span className="mx-2 h-4 w-px bg-white/20"></span>
-
-              {/* User Menu Dropdown */}
+              <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
               <UserMenu />
             </nav>
           </div>
         </header>
 
-        <div className="container mx-auto px-4 py-2 md:py-1">
+        <div className="container mx-auto px-4 py-4 pb-12">
           <div className="grid gap-6 md:gap-8 lg:grid-cols-3">
             {/* Left Column - Profile & Password */}
             <div className="space-y-6 lg:col-span-2">
               {/* Profile Information Section */}
-              <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
-                <div className="mb-6 space-y-2">
-                  <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
-                    Profile Information
+              <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
+                <div className="mb-6 space-y-1">
+                  <h2 className="text-xl font-semibold text-[#0F4C5C]">
+                    {t("profileInfo")}
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
-                    Update your personal details
+                  <p className="text-sm text-[#A1A1AA]">
+                    {t("profileInfoDesc")}
                   </p>
                 </div>
 
-                <div className="mb-6 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <Avatar className="h-20 w-20 border-2 border-[#FFE5B4]/30">
-                    <AvatarFallback className="text-xl bg-[#FFE5B4]/20 text-[#FFE5B4]">
+                <div className="mb-6 flex items-center gap-4 rounded-2xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
+                  <Avatar className="h-20 w-20 border-2 border-[#5FCBC4]/40">
+                    <AvatarFallback className="text-xl bg-[#CCFBF1] text-[#0F4C5C]">
                       {(user?.fullname || user?.name || user?.email || "U")
                         .split(" ")
                         .map((n: string) => n[0])
@@ -282,113 +251,86 @@ function ProfileContent() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-semibold text-white text-lg">{user?.fullname || user?.name || user?.email}</h3>
-                    <p className="text-sm text-[#FFE5B4]">{user?.role}</p>
+                    <h3 className="font-semibold text-[#0F4C5C] text-lg">{user?.fullname || user?.name || user?.email}</h3>
+                    <p className="text-sm text-[#5FCBC4]">{user?.role}</p>
                   </div>
                 </div>
 
                 <form onSubmit={handleUpdateProfile} className="space-y-5">
                   <div className="grid gap-2">
-                    <label htmlFor="fullName" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
-                      Full Name
+                    <label htmlFor="fullName" className="text-sm font-medium text-[#0F4C5C]">
+                      {t("fullName")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="fullName"
-                        name="fullName"
-                        type="text"
-                        value={formData.fullName}
-                        onChange={handleInputChange}
-                        placeholder="Enter your full name…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      placeholder={t("fullNamePlaceholder")}
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="email" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
-                      Email
+                    <label htmlFor="email" className="text-sm font-medium text-[#0F4C5C]">
+                      {t("email")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="email"
-                        type="email"
-                        value={user?.email}
-                        disabled
-                        className="h-12 w-full r  ounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-[#7D837A] placeholder:text-[#B6C2C6] cursor-not-allowed"
-                      />
-                    </div>
-                    <p className="text-xs text-[#7D837A]">Email cannot be changed</p>
+                    <input
+                      id="email"
+                      type="email"
+                      value={user?.email}
+                      disabled
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-[#F0FDFA] px-4 text-[#A1A1AA] cursor-not-allowed"
+                    />
+                    <p className="text-xs text-[#A1A1AA]">{t("emailCannotChange")}</p>
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="phoneNumber" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
-                      Phone Number
+                    <label htmlFor="phoneNumber" className="text-sm font-medium text-[#0F4C5C]">
+                      {t("phoneNumber")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        type="tel"
-                        value={formData.phoneNumber}
-                        onChange={handleInputChange}
-                        placeholder="Enter your phone number…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      type="tel"
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      placeholder={t("phoneNumberPlaceholder")}
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="address" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
-                      Address
+                    <label htmlFor="address" className="text-sm font-medium text-[#0F4C5C]">
+                      {t("address")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="address"
-                        name="address"
-                        type="text"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        placeholder="Enter your address…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="address"
+                      name="address"
+                      type="text"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      placeholder={t("addressPlaceholder")}
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
-                  {message && (
-                    <div
-                      className={`rounded-2xl border p-4 text-sm ${message.type === "success"
-                        ? "border-green-400/30 bg-green-400/10 text-green-300"
-                        : "border-red-400/30 bg-red-400/10 text-red-300"
-                        }`}
-                    >
-                      {message.text}
-                    </div>
-                  )}
+
+
 
                   <button
                     type="submit"
                     disabled={!isProfileFormValid || isUpdatingProfile}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFEED0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="h-12 w-full rounded-xl bg-[#5FCBC4] text-sm font-semibold text-white transition-all hover:bg-[#4AB8B0] hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    >
-                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
-                      <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
-                    </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#2B1200] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
+                    <span className="flex items-center justify-center gap-2">
                       {isUpdatingProfile ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
-                          Updating...
+                          {t("updating")}
                         </>
                       ) : (
-                        "Update Information"
+                        t("updateInfo")
                       )}
                     </span>
                   </button>
@@ -396,102 +338,77 @@ function ProfileContent() {
               </div>
 
               {/* Change Password Section */}
-              <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
-                <div className="mb-6 space-y-2">
-                  <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
-                    Change Password
+              <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
+                <div className="mb-6 space-y-1">
+                  <h2 className="text-xl font-semibold text-[#0F4C5C]">
+                    {t("changePassword")}
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
-                    Update your account password
+                  <p className="text-sm text-[#A1A1AA]">
+                    {t("changePasswordDesc")}
                   </p>
                 </div>
 
                 <form onSubmit={handleChangePassword} className="space-y-5">
                   <div className="grid gap-2">
-                    <label htmlFor="currentPassword" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
-                      Current Password
+                    <label htmlFor="currentPassword" className="text-sm font-medium text-[#0F4C5C]">
+                      {t("currentPassword")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="currentPassword"
-                        name="currentPassword"
-                        type="password"
-                        value={passwordData.currentPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="Enter current password…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="currentPassword"
+                      name="currentPassword"
+                      type="password"
+                      value={passwordData.currentPassword}
+                      onChange={handlePasswordChange}
+                      placeholder={t("currentPasswordPlaceholder")}
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="newPassword" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
-                      New Password
+                    <label htmlFor="newPassword" className="text-sm font-medium text-[#0F4C5C]">
+                      {t("newPassword")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="newPassword"
-                        name="newPassword"
-                        type="password"
-                        value={passwordData.newPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="Enter new password (min. 8 characters)…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="newPassword"
+                      name="newPassword"
+                      type="password"
+                      value={passwordData.newPassword}
+                      onChange={handlePasswordChange}
+                      placeholder={t("newPasswordPlaceholder")}
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="confirmPassword" className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4]">
-                      Confirm New Password
+                    <label htmlFor="confirmNewPassword" className="text-sm font-medium text-[#0F4C5C]">
+                      {t("confirmNewPassword")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/20 opacity-65" />
-                      <input
-                        id="confirmNewPassword"
-                        name="confirmPassword"
-                        type="password"
-                        value={passwordData.confirmPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="Confirm new password…"
-                        className="h-12 w-full rounded-2xl border border-white/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus-visible:border-[#FFE5B4] focus-visible:ring-2 focus-visible:ring-[#FFE5B4]/30 focus-visible:outline-none transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="confirmNewPassword"
+                      name="confirmPassword"
+                      type="password"
+                      value={passwordData.confirmPassword}
+                      onChange={handlePasswordChange}
+                      placeholder={t("confirmNewPasswordPlaceholder")}
+                      className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
+                    />
                   </div>
 
-                  {passwordMessage && (
-                    <div
-                      className={`rounded-2xl border p-4 text-sm ${passwordMessage.type === "success"
-                        ? "border-green-400/30 bg-green-400/10 text-green-300"
-                        : "border-red-400/30 bg-red-400/10 text-red-300"
-                        }`}
-                    >
-                      {passwordMessage.text}
-                    </div>
-                  )}
+
 
                   <button
                     type="submit"
                     disabled={!isPasswordFormValid || isChangingPassword}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] text-sm font-semibold text-[#2B1200] shadow-[0_25px_70px_-20px_rgba(255,186,102,0.85)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(255,186,102,0.95)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFEED0]/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="h-12 w-full rounded-xl bg-[#5FCBC4] text-sm font-semibold text-white transition-all hover:bg-[#4AB8B0] hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    >
-                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.65),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.5),transparent_60%)] mix-blend-screen" />
-                      <span className="absolute left-[-40%] top-1/2 h-[220%] w-[65%] -translate-y-1/2 rotate-[18deg] bg-white/70 blur-[60px] opacity-50" />
-                    </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] text-[#2B1200] drop-shadow-[0_10px_25px_rgba(255,225,190,0.6)]">
+                    <span className="flex items-center justify-center gap-2">
                       {isChangingPassword ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
-                          Changing...
+                          {t("changing")}
                         </>
                       ) : (
-                        "Change Password"
+                        t("changePasswordBtn")
                       )}
                     </span>
                   </button>
@@ -501,22 +418,22 @@ function ProfileContent() {
 
             {/* Right Column - Account Information */}
             <div className="lg:col-span-1 space-y-6">
-              <div className="rounded-3xl border border-white/15 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(0,0,0,0.75)]">
-                <div className="mb-6 space-y-2">
-                  <h2 className="text-xl font-semibold text-white drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
-                    Account Information
+              <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
+                <div className="mb-6 space-y-1">
+                  <h2 className="text-xl font-semibold text-[#0F4C5C]">
+                    {t("accountInfo")}
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
-                    Your account details
+                  <p className="text-sm text-[#A1A1AA]">
+                    {t("accountInfoDesc")}
                   </p>
                 </div>
 
-                <div className="space-y-6">
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4] mb-2">
-                      Account Created
+                <div className="space-y-4">
+                  <div className="rounded-2xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
+                    <p className="text-sm font-medium text-[#5FCBC4] mb-1">
+                      {t("accountCreated")}
                     </p>
-                    <p className="text-base text-white">
+                    <p className="text-base text-[#3F3F46]">
                       {user?.created_at ? new Date(user?.created_at).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
@@ -525,109 +442,88 @@ function ProfileContent() {
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-sm uppercase tracking-[0.25em] text-[#FFE5B4] mb-2">
-                      User Role
+                  <div className="rounded-2xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
+                    <p className="text-sm font-medium text-[#5FCBC4] mb-1">
+                      {t("userRole")}
                     </p>
-                    <p className="text-base text-white">{user?.role}</p>
+                    <p className="text-base text-[#3F3F46]">{user?.role}</p>
                   </div>
                 </div>
               </div>
 
               {/* Delete Account Section */}
-              <div className="rounded-3xl border border-red-500/30 bg-[rgba(10,25,33,0.9)] p-8 backdrop-blur-2xl shadow-[0_32px_110px_-60px_rgba(220,38,38,0.3)]">
-                <div className="mb-6 space-y-2">
-                  <h2 className="text-xl font-semibold text-red-400 drop-shadow-[0_18px_32px_rgba(0,0,0,0.4)]">
-                    Danger Zone
+              <div className="rounded-3xl border border-red-200 bg-white p-8 shadow-sm">
+                <div className="mb-6 space-y-1">
+                  <h2 className="text-xl font-semibold text-red-600">
+                    {t("dangerZone")}
                   </h2>
-                  <p className="text-sm text-[#D0D7D8]">
-                    Permanently delete your account
+                  <p className="text-sm text-[#A1A1AA]">
+                    {t("dangerZoneDesc")}
                   </p>
                 </div>
 
-                <div className="mb-6 rounded-2xl border border-red-500/20 bg-red-500/5 p-4">
+                <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4">
                   <div className="flex gap-3">
-                    <svg className="w-5 h-5 text-red-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <div className="text-sm text-red-300">
-                      <p className="font-semibold mb-1">Warning!</p>
-                      <p>This action cannot be undone. This will permanently delete your account and remove all your data from our servers.</p>
+                    <div className="text-sm text-red-600">
+                      <p className="font-semibold mb-1">{t("warningTitle")}</p>
+                      <p>{t("warningDesc")}</p>
                     </div>
                   </div>
                 </div>
 
                 <form onSubmit={handleDeleteAccount} className="space-y-5">
                   <div className="grid gap-2">
-                    <label htmlFor="confirmPassword" className="text-sm uppercase tracking-[0.25em] text-red-400">
-                      Confirm Password
+                    <label htmlFor="confirmPassword" className="text-sm font-medium text-red-600">
+                      {t("confirmPasswordLabel")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-red-500/20 opacity-65" />
-                      <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        value={deleteAccountData.confirmPassword}
-                        onChange={handleDeleteAccountChange}
-                        placeholder="Enter your password"
-                        className="h-12 w-full rounded-2xl border border-red-500/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-red-400 focus:outline-none focus:ring-0 transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      value={deleteAccountData.confirmPassword}
+                      onChange={handleDeleteAccountChange}
+                      placeholder={t("confirmPasswordPlaceholder")}
+                      className="h-12 w-full rounded-xl border border-red-200 bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors"
+                    />
                   </div>
 
                   <div className="grid gap-2">
-                    <label htmlFor="confirmText" className="text-sm uppercase tracking-[0.25em] text-red-400">
-                      Type "DELETE" to confirm
+                    <label htmlFor="confirmText" className="text-sm font-medium text-red-600">
+                      {t("confirmDeleteLabel")}
                     </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-0 rounded-2xl border border-red-500/20 opacity-65" />
-                      <input
-                        id="confirmText"
-                        name="confirmText"
-                        type="text"
-                        value={deleteAccountData.confirmText}
-                        onChange={handleDeleteAccountChange}
-                        placeholder="Type DELETE"
-                        className="h-12 w-full rounded-2xl border border-red-500/20 bg-[rgba(7,18,26,0.92)] px-4 text-white placeholder:text-[#B6C2C6] focus:border-red-400 focus:outline-none focus:ring-0 transition-colors"
-                      />
-                    </div>
+                    <input
+                      id="confirmText"
+                      name="confirmText"
+                      type="text"
+                      value={deleteAccountData.confirmText}
+                      onChange={handleDeleteAccountChange}
+                      placeholder={t("confirmDeletePlaceholder")}
+                      className="h-12 w-full rounded-xl border border-red-200 bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors"
+                    />
                   </div>
 
-                  {deleteMessage && (
-                    <div
-                      className={`rounded-2xl border p-4 text-sm ${deleteMessage.type === "success"
-                        ? "border-green-400/30 bg-green-400/10 text-green-300"
-                        : "border-red-400/30 bg-red-400/10 text-red-300"
-                        }`}
-                    >
-                      {deleteMessage.text}
-                    </div>
-                  )}
+
 
                   <button
                     type="submit"
                     disabled={!isDeleteAccountValid || isDeletingAccount}
-                    className="group relative mt-1 h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-red-600 via-red-500 to-red-600 text-sm font-semibold text-white shadow-[0_25px_70px_-20px_rgba(220,38,38,0.6)] transition-all hover:scale-[1.02] hover:shadow-[0_38px_98px_-30px_rgba(220,38,38,0.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1820] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="h-12 w-full rounded-xl bg-red-500 text-sm font-semibold text-white transition-all hover:bg-red-600 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-red-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    >
-                      <span className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.3),transparent_55%),radial-gradient(circle_at_85%_45%,rgba(255,255,255,0.2),transparent_60%)] mix-blend-screen" />
-                    </span>
-                    <span className="relative z-10 flex items-center justify-center gap-2 text-[1rem] font-semibold tracking-[0.03em] drop-shadow-[0_10px_25px_rgba(0,0,0,0.4)]">
+                    <span className="flex items-center justify-center gap-2">
                       {isDeletingAccount ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
-                          Deleting...
+                          {t("deleting")}
                         </>
                       ) : (
                         <>
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
-                          Delete Account Permanently
+                          {t("deleteAccountBtn")}
                         </>
                       )}
                     </span>
@@ -639,67 +535,7 @@ function ProfileContent() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-16 border-t border-white/10 bg-[#061017]/80 py-10 backdrop-blur">
-          <div className="mx-auto flex max-w-7xl flex-col gap-8 px-6 lg:flex-row lg:justify-between">
-            <div className="max-w-sm">
-              <p className="mb-2 text-sm uppercase tracking-[0.3em] text-[#7D837A]">
-                VietJourney
-              </p>
-              <h3 className="mb-4 text-xl font-semibold text-white">
-                Connect and discover experiences over land
-              </h3>
-              <p className="mb-2 text-sm text-[#D0D7D8]">
-                43 Building, 348 Arau They Street,
-              </p>
-              <p className="mb-2 text-sm text-[#D0D7D8]">
-                Can Giay District, Ha Noi, Vietnam
-              </p>
-              <p className="text-sm text-[#D0D7D8]">
-                help@vietjourneycommander.com
-              </p>
-            </div>
-
-            <div className="grid gap-8 sm:grid-cols-3">
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Platform</h4>
-                <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Tailored experiences</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Signature journeys</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Themed escapes</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Support</h4>
-                <ul className="space-y-2 text-sm text-[#D0D7D8]">
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Help centre</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Terms of privacy</a></li>
-                  <li><a href="#" className="hover:text-[#FFE5B4]">Legal</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="mb-4 text-sm font-semibold text-white">Stay looped</h4>
-                <p className="mb-3 text-sm text-[#D0D7D8]">
-                  Receive curated travel moments straight to your inbox
-                </p>
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    placeholder="Your email..."
-                    className="h-10 flex-1 rounded-lg border border-white/20 bg-[rgba(7,18,26,0.92)] px-3 text-sm text-white placeholder:text-[#B6C2C6] focus:border-[#FFE5B4] focus:outline-none"
-                  />
-                  <button className="rounded-lg bg-gradient-to-r from-[#FFEED0] via-[#FFD79E] to-[#FFB56D] px-4 text-sm font-semibold text-[#2B1200] transition hover:scale-105">
-                    Subscribe
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mx-auto mt-8 max-w-7xl border-t border-white/10 px-6 pt-8 text-center text-sm text-[#7D837A]">
-            <p>© 2025 VietJourney. All rights reserved</p>
-            <p className="mt-2">Design aligned with the Welcome experiences.</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </>
   )

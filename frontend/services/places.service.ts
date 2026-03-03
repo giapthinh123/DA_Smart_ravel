@@ -1,5 +1,5 @@
 import api from '@/lib/axios'
-import { CategorizedPlaces, PreferencesData } from '@/types/domain'
+import { AllPlaces, CategorizedPlaces, Place, PreferencesData } from '@/types/domain'
 import { ApiResponse } from '@/types/api'
 
 export class PlacesService {
@@ -18,6 +18,18 @@ export class PlacesService {
         }
     }
 
+    static async getAllPlaces(): Promise<AllPlaces> {
+        try {
+            const response = await api.get<AllPlaces>(`/api/places`)
+
+            // The backend returns the categorized data directly
+            return response.data
+        } catch (error: any) {
+            console.error('Error fetching all places:', error)
+            throw new Error(error.message || 'Failed to fetch places')
+        }
+    }
+    
     /**
      * Get user preferences for a specific city
      */
@@ -69,6 +81,40 @@ export class PlacesService {
             console.error('Error setting preferences:', error)
             const errorMessage = error.response?.data?.error || error.message || 'Failed to set preferences'
             throw new Error(errorMessage)
+        }
+    }
+
+    /**
+     * Create a new place
+     */
+    static async createPlace(data: Record<string, unknown>): Promise<Place> {
+        try {
+            const response = await api.post<{ message: string; place: Place }>('/api/places/place', data)
+            return response.data.place
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || error.message || 'Failed to create place')
+        }
+    }
+
+    /**
+     * Update a place by ID
+     */
+    static async updatePlace(placeId: string, data: Record<string, unknown>): Promise<void> {
+        try {
+            await api.put(`/api/places/place/${placeId}`, data)
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || error.message || 'Failed to update place')
+        }
+    }
+
+    /**
+     * Delete a place by ID
+     */
+    static async deletePlace(placeId: string): Promise<void> {
+        try {
+            await api.delete(`/api/places/place/${placeId}`)
+        } catch (error: any) {
+            throw new Error(error.response?.data?.error || error.message || 'Failed to delete place')
         }
     }
 

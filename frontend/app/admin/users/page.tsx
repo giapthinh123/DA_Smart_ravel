@@ -23,12 +23,15 @@ import {
 import { useEffect, useState } from 'react'
 import { UserService, UserStats } from '@/services/user.service'
 import { User as UserType } from '@/types/domain'
+import { toast } from '@/lib/toast'
+import { useTranslations } from 'next-intl'
 
 /**
  * User Management Page - Admin Only
  * Features: View users, search, filter, edit role, delete, create, update
  */
 function UserManagementPage() {
+    const t = useTranslations('AdminUsers')
     const { user: currentUser } = useAuthStore()
 
     // User data states
@@ -138,7 +141,7 @@ function UserManagementPage() {
             setShowDeleteModal(false)
             setSelectedUser(null)
         } catch (err: any) {
-            alert(err.message || 'Failed to delete user')
+            toast.error(err.message || t('toast.deleteError'), t('toast.errorTitle'))
         } finally {
             setActionLoading(false)
         }
@@ -155,7 +158,7 @@ function UserManagementPage() {
             setShowRoleModal(false)
             setSelectedUser(null)
         } catch (err: any) {
-            alert(err.message || 'Failed to update role')
+            toast.error(err.message || t('toast.roleError'), t('toast.errorTitle'))
         } finally {
             setActionLoading(false)
         }
@@ -178,7 +181,7 @@ function UserManagementPage() {
                 status: 'active'
             })
         } catch (err: any) {
-            alert(err.message || 'Failed to create user')
+            toast.error(err.message || t('toast.createError'), t('toast.errorTitle'))
         } finally {
             setActionLoading(false)
         }
@@ -204,7 +207,7 @@ function UserManagementPage() {
                 status: 'active'
             })
         } catch (err: any) {
-            alert(err.message || 'Failed to update user')
+            toast.error(err.message || t('toast.editError'), t('toast.errorTitle'))
         } finally {
             setActionLoading(false)
         }
@@ -217,61 +220,61 @@ function UserManagementPage() {
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage)
 
     return (
-        <AdminLayout title="User Management" description="Manage and monitor all users in the system">
+        <AdminLayout title={t('pageTitle')} description={t('pageDesc')}>
             {/* Stats Grid */}
             {stats && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                    <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Total Users</p>
-                                    <h3 className="text-3xl font-bold text-gray-900 dark:text-white">{stats.total_users}</h3>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.totalUsers')}</p>
+                                    <h3 className="text-3xl font-bold text-gray-900">{stats.total_users}</h3>
                                 </div>
-                                <div className="p-3 rounded-xl bg-purple-100 dark:bg-purple-500/20">
-                                    <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                                <div className="p-3 rounded-xl bg-purple-100">
+                                    <Users className="h-6 w-6 text-purple-600" />
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                    <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Active Users</p>
-                                    <h3 className="text-3xl font-bold text-gray-900 dark:text-white">{stats.active_users}</h3>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.activeUsers')}</p>
+                                    <h3 className="text-3xl font-bold text-gray-900">{stats.active_users}</h3>
                                 </div>
-                                <div className="p-3 rounded-xl bg-green-100 dark:bg-green-500/20">
-                                    <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
+                                <div className="p-3 rounded-xl bg-green-100">
+                                    <CheckCircle2 className="h-6 w-6 text-green-600" />
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                    <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Admins</p>
-                                    <h3 className="text-3xl font-bold text-gray-900 dark:text-white">{stats.by_role.admin}</h3>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.admins')}</p>
+                                    <h3 className="text-3xl font-bold text-gray-900">{stats.by_role.admin}</h3>
                                 </div>
-                                <div className="p-3 rounded-xl bg-cyan-100 dark:bg-cyan-500/20">
-                                    <Shield className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
+                                <div className="p-3 rounded-xl bg-cyan-100">
+                                    <Shield className="h-6 w-6 text-cyan-600" />
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
+                    <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">Regular Users</p>
-                                    <h3 className="text-3xl font-bold text-gray-900 dark:text-white">{stats.by_role.user}</h3>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.regularUsers')}</p>
+                                    <h3 className="text-3xl font-bold text-gray-900">{stats.by_role.user}</h3>
                                 </div>
-                                <div className="p-3 rounded-xl bg-blue-100 dark:bg-blue-500/20">
-                                    <User className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                <div className="p-3 rounded-xl bg-blue-100">
+                                    <User className="h-6 w-6 text-blue-600" />
                                 </div>
                             </div>
                         </CardContent>
@@ -280,18 +283,18 @@ function UserManagementPage() {
             )}
 
             {/* Filters and Search */}
-            <Card className="mb-6 bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700">
+            <Card className="mb-6 bg-white border-gray-200">
                 <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row gap-4">
                         {/* Search */}
                         <div className="flex-1">
                             <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 h-4 w-4" />
+                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                                 <Input
                                     placeholder="Search by name, email or ID..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="pl-10 bg-gray-50 dark:bg-slate-950 border-gray-200 dark:border-gray-700"
+                                    className="pl-10 bg-gray-50 border-gray-200"
                                 />
                             </div>
                         </div>
@@ -301,7 +304,7 @@ function UserManagementPage() {
                             <select
                                 value={roleFilter}
                                 onChange={(e) => setRoleFilter(e.target.value as any)}
-                                className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                             >
                                 <option value="all">All Roles</option>
                                 <option value="admin">Admin</option>
@@ -314,7 +317,7 @@ function UserManagementPage() {
                             <select
                                 value={statusFilter}
                                 onChange={(e) => setStatusFilter(e.target.value as any)}
-                                className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                             >
                                 <option value="all">All Status</option>
                                 <option value="active">Active</option>
@@ -326,10 +329,10 @@ function UserManagementPage() {
             </Card>
 
             {/* Users Table */}
-            <Card className="bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700">
-                <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+            <Card className="bg-white border-gray-200">
+                <CardHeader className="border-b border-gray-200">
                     <div className="flex items-center justify-between">
-                        <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
+                        <CardTitle className="text-xl font-bold text-gray-900">
                             Users ({filteredUsers.length})
                         </CardTitle>
                         <Button
@@ -346,54 +349,54 @@ function UserManagementPage() {
                         <div className="flex items-center justify-center py-12">
                             <div className="text-center">
                                 <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
-                                <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">Loading users...</p>
+                                <p className="mt-3 text-sm text-gray-600">Loading users...</p>
                             </div>
                         </div>
                     ) : error ? (
                         <div className="flex items-center justify-center py-12">
                             <div className="text-center">
                                 <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-3" />
-                                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                                <p className="text-sm text-red-600">{error}</p>
                             </div>
                         </div>
                     ) : currentUsers.length === 0 ? (
                         <div className="flex items-center justify-center py-12">
                             <div className="text-center">
-                                <Users className="h-12 w-12 text-gray-400 dark:text-gray-600 mx-auto mb-3" />
-                                <p className="text-sm text-gray-600 dark:text-gray-400">No users found</p>
+                                <Users className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                                <p className="text-sm text-gray-600">No users found</p>
                             </div>
                         </div>
                     ) : (
                         <>
                             <div className="overflow-x-auto">
                                 <table className="w-full">
-                                    <thead className="bg-gray-50 dark:bg-slate-950">
+                                    <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 User
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Contact
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Role
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Status
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Created
                                             </th>
-                                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Actions
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    <tbody className="divide-y divide-gray-200">
                                         {currentUsers.map((user) => (
                                             <tr
                                                 key={user.id}
-                                                className="hover:bg-gray-50 dark:hover:bg-slate-950 transition-colors"
+                                                className="hover:bg-gray-50 transition-colors"
                                             >
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
@@ -405,7 +408,7 @@ function UserManagementPage() {
                                                             </div>
                                                         </div>
                                                         <div className="ml-4">
-                                                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                                            <div className="text-sm font-medium text-gray-900">
                                                                 {user.fullname || 'N/A'}
                                                             </div>
 
@@ -413,14 +416,14 @@ function UserManagementPage() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <div className="text-sm text-gray-900 dark:text-white">{user.email}</div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400">{user.phone || 'No phone'}</div>
+                                                    <div className="text-sm text-gray-900">{user.email}</div>
+                                                    <div className="text-xs text-gray-500">{user.phone || 'No phone'}</div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <span
                                                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.role === 'admin'
-                                                            ? 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-800 dark:text-cyan-400'
-                                                            : 'bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-400'
+                                                            ? 'bg-cyan-100 text-cyan-800'
+                                                            : 'bg-blue-100 text-blue-800'
                                                             }`}
                                                     >
                                                         {user.role === 'admin' ? (
@@ -434,14 +437,14 @@ function UserManagementPage() {
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <span
                                                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${user.status === 'active'
-                                                            ? 'bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-400'
-                                                            : 'bg-gray-100 dark:bg-gray-500/20 text-gray-800 dark:text-gray-400'
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : 'bg-gray-100 text-gray-800'
                                                             }`}
                                                     >
                                                         {user.status}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                     {new Date(user.created_at).toLocaleDateString('vi-VN')}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -462,7 +465,7 @@ function UserManagementPage() {
                                                                 })
                                                                 setShowEditModal(true)
                                                             }}
-                                                            className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
+                                                            className="text-green-600 hover:text-green-700"
                                                         >
                                                             <Edit className="h-4 w-4" />
                                                         </Button>
@@ -474,7 +477,7 @@ function UserManagementPage() {
                                                                 setShowDeleteModal(true)
                                                             }}
                                                             disabled={user.id === currentUser?.id}
-                                                            className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                                                            className="text-red-600 hover:text-red-700"
                                                         >
                                                             <Trash2 className="h-4 w-4" />
                                                         </Button>
@@ -488,8 +491,8 @@ function UserManagementPage() {
 
                             {/* Pagination */}
                             {totalPages > 1 && (
-                                <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-                                    <div className="text-sm text-gray-700 dark:text-gray-300">
+                                <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200">
+                                    <div className="text-sm text-gray-700">
                                         Showing {indexOfFirstUser + 1} to {Math.min(indexOfLastUser, filteredUsers.length)} of{' '}
                                         {filteredUsers.length} users
                                     </div>
@@ -499,11 +502,11 @@ function UserManagementPage() {
                                             size="sm"
                                             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                                             disabled={currentPage === 1}
-                                            className="border-gray-200 dark:border-gray-700"
+                                            className="border-gray-200"
                                         >
                                             <ChevronLeft className="h-4 w-4" />
                                         </Button>
-                                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                                        <span className="text-sm text-gray-700">
                                             Page {currentPage} of {totalPages}
                                         </span>
                                         <Button
@@ -511,7 +514,7 @@ function UserManagementPage() {
                                             size="sm"
                                             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             disabled={currentPage === totalPages}
-                                            className="border-gray-200 dark:border-gray-700"
+                                            className="border-gray-200"
                                         >
                                             <ChevronRight className="h-4 w-4" />
                                         </Button>
@@ -526,10 +529,10 @@ function UserManagementPage() {
             {/* Delete Confirmation Modal */}
             {showDeleteModal && selectedUser && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <Card className="w-full max-w-md bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700">
-                        <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                    <Card className="w-full max-w-md bg-white border-gray-200">
+                        <CardHeader className="border-b border-gray-200">
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Delete User</CardTitle>
+                                <CardTitle className="text-xl font-bold text-gray-900">Delete User</CardTitle>
                                 <Button
                                     variant="ghost"
                                     size="sm"
@@ -537,7 +540,7 @@ function UserManagementPage() {
                                         setShowDeleteModal(false)
                                         setSelectedUser(null)
                                     }}
-                                    className="text-gray-500 dark:text-gray-400"
+                                    className="text-gray-500"
                                 >
                                     <X className="h-5 w-5" />
                                 </Button>
@@ -546,14 +549,14 @@ function UserManagementPage() {
                         <CardContent className="p-6">
                             <div className="mb-6">
                                 <div className="flex items-center justify-center mb-4">
-                                    <div className="h-12 w-12 rounded-full bg-red-100 dark:bg-red-500/20 flex items-center justify-center">
-                                        <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                                    <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center">
+                                        <AlertCircle className="h-6 w-6 text-red-600" />
                                     </div>
                                 </div>
-                                <p className="text-center text-gray-900 dark:text-white mb-2">
+                                <p className="text-center text-gray-900 mb-2">
                                     Are you sure you want to delete this user?
                                 </p>
-                                <p className="text-center text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-center text-sm text-gray-600">
                                     <strong>{selectedUser.fullname || selectedUser.email}</strong>
                                     <br />
                                     This action cannot be undone.
@@ -562,7 +565,7 @@ function UserManagementPage() {
                             <div className="flex gap-3">
                                 <Button
                                     variant="outline"
-                                    className="flex-1 border-gray-200 dark:border-gray-700"
+                                    className="flex-1 border-gray-200"
                                     onClick={() => {
                                         setShowDeleteModal(false)
                                         setSelectedUser(null)
@@ -589,10 +592,10 @@ function UserManagementPage() {
             {
                 showRoleModal && selectedUser && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                        <Card className="w-full max-w-md bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700">
-                            <CardHeader className="border-b border-gray-200 dark:border-gray-700">
+                        <Card className="w-full max-w-md bg-white border-gray-200">
+                            <CardHeader className="border-b border-gray-200">
                                 <div className="flex items-center justify-between">
-                                    <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Change User Role</CardTitle>
+                                    <CardTitle className="text-xl font-bold text-gray-900">Change User Role</CardTitle>
                                     <Button
                                         variant="ghost"
                                         size="sm"
@@ -600,7 +603,7 @@ function UserManagementPage() {
                                             setShowRoleModal(false)
                                             setSelectedUser(null)
                                         }}
-                                        className="text-gray-500 dark:text-gray-400"
+                                        className="text-gray-500"
                                     >
                                         <X className="h-5 w-5" />
                                     </Button>
@@ -608,17 +611,17 @@ function UserManagementPage() {
                             </CardHeader>
                             <CardContent className="p-6">
                                 <div className="mb-6">
-                                    <p className="text-center text-gray-900 dark:text-white mb-4">
+                                    <p className="text-center text-gray-900 mb-4">
                                         Change role for <strong>{selectedUser.fullname || selectedUser.email}</strong>
                                     </p>
-                                    <p className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                    <p className="text-center text-sm text-gray-600 mb-4">
                                         Current role: <strong>{selectedUser.role}</strong>
                                     </p>
                                 </div>
                                 <div className="flex gap-3">
                                     <Button
                                         variant="outline"
-                                        className="flex-1 border-gray-200 dark:border-gray-700"
+                                        className="flex-1 border-gray-200"
                                         onClick={() => {
                                             setShowRoleModal(false)
                                             setSelectedUser(null)
@@ -647,10 +650,10 @@ function UserManagementPage() {
             {
                 showCreateModal && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                        <Card className="w-full max-w-2xl bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
-                            <CardHeader className="border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-[#242b3d] z-10">
+                        <Card className="w-full max-w-2xl bg-white border-gray-200 max-h-[90vh] overflow-y-auto">
+                            <CardHeader className="border-b border-gray-200 sticky top-0 bg-white z-10">
                                 <div className="flex items-center justify-between">
-                                    <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Create New User</CardTitle>
+                                    <CardTitle className="text-xl font-bold text-gray-900">Create New User</CardTitle>
                                     <Button
                                         variant="ghost"
                                         size="sm"
@@ -666,7 +669,7 @@ function UserManagementPage() {
                                                 status: 'active'
                                             })
                                         }}
-                                        className="text-gray-500 dark:text-gray-400"
+                                        className="text-gray-500"
                                     >
                                         <X className="h-5 w-5" />
                                     </Button>
@@ -675,7 +678,7 @@ function UserManagementPage() {
                             <CardContent className="p-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Email <span className="text-red-500">*</span>
                                         </label>
                                         <Input
@@ -683,11 +686,11 @@ function UserManagementPage() {
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             placeholder="user@example.com"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                         />
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Password <span className="text-red-500">*</span>
                                         </label>
                                         <Input
@@ -695,63 +698,63 @@ function UserManagementPage() {
                                             value={formData.password}
                                             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                             placeholder="Minimum 8 characters"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                         />
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Full Name
                                         </label>
                                         <Input
                                             value={formData.fullname}
                                             onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
                                             placeholder="John Doe"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Phone
                                         </label>
                                         <Input
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                             placeholder="0123456789"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Role
                                         </label>
                                         <select
                                             value={formData.role}
                                             onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
-                                            className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300"
+                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900"
                                         >
                                             <option value="user">User</option>
                                             <option value="admin">Admin</option>
                                         </select>
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Address
                                         </label>
                                         <Input
                                             value={formData.address}
                                             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                             placeholder="123 Main St, City"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Status
                                         </label>
                                         <select
                                             value={formData.status}
                                             onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                            className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300"
+                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900"
                                         >
                                             <option value="active">Active</option>
                                             <option value="inactive">Inactive</option>
@@ -761,7 +764,7 @@ function UserManagementPage() {
                                 <div className="flex gap-3">
                                     <Button
                                         variant="outline"
-                                        className="flex-1 border-gray-200 dark:border-gray-700"
+                                        className="flex-1 border-gray-200"
                                         onClick={() => {
                                             setShowCreateModal(false)
                                             setFormData({
@@ -796,10 +799,10 @@ function UserManagementPage() {
             {
                 showEditModal && selectedUser && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                        <Card className="w-full max-w-2xl bg-white dark:bg-[#242b3d] border-gray-200 dark:border-gray-700 max-h-[90vh] overflow-y-auto">
-                            <CardHeader className="border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-[#242b3d] z-10">
+                        <Card className="w-full max-w-2xl bg-white border-gray-200 max-h-[90vh] overflow-y-auto">
+                            <CardHeader className="border-b border-gray-200 sticky top-0 bg-white z-10">
                                 <div className="flex items-center justify-between">
-                                    <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">Edit User</CardTitle>
+                                    <CardTitle className="text-xl font-bold text-gray-900">Edit User</CardTitle>
                                     <Button
                                         variant="ghost"
                                         size="sm"
@@ -816,7 +819,7 @@ function UserManagementPage() {
                                                 status: 'active'
                                             })
                                         }}
-                                        className="text-gray-500 dark:text-gray-400"
+                                        className="text-gray-500"
                                     >
                                         <X className="h-5 w-5" />
                                     </Button>
@@ -825,7 +828,7 @@ function UserManagementPage() {
                             <CardContent className="p-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Email
                                         </label>
                                         <Input
@@ -833,64 +836,64 @@ function UserManagementPage() {
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             placeholder="user@example.com"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                             disabled={true}
                                         />
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Full Name
                                         </label>
                                         <Input
                                             value={formData.fullname}
                                             onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
                                             placeholder="John Doe"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Phone
                                         </label>
                                         <Input
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                             placeholder="0123456789"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Role
                                         </label>
                                         <select
                                             value={formData.role}
                                             onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
-                                            className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300"
+                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900"
                                         >
                                             <option value="user">User</option>
                                             <option value="admin">Admin</option>
                                         </select>
                                     </div>
                                     <div className="md:col-span-2">
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Address
                                         </label>
                                         <Input
                                             value={formData.address}
                                             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                                             placeholder="123 Main St, City"
-                                            className="bg-gray-50 dark:bg-slate-950"
+                                            className="bg-gray-50"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
                                             Status
                                         </label>
                                         <select
                                             value={formData.status}
                                             onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
-                                            className="w-full px-3 py-2 bg-gray-50 dark:bg-slate-950 border border-gray-200 dark:border-gray-700 rounded-md text-sm text-gray-900 dark:text-gray-300"
+                                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900"
                                         >
                                             <option value="active">Active</option>
                                             <option value="inactive">Inactive</option>
@@ -900,7 +903,7 @@ function UserManagementPage() {
                                 <div className="flex gap-3">
                                     <Button
                                         variant="outline"
-                                        className="flex-1 border-gray-200 dark:border-gray-700"
+                                        className="flex-1 border-gray-200"
                                         onClick={() => {
                                             setShowEditModal(false)
                                             setSelectedUser(null)
