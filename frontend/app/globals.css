@@ -141,3 +141,9 @@
 :root {
   color-scheme: light dark;
 }
+
+/* Floating animation for cards on the home page */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}

@@ -12,9 +12,11 @@ import { useAuthStore } from "@/store/useAuthStore"
 import { AuthService } from "@/services/auth.service"
 import { UserMenu } from "@/components/user-menu"
 import { Footer } from "@/components/footer"
+import { useTranslations } from "next-intl"
 function ProfileContent() {
   const { user, logout, updateUser } = useAuthStore()
   const router = useRouter()
+  const t = useTranslations("ProfilePage")
 
   const [formData, setFormData] = useState({
     fullName: user?.fullname || user?.name || "",
@@ -197,24 +199,24 @@ function ProfileContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-[#5FCBC4]">
-                VietJourney
+                {t("brand")}
               </p>
               <p className="text-xl font-semibold text-[#0F4C5C]">
-                Mapping Vietnam experiences
+                {t("tagline")}
               </p>
             </div>
             <nav className="flex items-center gap-2 text-sm font-medium">
               <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                Home
+                {t("home")}
               </Link>
               <Link href="/planner" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                Planner
+                {t("planner")}
               </Link>
               <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                Personalities
+                {t("tours")}
               </Link>
               <Link href="#" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                Contact
+                {t("contact")}
               </Link>
               <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
               <UserMenu />
@@ -230,10 +232,10 @@ function ProfileContent() {
               <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
                 <div className="mb-6 space-y-1">
                   <h2 className="text-xl font-semibold text-[#0F4C5C]">
-                    Profile Information
+                    {t("profileInfo")}
                   </h2>
                   <p className="text-sm text-[#A1A1AA]">
-                    Update your personal details
+                    {t("profileInfoDesc")}
                   </p>
                 </div>
 
@@ -257,7 +259,7 @@ function ProfileContent() {
                 <form onSubmit={handleUpdateProfile} className="space-y-5">
                   <div className="grid gap-2">
                     <label htmlFor="fullName" className="text-sm font-medium text-[#0F4C5C]">
-                      Full Name
+                      {t("fullName")}
                     </label>
                     <input
                       id="fullName"
@@ -265,14 +267,14 @@ function ProfileContent() {
                       type="text"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      placeholder="Enter your full name…"
+                      placeholder={t("fullNamePlaceholder")}
                       className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
                     />
                   </div>
 
                   <div className="grid gap-2">
                     <label htmlFor="email" className="text-sm font-medium text-[#0F4C5C]">
-                      Email
+                      {t("email")}
                     </label>
                     <input
                       id="email"
@@ -281,12 +283,12 @@ function ProfileContent() {
                       disabled
                       className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-[#F0FDFA] px-4 text-[#A1A1AA] cursor-not-allowed"
                     />
-                    <p className="text-xs text-[#A1A1AA]">Email cannot be changed</p>
+                    <p className="text-xs text-[#A1A1AA]">{t("emailCannotChange")}</p>
                   </div>
 
                   <div className="grid gap-2">
                     <label htmlFor="phoneNumber" className="text-sm font-medium text-[#0F4C5C]">
-                      Phone Number
+                      {t("phoneNumber")}
                     </label>
                     <input
                       id="phoneNumber"
@@ -294,14 +296,14 @@ function ProfileContent() {
                       type="tel"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      placeholder="Enter your phone number…"
+                      placeholder={t("phoneNumberPlaceholder")}
                       className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
                     />
                   </div>
 
                   <div className="grid gap-2">
                     <label htmlFor="address" className="text-sm font-medium text-[#0F4C5C]">
-                      Address
+                      {t("address")}
                     </label>
                     <input
                       id="address"
@@ -309,7 +311,7 @@ function ProfileContent() {
                       type="text"
                       value={formData.address}
                       onChange={handleInputChange}
-                      placeholder="Enter your address…"
+                      placeholder={t("addressPlaceholder")}
                       className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
                     />
                   </div>
@@ -325,10 +327,10 @@ function ProfileContent() {
                       {isUpdatingProfile ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
-                          Updating...
+                          {t("updating")}
                         </>
                       ) : (
-                        "Update Information"
+                        t("updateInfo")
                       )}
                     </span>
                   </button>
@@ -339,17 +341,17 @@ function ProfileContent() {
               <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
                 <div className="mb-6 space-y-1">
                   <h2 className="text-xl font-semibold text-[#0F4C5C]">
-                    Change Password
+                    {t("changePassword")}
                   </h2>
                   <p className="text-sm text-[#A1A1AA]">
-                    Update your account password
+                    {t("changePasswordDesc")}
                   </p>
                 </div>
 
                 <form onSubmit={handleChangePassword} className="space-y-5">
                   <div className="grid gap-2">
                     <label htmlFor="currentPassword" className="text-sm font-medium text-[#0F4C5C]">
-                      Current Password
+                      {t("currentPassword")}
                     </label>
                     <input
                       id="currentPassword"
@@ -357,14 +359,14 @@ function ProfileContent() {
                       type="password"
                       value={passwordData.currentPassword}
                       onChange={handlePasswordChange}
-                      placeholder="Enter current password…"
+                      placeholder={t("currentPasswordPlaceholder")}
                       className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
                     />
                   </div>
 
                   <div className="grid gap-2">
                     <label htmlFor="newPassword" className="text-sm font-medium text-[#0F4C5C]">
-                      New Password
+                      {t("newPassword")}
                     </label>
                     <input
                       id="newPassword"
@@ -372,14 +374,14 @@ function ProfileContent() {
                       type="password"
                       value={passwordData.newPassword}
                       onChange={handlePasswordChange}
-                      placeholder="Enter new password (min. 8 characters)…"
+                      placeholder={t("newPasswordPlaceholder")}
                       className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
                     />
                   </div>
 
                   <div className="grid gap-2">
                     <label htmlFor="confirmNewPassword" className="text-sm font-medium text-[#0F4C5C]">
-                      Confirm New Password
+                      {t("confirmNewPassword")}
                     </label>
                     <input
                       id="confirmNewPassword"
@@ -387,7 +389,7 @@ function ProfileContent() {
                       type="password"
                       value={passwordData.confirmPassword}
                       onChange={handlePasswordChange}
-                      placeholder="Confirm new password…"
+                      placeholder={t("confirmNewPasswordPlaceholder")}
                       className="h-12 w-full rounded-xl border border-[#E4E4E7] bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-[#5FCBC4] focus:outline-none focus:ring-2 focus:ring-[#5FCBC4]/20 transition-colors"
                     />
                   </div>
@@ -403,10 +405,10 @@ function ProfileContent() {
                       {isChangingPassword ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
-                          Changing...
+                          {t("changing")}
                         </>
                       ) : (
-                        "Change Password"
+                        t("changePasswordBtn")
                       )}
                     </span>
                   </button>
@@ -419,17 +421,17 @@ function ProfileContent() {
               <div className="rounded-3xl border border-[#E4E4E7] bg-white p-8 shadow-sm">
                 <div className="mb-6 space-y-1">
                   <h2 className="text-xl font-semibold text-[#0F4C5C]">
-                    Account Information
+                    {t("accountInfo")}
                   </h2>
                   <p className="text-sm text-[#A1A1AA]">
-                    Your account details
+                    {t("accountInfoDesc")}
                   </p>
                 </div>
 
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
                     <p className="text-sm font-medium text-[#5FCBC4] mb-1">
-                      Account Created
+                      {t("accountCreated")}
                     </p>
                     <p className="text-base text-[#3F3F46]">
                       {user?.created_at ? new Date(user?.created_at).toLocaleDateString("en-US", {
@@ -442,7 +444,7 @@ function ProfileContent() {
 
                   <div className="rounded-2xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
                     <p className="text-sm font-medium text-[#5FCBC4] mb-1">
-                      User Role
+                      {t("userRole")}
                     </p>
                     <p className="text-base text-[#3F3F46]">{user?.role}</p>
                   </div>
@@ -453,10 +455,10 @@ function ProfileContent() {
               <div className="rounded-3xl border border-red-200 bg-white p-8 shadow-sm">
                 <div className="mb-6 space-y-1">
                   <h2 className="text-xl font-semibold text-red-600">
-                    Danger Zone
+                    {t("dangerZone")}
                   </h2>
                   <p className="text-sm text-[#A1A1AA]">
-                    Permanently delete your account
+                    {t("dangerZoneDesc")}
                   </p>
                 </div>
 
@@ -466,8 +468,8 @@ function ProfileContent() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     <div className="text-sm text-red-600">
-                      <p className="font-semibold mb-1">Warning!</p>
-                      <p>This action cannot be undone. This will permanently delete your account and remove all your data from our servers.</p>
+                      <p className="font-semibold mb-1">{t("warningTitle")}</p>
+                      <p>{t("warningDesc")}</p>
                     </div>
                   </div>
                 </div>
@@ -475,7 +477,7 @@ function ProfileContent() {
                 <form onSubmit={handleDeleteAccount} className="space-y-5">
                   <div className="grid gap-2">
                     <label htmlFor="confirmPassword" className="text-sm font-medium text-red-600">
-                      Confirm Password
+                      {t("confirmPasswordLabel")}
                     </label>
                     <input
                       id="confirmPassword"
@@ -483,14 +485,14 @@ function ProfileContent() {
                       type="password"
                       value={deleteAccountData.confirmPassword}
                       onChange={handleDeleteAccountChange}
-                      placeholder="Enter your password"
+                      placeholder={t("confirmPasswordPlaceholder")}
                       className="h-12 w-full rounded-xl border border-red-200 bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors"
                     />
                   </div>
 
                   <div className="grid gap-2">
                     <label htmlFor="confirmText" className="text-sm font-medium text-red-600">
-                      Type "DELETE" to confirm
+                      {t("confirmDeleteLabel")}
                     </label>
                     <input
                       id="confirmText"
@@ -498,7 +500,7 @@ function ProfileContent() {
                       type="text"
                       value={deleteAccountData.confirmText}
                       onChange={handleDeleteAccountChange}
-                      placeholder="Type DELETE"
+                      placeholder={t("confirmDeletePlaceholder")}
                       className="h-12 w-full rounded-xl border border-red-200 bg-white px-4 text-[#3F3F46] placeholder:text-[#A1A1AA] focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-100 transition-colors"
                     />
                   </div>
@@ -514,14 +516,14 @@ function ProfileContent() {
                       {isDeletingAccount ? (
                         <>
                           <LoaderCircle className="w-4 h-4 animate-spin" />
-                          Deleting...
+                          {t("deleting")}
                         </>
                       ) : (
                         <>
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
-                          Delete Account Permanently
+                          {t("deleteAccountBtn")}
                         </>
                       )}
                     </span>

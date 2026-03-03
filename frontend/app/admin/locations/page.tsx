@@ -27,6 +27,7 @@ import {
     MoreHorizontal
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { CityService } from '@/services/city.service'
 import { City } from '@/types/domain'
 import { PlacesService } from '@/services/places.service'
@@ -66,6 +67,7 @@ const SEARCH_TYPES = [
  * Features: Create, list locations with full form fields
  */
 function LocationManagementPage() {
+    const t = useTranslations('AdminLocations')
     // ImageUploader refs (to call uploadAll on save)
     const createUploaderRef = useRef<ImageUploaderHandle>(null)
     const editUploaderRef = useRef<ImageUploaderHandle>(null)
@@ -432,14 +434,14 @@ function LocationManagementPage() {
     }
 
     return (
-        <AdminLayout title="Quản lý Địa điểm" description="Tạo và quản lý các địa điểm du lịch">
+        <AdminLayout title={t('pageTitle')} description={t('pageDesc')}>
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <Card className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-2">Tổng địa điểm</p>
+                                <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.totalLocations')}</p>
                                 <h3 className="text-3xl font-bold text-gray-900">{places.length}</h3>
                             </div>
                             <div className="p-3 rounded-xl bg-blue-100">
@@ -453,7 +455,7 @@ function LocationManagementPage() {
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-2">Nhà hàng</p>
+                                <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.restaurants')}</p>
                                 <h3 className="text-3xl font-bold text-gray-900">
                                     {places.filter(p => p.search_type === 'restaurant').length}
                                 </h3>
@@ -469,7 +471,7 @@ function LocationManagementPage() {
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-2">Khách sạn</p>
+                                <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.hotels')}</p>
                                 <h3 className="text-3xl font-bold text-gray-900">
                                     {places.filter(p => p.search_type === 'hotel').length}
                                 </h3>
@@ -485,7 +487,7 @@ function LocationManagementPage() {
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div>
-                                <p className="text-sm font-medium text-gray-600 mb-2">Điểm tham quan</p>
+                                <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.attractions')}</p>
                                 <h3 className="text-3xl font-bold text-gray-900">
                                     {places.filter(p => p.search_type === 'attraction').length}
                                 </h3>
@@ -507,7 +509,7 @@ function LocationManagementPage() {
                             <div className="relative">
                                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                                 <Input
-                                    placeholder="Tìm kiếm địa điểm..."
+                                    placeholder={t('actions.searchPlaceholder')}
                                     value={searchQuery}
                                     onChange={(e) => handleSearchChange(e.target.value)}
                                     className="pl-10 bg-gray-50 border-gray-200"
@@ -523,7 +525,7 @@ function LocationManagementPage() {
                                 onChange={(e) => handleFilterChange(e.target.value)}
                                 className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                             >
-                                <option value="all">Tất cả loại</option>
+                                <option value="all">{t('actions.allTypes')}</option>
                                 {SEARCH_TYPES.map(t => (
                                     <option key={t.value} value={t.value}>{t.label}</option>
                                 ))}
@@ -536,7 +538,7 @@ function LocationManagementPage() {
                             className="bg-blue-600 hover:bg-blue-700 text-white"
                         >
                             <Plus className="h-4 w-4 mr-2" />
-                            Thêm địa điểm
+                            {t('actions.addLocation')}
                         </Button>
                     </div>
                 </CardContent>
@@ -547,10 +549,10 @@ function LocationManagementPage() {
                 <CardHeader className="border-b border-gray-200">
                     <div className="flex items-center justify-between">
                         <CardTitle className="text-xl font-bold text-gray-900">
-                            Danh sách địa điểm
+                            {t('list.title')}
                         </CardTitle>
                         <span className="text-sm text-gray-500">
-                            {filteredPlaces.length} địa điểm
+                            {filteredPlaces.length} {t('list.countSuffix')}
                         </span>
                     </div>
                 </CardHeader>
@@ -559,7 +561,7 @@ function LocationManagementPage() {
                         <div className="flex items-center justify-center py-16">
                             <div className="flex flex-col items-center gap-3">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-                                <p className="text-sm text-gray-500">Đang tải dữ liệu...</p>
+                                <p className="text-sm text-gray-500">{t('list.loading')}</p>
                             </div>
                         </div>
                     ) : paginatedPlaces.length === 0 ? (
@@ -567,10 +569,10 @@ function LocationManagementPage() {
                             <div className="text-center">
                                 <MapPin className="h-16 w-16 text-gray-300 mx-auto mb-4" />
                                 <p className="text-lg font-medium text-gray-600 mb-2">
-                                    {searchQuery || filterType !== 'all' ? 'Không tìm thấy địa điểm phù hợp' : 'Chưa có địa điểm nào'}
+                                    {searchQuery || filterType !== 'all' ? t('list.noDataSearch') : t('list.noData')}
                                 </p>
                                 <p className="text-sm text-gray-500">
-                                    {searchQuery || filterType !== 'all' ? 'Thử thay đổi từ khoá hoặc bộ lọc' : 'Bắt đầu bằng cách thêm địa điểm mới'}
+                                    {searchQuery || filterType !== 'all' ? t('list.tryChangeFilter') : t('list.startByAdding')}
                                 </p>
                             </div>
                         </div>
@@ -582,13 +584,13 @@ function LocationManagementPage() {
                                     <thead>
                                         <tr className="border-b border-gray-200 bg-gray-50">
                                             <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
-                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tên địa điểm</th>
-                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Loại</th>
-                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Đánh giá</th>
-                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Giá TB ($)</th>
-                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tọa độ</th>
-                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">City Name</th>
-                                            <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Thao tác</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.name')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.type')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.rating')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.avgPrice')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.coordinates')}</th>
+                                            <th className="text-left py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.cityName')}</th>
+                                            <th className="text-right py-3 px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('table.actions')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-100">
@@ -653,7 +655,7 @@ function LocationManagementPage() {
                                                             size="sm"
                                                             onClick={() => handleOpenEdit(place)}
                                                             className="h-8 w-8 p-0 text-blue-600 hover:bg-blue-50"
-                                                            title="Sửa"
+                                                            title={t('actions.edit')}
                                                         >
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
@@ -662,7 +664,7 @@ function LocationManagementPage() {
                                                             size="sm"
                                                             onClick={() => { setDeletingPlace(place); setShowDeleteModal(true) }}
                                                             className="h-8 w-8 p-0 text-red-600 hover:bg-red-50"
-                                                            title="Xóa"
+                                                            title={t('actions.delete')}
                                                         >
                                                             <Trash2 className="h-4 w-4" />
                                                         </Button>
@@ -677,13 +679,13 @@ function LocationManagementPage() {
                             {/* Pagination */}
                             <div className="flex items-center justify-between px-4 py-4 border-t border-gray-200">
                                 <p className="text-sm text-gray-500">
-                                    Hiển thị <span className="font-medium text-gray-700">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span>
+                                    {t('pagination.showing')} <span className="font-medium text-gray-700">{(currentPage - 1) * ITEMS_PER_PAGE + 1}</span>
                                     {' '}–{' '}
                                     <span className="font-medium text-gray-700">
                                         {Math.min(currentPage * ITEMS_PER_PAGE, filteredPlaces.length)}
                                     </span>
-                                    {' '}trong{' '}
-                                    <span className="font-medium text-gray-700">{filteredPlaces.length}</span> địa điểm
+                                    {' '}{t('pagination.of')}{' '}
+                                    <span className="font-medium text-gray-700">{filteredPlaces.length}</span> {t('list.countSuffix')}
                                 </p>
                                 <div className="flex items-center gap-1">
                                     <Button
@@ -745,7 +747,7 @@ function LocationManagementPage() {
                         <CardHeader className="border-b border-gray-200 sticky top-0 bg-white z-10">
                             <div className="flex items-center justify-between">
                                 <CardTitle className="text-xl font-bold text-gray-900">
-                                    Tạo địa điểm mới
+                                    {t('createModal.title')}
                                 </CardTitle>
                                 <Button
                                     variant="ghost"
@@ -782,7 +784,7 @@ function LocationManagementPage() {
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <FileText className="h-5 w-5 text-blue-500" />
-                                        Thông tin cơ bản
+                                        {t('form.basicInfo')}
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
@@ -798,18 +800,18 @@ function LocationManagementPage() {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Tên địa điểm <span className="text-red-500">*</span>
+                                                {t('form.locationName')} <span className="text-red-500">*</span>
                                             </label>
                                             <Input
                                                 value={formData.displayName_text}
                                                 onChange={(e) => setFormData({ ...formData, displayName_text: e.target.value })}
-                                                placeholder="VD: Wangbijib Myeongdong Central"
+                                                placeholder={t('form.locationNamePlaceholder')}
                                                 className="bg-gray-50 border-gray-200"
                                             />
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Thành phố <span className="text-red-500">*</span>
+                                                {t('form.city')} <span className="text-red-500">*</span>
                                             </label>
                                             <select
                                                 value={formData.city}
@@ -817,7 +819,7 @@ function LocationManagementPage() {
                                                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                                 disabled={loadingCities}
                                             >
-                                                <option value="">Chọn thành phố</option>
+                                                <option value="">{t('form.selectCity')}</option>
                                                 {cities.map((city) => (
                                                     <option key={city.id} value={city.city}>
                                                         {city.city}
@@ -832,18 +834,18 @@ function LocationManagementPage() {
                                             <Input
                                                 value={formData.city_id}
                                                 readOnly
-                                                placeholder="Tự động điền khi chọn thành phố"
+                                                placeholder={t('form.cityIdPlaceholder')}
                                                 className="bg-gray-100 border-gray-200 cursor-not-allowed"
                                             />
                                         </div>
                                         <div className="md:col-span-2">
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Mô tả
+                                                {t('form.description')}
                                             </label>
                                             <textarea
                                                 value={formData.editorialSummary_text}
                                                 onChange={(e) => setFormData({ ...formData, editorialSummary_text: e.target.value })}
-                                                placeholder="Mô tả ngắn về địa điểm..."
+                                                placeholder={t('form.descPlaceholder')}
                                                 rows={3}
                                                 className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
                                             />
@@ -855,12 +857,12 @@ function LocationManagementPage() {
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <MapPinned className="h-5 w-5 text-green-500" />
-                                        Vị trí
+                                        {t('form.locationSection')}
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Vĩ độ (Latitude)
+                                                {t('form.latitude')}
                                             </label>
                                             <Input
                                                 type="number"
@@ -876,7 +878,7 @@ function LocationManagementPage() {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Kinh độ (Longitude)
+                                                {t('form.longitude')}
                                             </label>
                                             <Input
                                                 type="number"
@@ -897,12 +899,12 @@ function LocationManagementPage() {
                                 <div className="gap-4 ">
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <Tag className="h-5 w-5 text-purple-500" />
-                                        Phân loại
+                                        {t('form.categorySection')}
                                     </h3>
                                     <div className="gap-4 mb-4">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Loại tìm kiếm (Search Type)
+                                                {t('form.searchType')}
                                             </label>
                                             <select
                                                 value={formData.search_type}
@@ -921,12 +923,12 @@ function LocationManagementPage() {
                                     {/* Rating & Price Section */}
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <Star className="h-5 w-5 text-yellow-500" />
-                                        Giá
+                                        {t('form.priceSection')}
                                     </h3>
                                     <div className="gap-4">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Giá trung bình ($)
+                                                {t('form.avgPrice')}
                                             </label>
                                             <Input
                                                 type="number"
@@ -944,10 +946,10 @@ function LocationManagementPage() {
                                 <div>
                                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                         <ImageIcon className="h-5 w-5 text-pink-500" />
-                                        Hình ảnh
+                                        {t('form.images')}
                                         {formData.image_url.filter(u => u).length > 0 && (
                                             <span className="ml-1 text-xs font-normal text-gray-500">
-                                                ({formData.image_url.filter(u => u).length} ảnh)
+                                                ({formData.image_url.filter(u => u).length} {t('form.imagesSuffix')})
                                             </span>
                                         )}
                                     </h3>
@@ -994,14 +996,14 @@ function LocationManagementPage() {
                                     }}
                                     disabled={actionLoading}
                                 >
-                                    Hủy
+                                    {t('actions.cancel')}
                                 </Button>
                                 <Button
                                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                                     onClick={handleCreateLocation}
                                     disabled={actionLoading}
                                 >
-                                    {actionLoading ? 'Đang tạo…' : 'Tạo địa điểm'}
+                                    {actionLoading ? t('actions.creating') : t('actions.createLocation')}
                                 </Button>
                             </div>
                         </CardContent>
@@ -1016,7 +1018,7 @@ function LocationManagementPage() {
                             <div className="flex items-center justify-between">
                                 <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
                                     <Pencil className="h-5 w-5 text-blue-500" />
-                                    Chỉnh sửa địa điểm
+                                    {t('editModal.title')}
                                 </CardTitle>
                                 <Button
                                     variant="ghost"
@@ -1033,7 +1035,7 @@ function LocationManagementPage() {
                                 <div className="flex items-center justify-center py-16">
                                     <div className="flex flex-col items-center gap-3">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-                                        <p className="text-sm text-gray-500">Đang tải thông tin...</p>
+                                        <p className="text-sm text-gray-500">{t('editModal.loading')}</p>
                                     </div>
                                 </div>
                             ) : (
@@ -1055,7 +1057,7 @@ function LocationManagementPage() {
                                         <div>
                                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                                 <FileText className="h-5 w-5 text-blue-500" />
-                                                Thông tin cơ bản
+                                                {t('form.basicInfo')}
                                             </h3>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div>
@@ -1064,7 +1066,7 @@ function LocationManagementPage() {
                                                 </div>
                                                 <div>
                                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                        Tên địa điểm <span className="text-red-500">*</span>
+                                                        {t('form.locationName')} <span className="text-red-500">*</span>
                                                     </label>
                                                     <Input
                                                         value={editFormData.displayName_text}
@@ -1073,14 +1075,14 @@ function LocationManagementPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-2">Thành phố</label>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.city')}</label>
                                                     <select
                                                         value={editFormData.city}
                                                         onChange={(e) => handleEditCityChange(e.target.value)}
                                                         className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                                                         disabled={loadingCities}
                                                     >
-                                                        <option value="">Chọn thành phố</option>
+                                                        <option value="">{t('form.selectCity')}</option>
                                                         {cities.map((city) => (
                                                             <option key={city.id} value={city.city}>{city.city}</option>
                                                         ))}
@@ -1091,7 +1093,7 @@ function LocationManagementPage() {
                                                     <Input value={editFormData.city_id} readOnly className="bg-gray-100 border-gray-200 cursor-not-allowed" />
                                                 </div>
                                                 <div className="md:col-span-2">
-                                                    <label className="block text-sm font-medium text-gray-700 mb-2">Mô tả</label>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.description')}</label>
                                                     <textarea
                                                         value={editFormData.editorialSummary_text}
                                                         onChange={(e) => setEditFormData({ ...editFormData, editorialSummary_text: e.target.value })}
@@ -1106,11 +1108,11 @@ function LocationManagementPage() {
                                         <div>
                                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                                 <MapPinned className="h-5 w-5 text-green-500" />
-                                                Vị trí
+                                                {t('form.locationSection')}
                                             </h3>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-2">Vĩ độ (Latitude)</label>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.latitude')}</label>
                                                     <Input
                                                         type="number" step="any"
                                                         value={editFormData.location.latitude}
@@ -1119,7 +1121,7 @@ function LocationManagementPage() {
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-2">Kinh độ (Longitude)</label>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.longitude')}</label>
                                                     <Input
                                                         type="number" step="any"
                                                         value={editFormData.location.longitude}
@@ -1134,11 +1136,11 @@ function LocationManagementPage() {
                                         <div>
                                             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                                 <Tag className="h-5 w-5 text-purple-500" />
-                                                Phân loại & Giá
+                                                {t('form.categoryPrice')}
                                             </h3>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-2">Loại</label>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('table.type')}</label>
                                                     <select
                                                         value={editFormData.search_type}
                                                         onChange={(e) => setEditFormData({ ...editFormData, search_type: e.target.value })}
@@ -1148,7 +1150,7 @@ function LocationManagementPage() {
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-700 mb-2">Giá trung bình ($)</label>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('form.avgPrice')}</label>
                                                     <Input
                                                         type="number" min="0"
                                                         value={editFormData.avg_price}
@@ -1163,16 +1165,16 @@ function LocationManagementPage() {
                                         <div>
                                             <h3 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
                                                 <ImageIcon className="h-5 w-5 text-pink-500" />
-                                                Hình ảnh
+                                                {t('form.images')}
                                                 {editFormData.image_url.filter(u => u).length > 0 && (
                                                     <span className="ml-1 text-xs font-normal text-gray-500">
-                                                        ({editFormData.image_url.filter(u => u).length} ảnh)
+                                                        ({editFormData.image_url.filter(u => u).length} {t('form.imagesSuffix')})
                                                     </span>
                                                 )}
                                             </h3>
                                             <p className="text-xs text-blue-600 mb-4 flex items-center gap-1">
                                                 <CheckCircle2 className="h-3.5 w-3.5" />
-                                                Ảnh mới sẽ được upload và lưu khi nhấn "Lưu thay đổi"
+                                                {t('editModal.imageNotice')}
                                             </p>
 
                                             <ImageUploader
@@ -1183,7 +1185,7 @@ function LocationManagementPage() {
                                             {/* Existing image grid */}
                                             {editFormData.image_url.filter(u => u).length > 0 && (
                                                 <div className="mt-4">
-                                                    <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">Ảnh hiện tại</p>
+                                                    <p className="text-xs font-medium text-gray-500 mb-2 uppercase tracking-wide">{t('editModal.currentImages')}</p>
                                                     <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                                                         {editFormData.image_url.filter(u => u).map((url, idx) => (
                                                             <div key={idx} className="relative group aspect-square rounded-lg overflow-hidden border border-gray-200">
@@ -1217,14 +1219,14 @@ function LocationManagementPage() {
                                             onClick={() => { setShowEditModal(false); setEditingPlaceId(null); setErrorMessage(''); setSuccessMessage('') }}
                                             disabled={actionLoading}
                                         >
-                                            Hủy
+                                            {t('actions.cancel')}
                                         </Button>
                                         <Button
                                             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
                                             onClick={handleUpdateLocation}
                                             disabled={actionLoading}
                                         >
-                                            {actionLoading ? 'Đang lưu…' : 'Lưu thay đổi'}
+                                            {actionLoading ? t('actions.saving') : t('actions.saveChanges')}
                                         </Button>
                                     </div>
                                 </>
@@ -1244,13 +1246,13 @@ function LocationManagementPage() {
                                     <Trash2 className="h-6 w-6 text-red-600" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900">Xác nhận xóa</h3>
-                                    <p className="text-sm text-gray-500 mt-0.5">Hành động này không thể hoàn tác</p>
+                                    <h3 className="text-lg font-semibold text-gray-900">{t('deleteModal.title')}</h3>
+                                    <p className="text-sm text-gray-500 mt-0.5">{t('deleteModal.warning')}</p>
                                 </div>
                             </div>
 
                             <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
-                                <p className="text-sm text-gray-600 mb-1">Địa điểm sẽ bị xóa:</p>
+                                <p className="text-sm text-gray-600 mb-1">{t('deleteModal.deletingTarget')}</p>
                                 <p className="font-semibold text-gray-900">{deletingPlace.displayName_text}</p>
                                 <span className={`inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeBadgeClass(deletingPlace.search_type)}`}>
                                     {getTypeLabel(deletingPlace.search_type)}
@@ -1264,14 +1266,14 @@ function LocationManagementPage() {
                                     onClick={() => { setShowDeleteModal(false); setDeletingPlace(null) }}
                                     disabled={deleteLoading}
                                 >
-                                    Hủy
+                                    {t('actions.cancel')}
                                 </Button>
                                 <Button
                                     className="flex-1 bg-red-600 hover:bg-red-700 text-white"
                                     onClick={handleDeleteLocation}
                                     disabled={deleteLoading}
                                 >
-                                    {deleteLoading ? 'Đang xóa…' : 'Xóa địa điểm'}
+                                    {deleteLoading ? t('actions.deleting') : t('actions.delete')}
                                 </Button>
                             </div>
                         </CardContent>

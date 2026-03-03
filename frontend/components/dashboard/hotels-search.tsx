@@ -7,6 +7,7 @@ import { Slider } from 'primereact/slider'
 import { PlacesService } from "@/services/places.service"
 import { Star, Loader2, MapPin } from "lucide-react"
 import { toast } from "@/lib/toast"
+import { useTranslations } from "next-intl"
 
 function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
@@ -28,6 +29,7 @@ interface PlaceDetails {
 }
 
 export default function HotelsSearch() {
+  const t = useTranslations("HotelsSearch")
   const [locations, setLocations] = useState<City[]>([])
   const [budgetRange, setBudgetRange] = useState<[number, number]>([0, 30])
   const [isLoading, setIsLoading] = useState(false)
@@ -47,7 +49,7 @@ export default function HotelsSearch() {
 
   const handleSubmit = async () => {
     if (!selectedLocation) {
-      toast.warning('Vui lòng chọn địa điểm trước khi tìm kiếm.', 'Thiếu thông tin')
+      toast.warning(t("valLocation"), t("valLocationTitle"))
       return
     }
 
@@ -63,7 +65,7 @@ export default function HotelsSearch() {
       setResults(filtered)
     } catch (error: any) {
       console.error("Hotels search error:", error)
-      toast.error(error.message || 'Không thể tìm kiếm khách sạn. Thử lại sau.', 'Lỗi tìm kiếm')
+      toast.error(error.message || t("errorSearch"), t("errorSearchTitle"))
     } finally {
       setIsLoading(false)
     }
@@ -100,13 +102,13 @@ export default function HotelsSearch() {
     <div className="p-8">
       <div className="mb-6">
         <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
-          Accommodation Finder
+          {t("navigator")}
         </p>
         <h3 className="text-2xl font-semibold text-[#0F4C5C]">
-          Find curated and budget-aligned accommodation
+          {t("title")}
         </h3>
         <p className="mt-2 text-sm text-[#3F3F46]">
-          Search for hotels and stays that match your preferences and budget range.
+          {t("description")}
         </p>
       </div>
 
@@ -114,7 +116,7 @@ export default function HotelsSearch() {
         <div className="mb-12 grid gap-4 sm:grid-cols-2">
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Location <span className="text-red-400">*</span>
+              {t("location")} <span className="text-red-400">*</span>
             </label>
             <Dropdown
               value={selectedLocation}
@@ -125,7 +127,7 @@ export default function HotelsSearch() {
               }))}
               optionLabel="label"
               optionValue="value"
-              placeholder="Select location"
+              placeholder={t("selectLocation")}
               filter
               showClear={false}
               className="dashboard-form__prime"
@@ -135,7 +137,7 @@ export default function HotelsSearch() {
           <div>
             <div className="dashboard-form__field">
               <label htmlFor="hotel-budget" className="dashboard-form__label">
-                Budget Range (per night)
+                {t("budgetRange")}
               </label>
               <div className="mt-4 px-2">
                 <Slider
@@ -154,7 +156,7 @@ export default function HotelsSearch() {
                 />
                 <div className="flex justify-between mt-3 text-sm">
                   <span className="font-medium text-[#5FCBC4]">${budgetRange[0]}</span>
-                  <span className="text-[#A1A1AA]">to</span>
+                  <span className="text-[#A1A1AA]">{t("to")}</span>
                   <span className="font-medium text-[#5FCBC4]">${budgetRange[1]}</span>
                 </div>
               </div>
@@ -176,10 +178,10 @@ export default function HotelsSearch() {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Processing...
+              {t("processing")}
             </span>
           ) : (
-            "Search hotels"
+            t("searchHotels")
           )}
         </button>
 
@@ -188,7 +190,7 @@ export default function HotelsSearch() {
           <div className="mt-8">
             <div className="mb-4">
               <h4 className="text-lg font-semibold text-[#0F4C5C]">
-                Found {results.length} hotel{results.length !== 1 ? 's' : ''}
+                {t("found")} {results.length} {results.length !== 1 ? t("hotels") : t("hotel")}
               </h4>
             </div>
             <div className="space-y-4">
@@ -218,11 +220,11 @@ export default function HotelsSearch() {
                             <span className="font-bold">{place.rating}</span>
                           </div>
                           <span className="text-lg font-bold text-emerald-600">${place.avg_price}</span>
-                          <p className="text-xs text-[#A1A1AA]">per night</p>
+                          <p className="text-xs text-[#A1A1AA]">{t("perNight")}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4 text-sm text-[#A1A1AA]">
-                        <span>{place.userRatingCount.toLocaleString()} reviews</span>
+                        <span>{place.userRatingCount.toLocaleString()} {t("reviews")}</span>
                       </div>
                     </div>
 
@@ -299,7 +301,7 @@ export default function HotelsSearch() {
                                       <span className="font-bold text-amber-400 text-lg">{details.rating}</span>
                                     </div>
                                     <span className="text-sm text-[#A1A1AA]">
-                                      ({details.userRatingCount?.toLocaleString() || 0} reviews)
+                                      ({details.userRatingCount?.toLocaleString() || 0} {t("reviews")})
                                     </span>
                                   </div>
 
@@ -308,7 +310,7 @@ export default function HotelsSearch() {
                                     <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
                                       <span className="text-emerald-600 text-2xl">💵</span>
                                       <div>
-                                        <p className="text-xs text-emerald-500 uppercase tracking-wide">Avg. Price</p>
+                                        <p className="text-xs text-emerald-500 uppercase tracking-wide">{t("avgPrice")}</p>
                                         <p className="text-xl font-bold text-emerald-700">${details.avg_price}</p>
                                       </div>
                                     </div>
@@ -320,7 +322,7 @@ export default function HotelsSearch() {
                             {/* Editorial Summary */}
                             {details.editorialSummary_text && (
                               <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7]">
-                                <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">About</h5>
+                                <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">{t("about")}</h5>
                                 <p className="text-sm text-[#3F3F46] leading-relaxed">
                                   {details.editorialSummary_text}
                                 </p>
@@ -330,7 +332,7 @@ export default function HotelsSearch() {
                             {/* Reviews Section */}
                             {details.reviews && details.reviews.length > 0 && (
                               <div className="space-y-3">
-                                <h5 className="text-sm font-semibold text-[#5FCBC4] uppercase tracking-wide">Recent Reviews</h5>
+                                <h5 className="text-sm font-semibold text-[#5FCBC4] uppercase tracking-wide">{t("recentReviews")}</h5>
                                 <div className="space-y-3 max-h-96 overflow-y-auto">
                                   {details.reviews.slice(0, 3).map((review, idx) => (
                                     <div
@@ -370,7 +372,7 @@ export default function HotelsSearch() {
                             )}
                           </div>
                         ) : (
-                          <p className="text-sm text-[#A1A1AA] py-4">Click to load details...</p>
+                          <p className="text-sm text-[#A1A1AA] py-4">{t("clickToLoad")}</p>
                         )}
                       </div>
                     )}

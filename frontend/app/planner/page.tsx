@@ -12,12 +12,15 @@ import FoodSearch from "@/components/dashboard/food-search"
 import { data_build_tour } from "@/types/domain"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
+import { LanguageSwitcher } from "@/components/i18n/language-switcher"
 import { Footer } from "@/components/footer"
 import { useAuthStore } from "@/store/useAuthStore"
+import { useTranslations } from "next-intl"
 
 export default function DashboardPage() {
   const router = useRouter()
   const { isAuthenticated } = useAuthStore()
+  const t = useTranslations("PlannerPage")
   const [selectedItem, setSelectedItem] = useState<string | null>(null)
   const [dataBuildTour, setDataBuildTour] = useState<data_build_tour>({
     departure: "",
@@ -39,12 +42,11 @@ export default function DashboardPage() {
   })
 
   const quickAccessItems = [
-    { title: "Personal tours", subtitle: "Craft bespoke travel stories with personal imprints" },
-    { title: "Flights", subtitle: "Search flights for the departure and destination" },
-    { title: "Hotels", subtitle: "Find curated and budget-aligned accommodation" },
-    { title: "Food", subtitle: "Find restaurants and cafes" },
-    { title: "Activities", subtitle: "Find curated and budget-aligned activities" },
-
+    { title: t("personalTours"), subtitle: t("personalToursDesc") },
+    { title: t("flights"), subtitle: t("flightsDesc") },
+    { title: t("hotels"), subtitle: t("hotelsDesc") },
+    { title: t("food"), subtitle: t("foodDesc") },
+    { title: t("activities"), subtitle: t("activitiesDesc") },
   ]
 
   useEffect(() => {
@@ -57,15 +59,15 @@ export default function DashboardPage() {
 
   const renderSearchSection = () => {
     switch (selectedItem) {
-      case "Personal tours":
+      case t("personalTours"):
         return <JourneyBuilder />
-      case "Hotels":
+      case t("hotels"):
         return <HotelsSearch />
-      case "Flights":
+      case t("flights"):
         return <FlightsSearch data_build_tour={dataBuildTour} />
-      case "Food":
+      case t("food"):
         return <FoodSearch />
-      case "Activities":
+      case t("activities"):
         return <ActivitiesSearch />
       default:
         return <JourneyBuilder />
@@ -81,23 +83,25 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-[#A1A1AA]">
-                VietJourney
+                {t("brand")}
               </p>
               <p className="text-xl font-semibold text-[#0F4C5C]">
-                Mapping Vietnam experiences
+                {t("tagline")}
               </p>
             </div>
             <nav className="flex items-center gap-2 text-sm font-medium">
               <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                Home
+                {t("home")}
               </Link>
               <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                Tours
+                {t("tours")}
               </Link>
               <Link href="/contact" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                Contact
+                {t("contact")}
               </Link>
               <>
+                <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
+                <LanguageSwitcher />
                 {isAuthenticated ? (
                   <>
                     <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
@@ -105,7 +109,7 @@ export default function DashboardPage() {
                   </>
                 ) : (
                   <Link href="/login" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                    Login
+                    {t("login")}
                   </Link>
                 )}
               </>
@@ -167,10 +171,10 @@ export default function DashboardPage() {
                 </div>
 
                 <h3 className="mb-2 text-xl font-semibold text-[#0F4C5C]">
-                  Đăng nhập để sử dụng chức năng này
+                  {t("loginRequired")}
                 </h3>
                 <p className="mb-6 max-w-xs text-center text-sm text-[#71717A]">
-                  Vui lòng đăng nhập để truy cập công cụ lập kế hoạch và các tính năng cá nhân hoá.
+                  {t("loginRequiredDesc")}
                 </p>
 
                 <div className="flex gap-3">
@@ -178,13 +182,13 @@ export default function DashboardPage() {
                     href="/login"
                     className="rounded-full bg-[#0F4C5C] px-6 py-2.5 text-sm font-medium text-white shadow transition hover:bg-[#0d3f4d] active:scale-95"
                   >
-                    Đăng nhập
+                    {t("loginBtn")}
                   </Link>
                   <Link
                     href="/register"
                     className="rounded-full border border-[#5FCBC4] px-6 py-2.5 text-sm font-medium text-[#0F4C5C] transition hover:bg-[#CCFBF1] active:scale-95"
                   >
-                    Đăng ký
+                    {t("registerBtn")}
                   </Link>
                 </div>
               </div>
@@ -195,13 +199,13 @@ export default function DashboardPage() {
           <section className="mb-12 rounded-[2rem] border border-[#E4E4E7] bg-white p-10 shadow-sm">
             <div className="mb-10 text-center">
               <p className="mb-3 text-xs uppercase tracking-[0.4em] text-[#A1A1AA]">
-                Personalised Tour Workflow
+                {t("workflowLabel")}
               </p>
               <h2 className="text-3xl font-semibold text-[#0F4C5C]">
-                Step-by-step to optimise every personalised journey
+                {t("workflowTitle")}
               </h2>
               <p className="mx-auto mt-3 max-w-3xl text-base text-[#3F3F46]">
-                Complete the stages below once you choose a venue in the curated builder. Every detail is stored in a single dashboard so you can refine with complete control.
+                {t("workflowDesc")}
               </p>
             </div>
 
@@ -212,23 +216,23 @@ export default function DashboardPage() {
                   01
                 </div>
                 <h3 className="mb-3 text-xl font-semibold text-[#0F4C5C]">
-                  Clarify your travel goals
+                  {t("step1Title")}
                 </h3>
                 <p className="mb-4 text-sm text-[#3F3F46] leading-relaxed">
-                  Choose traveller types, inspirations and budget so the system captures your core preferences first:
+                  {t("step1Desc")}
                 </p>
                 <ul className="space-y-2 text-sm text-[#3F3F46]">
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    State the place and exploration
+                    {t("step1Item1")}
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    Pick top memories (culture or nature)
+                    {t("step1Item2")}
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    Set trip length and budget
+                    {t("step1Item3")}
                   </li>
                 </ul>
               </div>
@@ -239,23 +243,23 @@ export default function DashboardPage() {
                   02
                 </div>
                 <h3 className="mb-3 text-xl font-semibold text-[#0F4C5C]">
-                  Provide itinerary details
+                  {t("step2Title")}
                 </h3>
                 <p className="mb-4 text-sm text-[#3F3F46] leading-relaxed">
-                  Specify departure, destination, dates, and headcount to build the base schedule:
+                  {t("step2Desc")}
                 </p>
                 <ul className="space-y-2 text-sm text-[#3F3F46]">
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    Select the relevant venues (via dates)
+                    {t("step2Item1")}
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    Provide precise travel dates
+                    {t("step2Item2")}
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    Upload any fragment or add link
+                    {t("step2Item3")}
                   </li>
                 </ul>
               </div>
@@ -266,23 +270,23 @@ export default function DashboardPage() {
                   03
                 </div>
                 <h3 className="mb-3 text-xl font-semibold text-[#0F4C5C]">
-                  Receive and refine suggestions
+                  {t("step3Title")}
                 </h3>
                 <p className="mb-4 text-sm text-[#3F3F46] leading-relaxed max-w-3xl">
-                  Review automated suggestions and tune destinations, activities, and stays before finalising:
+                  {t("step3Desc")}
                 </p>
                 <ul className="grid gap-2 text-sm text-[#3F3F46] sm:grid-cols-2 max-w-4xl">
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    Compare accommodation tickets
+                    {t("step3Item1")}
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    Tune AI drag-and-drop logic
+                    {t("step3Item2")}
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#5FCBC4]" />
-                    View personalised journey for booking
+                    {t("step3Item3")}
                   </li>
                 </ul>
               </div>

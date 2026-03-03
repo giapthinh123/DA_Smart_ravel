@@ -35,6 +35,7 @@ import { ItineraryService } from "@/services/itinerary.service"
 import { Place, PreferencesData } from "@/types/domain"
 import { UserMenu } from "@/components/user-menu"
 import { Footer } from "@/components/footer"
+import { useTranslations } from "next-intl"
 interface PlaceItem {
   id: string | number
   place_id?: string
@@ -81,6 +82,7 @@ function PreferencesContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, logout, token } = useAuthStore()
+  const t = useTranslations("PreferencesPage")
   const [categories, setCategories] = useState<CategorySection[]>([])
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['Restaurants', 'Hotels', 'Recreation Places', 'Local Transport'])
   const [isLoading, setIsLoading] = useState(true)
@@ -855,24 +857,24 @@ function PreferencesContent() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-[#A1A1AA]">
-              VietJourney
+              {t("brand")}
             </p>
             <p className="text-xl font-semibold text-[#0F4C5C]">
-              Mapping Vietnam experiences
+              {t("tagline")}
             </p>
           </div>
           <nav className="flex items-center gap-2 text-sm font-medium">
             <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C]">
-              Home
+              {t("home")}
             </Link>
             <Link href="/planner" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C]">
-              Dashboard
+              {t("dashboard")}
             </Link>
             <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C]">
-              Personalities
+              {t("tours")}
             </Link>
             <Link href="#" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C]">
-              Contact
+              {t("contact")}
             </Link>
             <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
 

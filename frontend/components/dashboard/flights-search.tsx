@@ -8,6 +8,7 @@ import { City, data_build_tour } from "@/types/domain"
 import { useRouter } from "next/navigation"
 import { CityService } from "@/services/city.service"
 import { toast } from "@/lib/toast"
+import { useTranslations } from "next-intl"
 
 function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
@@ -15,6 +16,7 @@ function cn(...classes: (string | undefined | false)[]) {
 
 export default function FlightsSearch({ data_build_tour }: { data_build_tour: data_build_tour }) {
   const router = useRouter()
+  const t = useTranslations("FlightsSearch")
   const [departure, setDeparture] = useState<string | null>(data_build_tour.departure)
   const [destination, setDestination] = useState<string | null>(data_build_tour.destination)
   const [isLoading, setIsLoading] = useState(false)
@@ -48,13 +50,13 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
   }
   const handleSubmit = useCallback(() => {
     const missing: string[] = []
-    if (!departure) missing.push('Điểm xuất phát')
-    if (!destination) missing.push('Điểm đến')
-    if (!flightDepartureDate) missing.push('Ngày bay đi')
-    if (!flightReturnDate) missing.push('Ngày bay về')
+    if (!departure) missing.push(t("valDeparture"))
+    if (!destination) missing.push(t("valDestination"))
+    if (!flightDepartureDate) missing.push(t("valFlightDeparture"))
+    if (!flightReturnDate) missing.push(t("valFlightReturn"))
 
     if (missing.length > 0) {
-      toast.warning(`Vui lòng điền đầy đủ: ${missing.join(', ')}.`, 'Thiếu thông tin')
+      toast.warning(`${t("pleaseFillAll")} ${missing.join(', ')}.`, t("missingInfo"))
       return
     }
     dataBuildTour.flight_departure_date = formattedFlightDepartureDate
@@ -86,13 +88,13 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
     <div className="p-8">
       <div className="mb-6">
         <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
-          Flight Navigator
+          {t("navigator")}
         </p>
         <h3 className="text-2xl font-semibold text-[#0F4C5C]">
-          Search flights for departure and destination
+          {t("title")}
         </h3>
         <p className="mt-2 text-sm text-[#3F3F46]">
-          Find the best flight options connecting your journey endpoints with flexible schedules.
+          {t("description")}
         </p>
       </div>
 
@@ -100,7 +102,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Departure <span className="text-red-400">*</span>
+              {t("departure")} <span className="text-red-400">*</span>
             </label>
             <Dropdown
               value={departure || ""}
@@ -111,7 +113,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
               }))}
               optionLabel="label"
               optionValue="value"
-              placeholder="Search departure..."
+              placeholder={t("searchDeparture")}
               filter
               showClear={false}
               className="dashboard-form__prime"
@@ -121,7 +123,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
 
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Destination <span className="text-red-400">*</span>
+              {t("destination")} <span className="text-red-400">*</span>
             </label>
             <Dropdown
               value={destination || ""}
@@ -131,7 +133,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
                 value: city.id
               }))} optionLabel="label"
               optionValue="value"
-              placeholder="Search destination..."
+              placeholder={t("searchDestination")}
               filter
               showClear={false}
               className="dashboard-form__prime"
@@ -142,10 +144,10 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
         <div className="grid gap-5 sm:grid-cols-2">
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Flight departure time <span className="text-red-400">*</span>
+              {t("flightDeparture")} <span className="text-red-400">*</span>
             </label>
             <Calendar
-              placeholder={'Select departure date...'}
+              placeholder={t("selectDeparture")}
               selectionMode="single"
               value={flightDepartureDate}
               onChange={(event) => {
@@ -168,10 +170,10 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
           </div>
           <div className="dashboard-form__field">
             <label className="dashboard-form__label">
-              Flight return time <span className="text-red-400">*</span>
+              {t("flightReturn")} <span className="text-red-400">*</span>
             </label>
             <Calendar
-              placeholder={'Select return date...'}
+              placeholder={t("selectReturn")}
               selectionMode="single"
               value={flightReturnDate}
               onChange={(event) => {
@@ -215,10 +217,10 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Processing...
+              {t("processing")}
             </span>
           ) : (
-            "Search flights"
+            t("searchFlights")
           )}
         </button>
       </div>

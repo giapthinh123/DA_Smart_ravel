@@ -15,19 +15,22 @@ import {
     CreditCard
 } from 'lucide-react'
 
-// Sidebar navigation items
-const sidebarItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
-    { name: 'Tour Management', icon: Globe, href: '/admin/tours' },
-    { name: 'Location Management', icon: MapPin, href: '/admin/locations' },
-    { name: 'User Management', icon: Users, href: '/admin/users' },
-    { name: 'Payment Management', icon: CreditCard, href: '/admin/payments' },
-    { name: 'Reports & Statistics', icon: BarChart3, href: '/admin/reports' },
+import { useTranslations } from 'next-intl'
+
+// Sidebar navigation keys
+const sidebarKeys = [
+    { key: 'dashboard', icon: LayoutDashboard, href: '/admin' },
+    { key: 'tourManagement', icon: Globe, href: '/admin/tours' },
+    { key: 'locationManagement', icon: MapPin, href: '/admin/locations' },
+    { key: 'userManagement', icon: Users, href: '/admin/users' },
+    { key: 'paymentManagement', icon: CreditCard, href: '/admin/payments' },
+    { key: 'reports', icon: BarChart3, href: '/admin/reports' },
 ]
 
 export function AdminSidebar() {
     const pathname = usePathname()
     const { logout } = useAuthStore()
+    const t = useTranslations("AdminSidebar")
 
     return (
         <aside className="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
@@ -37,26 +40,26 @@ export function AdminSidebar() {
                     <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                         <Globe className="h-6 w-6 text-white" />
                     </div>
-                    <h1 className="text-xl font-bold text-gray-900">TravelAdmin</h1>
+                    <h1 className="text-xl font-bold text-gray-900">{t("brand")}</h1>
                 </div>
             </div>
 
             {/* Navigation */}
             <nav className="flex-1 p-4 space-y-1">
-                {sidebarItems.map((item) => {
+                {sidebarKeys.map((item) => {
                     const Icon = item.icon
-                    const isActive = pathname === item.href 
+                    const isActive = pathname === item.href
                     return (
                         <Link
-                            key={item.name}
+                            key={item.key}
                             href={item.href}
                             className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                    ? 'bg-blue-600 text-white'
-                                    : 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
+                                ? 'bg-blue-600 text-white'
+                                : 'text-gray-700 hover:bg-gray-200 hover:text-gray-900'
                                 }`}
                         >
                             <Icon className="h-5 w-5" />
-                            <span className="text-sm font-medium">{item.name}</span>
+                            <span className="text-sm font-medium">{t(`menu.${item.key}`)}</span>
                         </Link>
                     )
                 })}
@@ -70,7 +73,7 @@ export function AdminSidebar() {
                     className="w-full justify-start text-red-600 hover:bg-red-50 hover:text-red-700"
                 >
                     <LogOut className="h-5 w-5 mr-3" />
-                    Logout
+                    {t("logout")}
                 </Button>
             </div>
         </aside>

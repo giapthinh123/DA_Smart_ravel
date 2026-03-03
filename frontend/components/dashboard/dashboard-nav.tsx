@@ -3,8 +3,10 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Globe } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 export function DashboardNav() {
+  const t = useTranslations("Dashboard.Nav")
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
       <div className="container mx-auto px-4 md:px-6">
@@ -18,13 +20,13 @@ export function DashboardNav() {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center gap-8">
             <Link href="#experiences" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
-              Experiences
+              {t("experiences")}
             </Link>
             <Link href="#featured" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
-              Featured Tours
+              {t("featuredTours")}
             </Link>
             <Link href="#stories" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">
-              Stories
+              {t("stories")}
             </Link>
           </div>
 
@@ -34,10 +36,10 @@ export function DashboardNav() {
 
 
             <Button variant="ghost" size="sm" className="text-white hover:bg-white/10" asChild>
-              <Link href="/login">Login</Link>
+              <Link href="/login">{t("login")}</Link>
             </Button>
             <Button size="sm" className="bg-cyan-500 hover:bg-cyan-600 text-white" asChild>
-              <Link href="/register">Get Started</Link>
+              <Link href="/register">{t("getStarted")}</Link>
             </Button>
           </div>
         </div>

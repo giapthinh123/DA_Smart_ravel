@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useAuthStore } from "@/store/useAuthStore"
 import { AuthGuard } from "@/components/auth-guard"
+import { LanguageSwitcher } from "@/components/i18n/language-switcher"
+import { useTranslations } from "next-intl"
 import {
     ItineraryService,
     Itinerary,
@@ -78,14 +80,14 @@ const getBlockIcon = (blockType: string): string => {
     return icons[blockType] || "📍"
 }
 
-const getBlockLabel = (blockType: string): string => {
+const getBlockLabel = (blockType: string, t: any): string => {
     const labels: Record<string, string> = {
-        breakfast: "Breakfast",
-        morning_activity: "Morning Activity",
-        lunch: "Lunch",
-        afternoon_activity: "Afternoon Activity",
-        dinner: "Dinner",
-        hotel: "Accommodation"
+        breakfast: t("breakfast"),
+        morning_activity: t("morningActivity"),
+        lunch: t("lunch"),
+        afternoon_activity: t("afternoonActivity"),
+        dinner: t("dinner"),
+        hotel: t("hotel")
     }
     return labels[blockType] || blockType
 }
@@ -110,6 +112,7 @@ function ItineraryContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const { user, logout, token } = useAuthStore()
+    const t = useTranslations("ItineraryPage")
 
     // State
     const [itinerary, setItinerary] = useState<Itinerary | null>(null)
@@ -427,8 +430,8 @@ function ItineraryContent() {
                         </Link>
                         <div className="h-6 w-px bg-[#E4E4E7]" />
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#A1A1AA]">VIETJOURNEY</p>
-                            <h1 className="text-sm font-semibold text-[#0F4C5C]">Your Itinerary</h1>
+                            <p className="text-[10px] uppercase tracking-[0.3em] text-[#A1A1AA]">{t("brand")}</p>
+                            <h1 className="text-sm font-semibold text-[#0F4C5C]">{t("pageTitle")}</h1>
                         </div>
                     </div>
                     <nav className="flex items-center gap-3">
@@ -440,16 +443,18 @@ function ItineraryContent() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="bg-white border-[#E4E4E7] shadow-lg">
                                 <DropdownMenuItem onClick={() => router.push("/profile")} className="text-[#3F3F46] hover:bg-[#CCFBF1] cursor-pointer">
-                                    Profile
+                                    {t("profile")}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push("/planner")} className="text-[#3F3F46] hover:bg-[#CCFBF1] cursor-pointer">
-                                    Dashboard
+                                    {t("dashboard")}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => { logout(); router.push("/login") }} className="text-red-500 hover:bg-red-50 cursor-pointer">
-                                    Logout
+                                    {t("logout")}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
+                        <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
+                        <LanguageSwitcher />
                     </nav>
                 </div>
             </header>
@@ -470,16 +475,16 @@ function ItineraryContent() {
                         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#CCFBF1] flex items-center justify-center">
                             <MapPin className="w-10 h-10 text-[#5FCBC4]" />
                         </div>
-                        <h2 className="text-2xl font-bold mb-4 text-[#0F4C5C]">No Itinerary Found</h2>
+                        <h2 className="text-2xl font-bold mb-4 text-[#0F4C5C]">{t("noItineraryTitle")}</h2>
                         <p className="text-[#A1A1AA] mb-8 max-w-md mx-auto">
-                            Start planning your trip by selecting a destination and your preferences.
+                            {t("noItineraryDesc")}
                         </p>
                         <Link
                             href="/planner"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-[#5FCBC4] text-white font-bold rounded-xl hover:bg-[#4AB8B0] transition"
                         >
                             <Home className="w-5 h-5" />
-                            Go to Planner
+                            {t("goToPlanner")}
                         </Link>
                     </div>
                 )}
@@ -499,7 +504,7 @@ function ItineraryContent() {
                         <aside className="space-y-6">
                             {/* Trip Summary Card */}
                             <div className="rounded-2xl border border-[#E4E4E7] bg-white shadow-sm p-6">
-                                <h2 className="text-lg font-semibold mb-4 text-[#0F4C5C]">Trip Summary</h2>
+                                <h2 className="text-lg font-semibold mb-4 text-[#0F4C5C]">{t("tripSummary")}</h2>
 
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
@@ -507,8 +512,10 @@ function ItineraryContent() {
                                             <Calendar className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A1A1AA]">Duration</p>
-                                            <p className="font-medium text-[#3F3F46]">{itinerary.trip_duration_days} days</p>
+                                            <p className="text-xs text-[#A1A1AA]">{t("duration")}</p>
+                                            <p className="font-medium text-[#3F3F46]">
+                                                {itinerary.trip_duration_days} {t("days")}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -517,8 +524,10 @@ function ItineraryContent() {
                                             <Users className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A1A1AA]">Travelers</p>
-                                            <p className="font-medium text-[#3F3F46]">{itinerary.guest_count} guests</p>
+                                            <p className="text-xs text-[#A1A1AA]">{t("travelers")}</p>
+                                            <p className="font-medium text-[#3F3F46]">
+                                                {itinerary.guest_count} {t("guests")}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -527,7 +536,7 @@ function ItineraryContent() {
                                             <DollarSign className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A1A1AA]">Budget</p>
+                                            <p className="text-xs text-[#A1A1AA]">{t("budget")}</p>
                                             <p className="font-medium text-[#3F3F46]">${itinerary.budget}</p>
                                         </div>
                                     </div>
@@ -602,7 +611,7 @@ function ItineraryContent() {
                             {/* Day Selector */}
                             <div className="rounded-2xl border border-[#E4E4E7] bg-white shadow-sm p-4">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-sm font-semibold text-[#0F4C5C]">Select Day</h3>
+                                    <h3 className="text-sm font-semibold text-[#0F4C5C]">{t("selectDay")}</h3>
                                     <div className="flex gap-1">
                                         <button
                                             onClick={goToPrevDay}
@@ -639,7 +648,7 @@ function ItineraryContent() {
                                                         : "bg-[#F0FDFA] text-[#A1A1AA] cursor-not-allowed border border-[#E4E4E7]"
                                                     } ${isGeneratingThis ? "animate-pulse" : ""}`}
                                             >
-                                                <span className="block text-xs opacity-70">Day</span>
+                                                <span className="block text-xs opacity-70">{t("dayLabel")}</span>
                                                 <span className="block text-lg font-bold">{day}</span>
                                                 {dayData && (
                                                     <span className={`block text-[10px] mt-1 ${isSelected ? 'opacity-90' : 'text-[#A1A1AA]'}`}>
@@ -672,14 +681,14 @@ function ItineraryContent() {
                                                 <h2 className="text-2xl font-bold text-[#0F4C5C]">{formatDate(currentDay.date)}</h2>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-sm text-[#A1A1AA]">Estimated Cost</p>
+                                                <p className="text-sm text-[#A1A1AA]">{t("estimatedCost")}</p>
                                                 <p className="text-2xl font-bold text-[#5FCBC4]">${currentDay.day_cost}</p>
                                             </div>
                                         </div>
                                         <div className="mt-4 flex gap-4 text-sm text-[#A1A1AA]">
-                                            <span>{currentDay.blocks.length} activities</span>
+                                            <span>{currentDay.blocks.length} {t("activities")}</span>
                                             <span>•</span>
-                                            <span>Full day planned</span>
+                                            <span>{t("fullDayPlanned")}</span>
                                         </div>
                                     </div>
 
@@ -713,7 +722,7 @@ function ItineraryContent() {
                                                                     <span className="text-3xl">{getBlockIcon(block.block_type)}</span>
                                                                     <div>
                                                                         <p className="text-xs font-semibold uppercase tracking-wide text-[#A1A1AA]">
-                                                                            {getBlockLabel(block.block_type)}
+                                                                            {getBlockLabel(block.block_type, t)}
                                                                         </p>
                                                                         <div className="flex items-center gap-2 text-sm text-[#A1A1AA]">
                                                                             <Clock className="w-3 h-3" />
@@ -735,7 +744,7 @@ function ItineraryContent() {
 
                                                             {/* Quick Info */}
                                                             <div className="flex items-center gap-4 text-sm text-[#A1A1AA]">
-                                                                <span>{block.place.userRatingCount.toLocaleString()} reviews</span>
+                                                                <span>{block.place.userRatingCount.toLocaleString()} {t("reviews")}</span>
                                                             </div>
 
                                                             {/* Expanded Details */}
@@ -832,7 +841,7 @@ function ItineraryContent() {
                                                                             {/* Editorial Summary */}
                                                                             {details.editorialSummary_text && (
                                                                                 <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7]">
-                                                                                    <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">About</h5>
+                                                                                    <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">{t("about")}</h5>
                                                                                     <p className="text-sm text-[#3F3F46] leading-relaxed">
                                                                                         {details.editorialSummary_text}
                                                                                     </p>
@@ -909,13 +918,13 @@ function ItineraryContent() {
                                     <div className="mt-8 p-6 rounded-2xl border border-[#E4E4E7] bg-white shadow-sm">
                                         <div className="flex items-center justify-between mb-4">
                                             <div>
-                                                <p className="text-sm text-[#A1A1AA]">Day {currentDay.day_number} of {itinerary.trip_duration_days || 3}</p>
+                                                <p className="text-sm text-[#A1A1AA]">{t("dayLabel")} {currentDay.day_number} / {itinerary.trip_duration_days || 3}</p>
                                                 <p className="text-lg font-semibold text-[#0F4C5C]">
                                                     {currentDay.day_number < (itinerary.trip_duration_days || 3)
-                                                        ? "Ready to plan the next day?"
+                                                        ? t("readyNext")
                                                         : itinerary.status === 'complete'
-                                                            ? "Your itinerary is complete!"
-                                                            : "Generate remaining days to complete"
+                                                            ? t("itineraryComplete")
+                                                            : t("generateRemaining")
                                                     }
                                                 </p>
                                             </div>
@@ -931,7 +940,7 @@ function ItineraryContent() {
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
-                                                Edit Day {currentDay.day_number}
+                                                {t("editDay")} {currentDay.day_number}
                                             </button>
 
                                             {/* Continue Button - show if not all days generated */}
@@ -944,12 +953,12 @@ function ItineraryContent() {
                                                     {generatingDay !== null ? (
                                                         <>
                                                             <Loader2 className="w-5 h-5 animate-spin" />
-                                                            Generating...
+                                                            {t("generating")}
                                                         </>
                                                     ) : (
                                                         <>
                                                             <ChevronRight className="w-5 h-5" />
-                                                            Continue to Day {(itinerary.daily_itinerary?.length || 0) + 1}
+                                                            {t("continueToDay")} {(itinerary.daily_itinerary?.length || 0) + 1}
                                                         </>
                                                     )}
                                                 </button>

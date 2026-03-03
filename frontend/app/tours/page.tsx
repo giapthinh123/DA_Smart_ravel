@@ -7,6 +7,7 @@ import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
 import { TourService, TourDocument } from "@/services/tour.service"
 import { useAuthStore } from "@/store/useAuthStore"
+import { useTranslations } from "next-intl"
 // Destination images map for beautiful cards
 const DESTINATION_IMAGES: Record<string, string> = {
     "ha noi": "https://marketplace.canva.com/wgNe8/MAFaRvwgNe8/1/tl/canva-hoan-kiem-lake-MAFaRvwgNe8.jpg",
@@ -39,6 +40,7 @@ type SortOption = "newest" | "oldest" | "price_high" | "price_low" | "duration"
 export default function ToursPage() {
     const router = useRouter()
     const { isAuthenticated } = useAuthStore()
+    const t = useTranslations("ToursPage")
     const [tours, setTours] = useState<TourDocument[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string>("")
@@ -130,11 +132,11 @@ export default function ToursPage() {
     }
 
     const sortOptions: { value: SortOption; label: string }[] = [
-        { value: "newest", label: "Newest First" },
-        { value: "oldest", label: "Oldest First" },
-        { value: "price_high", label: "Price: High → Low" },
-        { value: "price_low", label: "Price: Low → High" },
-        { value: "duration", label: "Longest Duration" },
+        { value: "newest", label: t("sortNewest") },
+        { value: "oldest", label: t("sortOldest") },
+        { value: "price_high", label: t("sortPriceHigh") },
+        { value: "price_low", label: t("sortPriceLow") },
+        { value: "duration", label: t("sortDuration") },
     ]
 
     const formatDate = (dateStr: string) => {
@@ -171,18 +173,18 @@ export default function ToursPage() {
                                 VietJourney
                             </p>
                             <p className="text-sm font-semibold text-[#0F4C5C]">
-                                Explore All Tours
+                                {t("exploreAll")}
                             </p>
                         </div>
                         <nav className="flex items-center gap-2 text-sm font-medium">
                             <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                                Home
+                                {t("home")}
                             </Link>
                             <Link href="/tours" className="rounded-full px-4 py-2 bg-[#CCFBF1] text-[#0F4C5C] font-semibold">
-                                Tours
+                                {t("tours")}
                             </Link>
                             <Link href="/history_tour" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                                History Tour
+                                {t("historyTour")}
                             </Link>
                             <>
                                 {isAuthenticated ? (
@@ -192,7 +194,7 @@ export default function ToursPage() {
                                     </>
                                 ) : (
                                     <Link href="/login" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                                        Login
+                                        {t("login")}
                                     </Link>
                                 )}
                             </>
@@ -232,7 +234,7 @@ export default function ToursPage() {
                             </svg>
                             <input
                                 type="text"
-                                placeholder="Search tours, cities, or countries..."
+                                placeholder={t("searchPlaceholder")}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-11 pr-4 py-3 rounded-xl border border-[#E4E4E7] bg-white text-[#3F3F46] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#5FCBC4] focus:ring-2 focus:ring-[#5FCBC4]/20 transition shadow-sm"
@@ -296,7 +298,7 @@ export default function ToursPage() {
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
-                                New Tour
+                                {t("newTour")}
                             </Link>
                         </div>
                     </div>
@@ -305,8 +307,8 @@ export default function ToursPage() {
                     {loading && (
                         <div className="text-center py-24 rounded-2xl border border-[#E4E4E7] bg-white">
                             <div className="w-16 h-16 mx-auto mb-6 border-4 border-[#5FCBC4] border-t-transparent rounded-full animate-spin"></div>
-                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">Loading tours...</h3>
-                            <p className="text-[#A1A1AA]">Fetching your curated travel experiences</p>
+                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">{t("loadingTitle")}</h3>
+                            <p className="text-[#A1A1AA]">{t("loadingDesc")}</p>
                         </div>
                     )}
 
@@ -316,13 +318,13 @@ export default function ToursPage() {
                             <svg className="w-16 h-16 mx-auto mb-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">Error Loading Tours</h3>
+                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">{t("errorTitle")}</h3>
                             <p className="text-[#A1A1AA] mb-6">{error}</p>
                             <button
                                 onClick={() => window.location.reload()}
                                 className="px-6 py-2.5 rounded-xl bg-[#5FCBC4] text-white font-semibold hover:bg-[#4AB8B0] transition"
                             >
-                                Retry
+                                {t("retry")}
                             </button>
                         </div>
                     )}
@@ -337,19 +339,19 @@ export default function ToursPage() {
                             </div>
                             {searchQuery ? (
                                 <>
-                                    <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">No tours match your search</h3>
-                                    <p className="text-[#A1A1AA] mb-6">Try adjusting your search query or clear the filter</p>
+                                    <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">{t("noMatchTitle")}</h3>
+                                    <p className="text-[#A1A1AA] mb-6">{t("noMatchDesc")}</p>
                                     <button
                                         onClick={() => setSearchQuery("")}
                                         className="inline-block px-6 py-2.5 rounded-xl border border-[#E4E4E7] text-[#3F3F46] font-semibold hover:bg-[#CCFBF1] hover:border-[#5FCBC4] transition"
                                     >
-                                        Clear Search
+                                        {t("clearSearch")}
                                     </button>
                                 </>
                             ) : (
                                 <>
-                                    <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">No tours yet</h3>
-                                    <p className="text-[#A1A1AA] mb-6">Start planning your first adventure today!</p>
+                                    <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">{t("noToursTitle")}</h3>
+                                    <p className="text-[#A1A1AA] mb-6">{t("noToursDesc")}</p>
                                     <Link
                                         href="/planner"
                                         className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#5FCBC4] text-white font-semibold hover:bg-[#4AB8B0] transition shadow-lg shadow-[#5FCBC4]/25"
@@ -357,7 +359,7 @@ export default function ToursPage() {
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                         </svg>
-                                        Create Your First Tour
+                                        {t("createFirst")}
                                     </Link>
                                 </>
                             )}
@@ -564,8 +566,8 @@ export default function ToursPage() {
                 {/* Footer */}
                 <footer className="mt-8 border-t border-[#E4E4E7] bg-[#1E293B] py-10">
                     <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#94A3B8]">
-                        <p>© {new Date().getFullYear()} VietJourney. All rights reserved</p>
-                        <p className="mt-2">Crafting unforgettable travel experiences.</p>
+                        <p>© {new Date().getFullYear()} {t("copyright")}</p>
+                        <p className="mt-2">{t("tagline")}</p>
                     </div>
                 </footer>
             </div>

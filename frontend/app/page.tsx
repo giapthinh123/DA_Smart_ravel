@@ -1,33 +1,45 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useAuthStore } from "@/store/useAuthStore"
+import { useTranslations, useLocale } from "next-intl"
+import { LanguageSwitcher } from "@/components/i18n/language-switcher"
 
 export default function Home() {
-  const router = useRouter()
   const { isAuthenticated, user } = useAuthStore()
-  // Featured Tours Data
+  const locale = useLocale()
+  const t = useTranslations("HomePage")
+  const tHeader = useTranslations("Header")
+  const tFooter = useTranslations("Footer")
+  const isVi = locale === "vi"
+
+  // Featured Tours Data — dùng locale để chọn đúng ngôn ngữ
   const featuredTours = [
     {
-      name: "Hanoi - A Thousand Years of Civilization",
-      description: "Discover Hanoi with its heroic historical stories and traditional cultural beauty.",
-      duration: "5 days · 4 nights",
+      name: isVi ? "Hà Nội - Nghìn Năm Văn Hiến" : "Hanoi - A Thousand Years of Civilization",
+      description: isVi
+        ? "Khám phá Hà Nội với những câu chuyện lịch sử hào hùng và vẻ đẹp văn hóa truyền thống."
+        : "Discover Hanoi with its heroic historical stories and traditional cultural beauty.",
+      duration: isVi ? "5 ngày · 4 đêm" : "5 days · 4 nights",
       price: "2,480",
       image: "https://marketplace.canva.com/wgNe8/MAFaRvwgNe8/1/tl/canva-hoan-kiem-lake-MAFaRvwgNe8.jpg",
     },
     {
-      name: "Da Nang - The Coastal Paradise",
-      description: "Discover the livable city with beautiful beaches, diverse cuisine, and iconic bridges.",
-      duration: "3 days · 2 nights",
+      name: isVi ? "Đà Nẵng - Thiên Đường Biển" : "Da Nang - The Coastal Paradise",
+      description: isVi
+        ? "Khám phá thành phố đáng sống với những bãi biển đẹp, ẩm thực đa dạng và những cây cầu biểu tượng."
+        : "Discover the livable city with beautiful beaches, diverse cuisine, and iconic bridges.",
+      duration: isVi ? "3 ngày · 2 đêm" : "3 days · 2 nights",
       price: "890",
       image: "https://media.vneconomy.vn/images/upload/2023/08/30/cau-vang-nag-tran-tuan-viet-5.jpg",
     },
     {
-      name: "Paris - The City of Light",
-      description: "The most romantic city in the world with ancient architecture, famous museums, and exquisite culinary experiences.",
-      duration: "7 days · 6 nights",
+      name: isVi ? "Paris - Kinh đô Ánh sáng" : "Paris - The City of Light",
+      description: isVi
+        ? "Thành phố lãng mạn nhất thế giới với kiến trúc cổ kính, bảo tàng nổi tiếng và trải nghiệm ẩm thực tinh tế."
+        : "The most romantic city in the world with ancient architecture, famous museums, and exquisite culinary experiences.",
+      duration: isVi ? "7 ngày · 6 đêm" : "7 days · 6 nights",
       price: "3,950",
       image: "https://c4.wallpaperflare.com/wallpaper/150/935/583/paris-4k-download-beautiful-for-desktop-wallpaper-preview.jpg",
     },
@@ -35,19 +47,13 @@ export default function Home() {
 
   // Statistics Data
   const stats = [
-    { label: "Optimized Journeys", value: "1.2K+" },
-    { label: "Satisfied Customers", value: "98%" },
-    { label: "Partner Countries", value: "16" },
+    { label: t("statJourneys"), value: "1.2K+" },
+    { label: t("statSatisfied"), value: "98%" },
+    { label: t("statCountries"), value: "16" },
   ]
 
   return (
     <div className="relative min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
-      <style jsx global>{`
-        @keyframes floatSlow {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-14px); }
-        }
-      `}</style>
 
       {/* Background Layers */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
@@ -63,26 +69,29 @@ export default function Home() {
               Smart Travel
             </p>
             <p className="text-xl font-semibold text-[#0F4C5C]">
-              Discover the world your way
+              {t("brandTagline")}
             </p>
           </div>
         </div>
 
-        {/* Right: Auth Buttons / User Menu */}
+        {/* Right: Nav + Language Switcher + Auth */}
         <div className="flex items-center gap-3">
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
           {isAuthenticated ? (
             <>
               <Link
                 href="/planner"
                 className="rounded-full px-4 py-2 text-[#A1A1AA] transition hover:text-[#0F4C5C]"
               >
-                Planner
+                {tHeader("planner")}
               </Link>
               <Link
                 href="/profile"
                 className="rounded-full bg-[#5FCBC4] px-5 py-2 text-white font-medium transition hover:bg-[#4AB8B0]"
               >
-                {user?.fullname || user?.email || 'Profile'}
+                {user?.fullname || user?.email || tHeader("profile")}
               </Link>
             </>
           ) : (
@@ -91,13 +100,13 @@ export default function Home() {
                 href="/planner"
                 className="rounded-full px-4 py-2 text-[#A1A1AA] transition hover:text-[#0F4C5C]"
               >
-                Planner
+                {tHeader("planner")}
               </Link>
               <Link
                 href="/login"
                 className="rounded-full bg-[#5FCBC4] px-5 py-2 text-white font-medium transition hover:bg-[#4AB8B0]"
               >
-                Get Started
+                {t("getStarted")}
               </Link>
             </>
           )}
@@ -110,13 +119,14 @@ export default function Home() {
         <section className="grid gap-10 lg:grid-cols-[1.25fr_1fr] ">
           <div className="space-y-8 pt-4">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#5FCBC4]/40 bg-[#E0F7FA] px-4 py-2 text-xs font-medium uppercase tracking-[0.35em] text-[#2A9D8F]">
-              The First Tour Recommendation Platform in Vietnam
+              {t("badge")}
             </span>
             <h1 className="text-4xl font-semibold leading-tight text-[#0F4C5C] sm:text-5xl">
-              Create a personalized travel itinerary in minutes
+              {t("heroHeadline")}
             </h1>
             <p className="max-w-xl text-base leading-relaxed text-[#3F3F46]">
-              Smart Travel helps you design your own journey: choose departure/arrival points, book round-trip flights, select favorite restaurants, hotels, and locations, and instantly receive an optimized daily schedule.            </p>
+              {t("heroDescription")}
+            </p>
 
             {/* Statistics */}
             <div className="grid gap-4 sm:grid-cols-3">
@@ -144,14 +154,14 @@ export default function Home() {
                 href={isAuthenticated ? "/planner" : "/login"}
                 className="inline-flex items-center gap-2 rounded-full bg-[#5FCBC4] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#4AB8B0] shadow-lg shadow-[#5FCBC4]/25"
               >
-                {isAuthenticated ? "Go to Dashboard" : "Start Planning Now"}
+                {isAuthenticated ? t("ctaDashboard") : t("ctaStartPlanning")}
                 <span aria-hidden>→</span>
               </Link>
               <a
                 href="#tours"
                 className="inline-flex items-center gap-2 rounded-full border border-[#E4E4E7] px-6 py-3 text-sm font-semibold text-[#3F3F46] transition hover:border-[#5FCBC4] hover:bg-[#CCFBF1]"
               >
-                View Tours
+                {t("ctaViewTours")}
               </a>
             </div>
           </div>
@@ -160,13 +170,13 @@ export default function Home() {
           <div className="relative">
             <div className="absolute -inset-3 rounded-[2.2rem] bg-gradient-to-br from-[#CCFBF1]/60 via-transparent to-transparent blur-[70px]" />
             <div className="relative overflow-hidden rounded-[2rem] border border-[#E4E4E7] bg-white p-4 shadow-xl transition duration-500 hover:border-[#5FCBC4]/40 hover:shadow-2xl">
-              {/* Header */}
+              {/* Card Header */}
               <div className="mb-8">
                 <p className="text-xs uppercase tracking-[0.4em] text-[#5FCBC4]">
-                  Smart Travel Planner
+                  {t("itineraryLabel")}
                 </p>
                 <h3 className="mt-2 text-xl font-semibold text-[#0F4C5C]">
-                  Suggested Itinerary Overview
+                  {t("itineraryTitle")}
                 </h3>
               </div>
 
@@ -206,7 +216,7 @@ export default function Home() {
 
               {/* Footer Note */}
               <p className="mt-8 text-sm text-[#A1A1AA] leading-relaxed">
-                The Smart Travel AI algorithm updates flight status, accommodation availability, and optimizes the daily itinerary for the whole group.
+                {t("itineraryNote")}
               </p>
             </div>
           </div>
@@ -219,13 +229,13 @@ export default function Home() {
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div className="space-y-3">
               <p className="text-xs uppercase tracking-[0.4em] text-[#5FCBC4]">
-                Popular Destinations
+                {t("popularDestinations")}
               </p>
               <h2 className="text-4xl font-semibold text-[#0F4C5C]">
-                Featured Tours
+                {t("featuredTours")}
               </h2>
               <p className="mt-3 max-w-2xl text-base text-[#3F3F46] leading-relaxed">
-                Explore curated travel experiences designed by our AI and refined by local experts
+                {t("toursDescription")}
               </p>
             </div>
           </div>
@@ -257,7 +267,7 @@ export default function Home() {
                   </div>
                   <div className="mt-6 pt-4 border-t border-[#E4E4E7] flex items-center justify-between text-sm font-medium text-[#5FCBC4]">
                     <span>{tour.duration}</span>
-                    <span className="text-base">from ${tour.price}</span>
+                    <span className="text-base">{t("from")} ${tour.price}</span>
                   </div>
                 </div>
               </article>
@@ -270,17 +280,17 @@ export default function Home() {
       <footer className="border-t border-[#1E293B]/10 bg-[#1E293B] py-10">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 text-sm text-[#94A3B8] sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} Smart Travel. All rights reserved.
+            © {new Date().getFullYear()} {tFooter("copyright")}
           </p>
           <div className="flex flex-wrap gap-4">
             <a href="#" className="transition hover:text-[#5FCBC4]">
-              Privacy Policy
+              {tFooter("privacy")}
             </a>
             <a href="#" className="transition hover:text-[#5FCBC4]">
-              Terms of Use
+              {tFooter("terms")}
             </a>
             <a href="#" className="transition hover:text-[#5FCBC4]">
-              Support Center
+              {tFooter("support")}
             </a>
           </div>
         </div>

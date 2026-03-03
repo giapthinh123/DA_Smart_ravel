@@ -35,6 +35,7 @@ import {
     Share2
 } from "lucide-react"
 import { UserMenu } from "@/components/user-menu"
+import { useTranslations } from "next-intl"
 // Types for place details
 interface PlaceDetails {
     displayName_text: string
@@ -77,16 +78,16 @@ const getBlockIcon = (blockType: string): string => {
     return icons[blockType] || "📍"
 }
 
-const getBlockLabel = (blockType: string): string => {
-    const labels: Record<string, string> = {
-        breakfast: "Breakfast",
-        morning_activity: "Morning Activity",
-        lunch: "Lunch",
-        afternoon_activity: "Afternoon Activity",
-        dinner: "Dinner",
-        hotel: "Accommodation"
+const getBlockLabel = (blockType: string, tItinerary: any): string => {
+    switch (blockType) {
+        case "breakfast": return tItinerary("breakfast")
+        case "morning_activity": return tItinerary("morningActivity")
+        case "lunch": return tItinerary("lunch")
+        case "afternoon_activity": return tItinerary("afternoonActivity")
+        case "dinner": return tItinerary("dinner")
+        case "hotel": return tItinerary("hotel")
+        default: return blockType
     }
-    return labels[blockType] || blockType
 }
 
 const formatDate = (dateString: string): string => {
@@ -115,6 +116,8 @@ function FullTourContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const { user, logout, token } = useAuthStore()
+    const t = useTranslations("FullTourPage")
+    const tItinerary = useTranslations("ItineraryPage")
 
     // State
     const [itinerary, setItinerary] = useState<Itinerary | null>(null)
@@ -216,12 +219,12 @@ function FullTourContent() {
                             className="flex items-center gap-2 text-[#3F3F46] hover:text-[#0F4C5C] transition"
                         >
                             <ChevronLeft className="w-5 h-5" />
-                            <span className="text-sm">Back</span>
+                            <span className="text-sm">{t("back")}</span>
                         </Link>
                         <div className="h-6 w-px bg-white/20" />
                         <div>
                             <p className="text-[10px] uppercase tracking-[0.3em] text-[#A1A1AA]">VIETJOURNEY</p>
-                            <h1 className="text-sm font-semibold text-[#0F4C5C]">Full Tour</h1>
+                            <h1 className="text-sm font-semibold text-[#0F4C5C]">{t("pageTitle")}</h1>
                         </div>
                     </div>
                     <UserMenu />
@@ -234,7 +237,7 @@ function FullTourContent() {
                 {error && (
                     <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-600 flex items-center justify-between">
                         <span>{error}</span>
-                        <button onClick={() => setError(null)} className="text-sm underline hover:no-underline">Dismiss</button>
+                        <button onClick={() => setError(null)} className="text-sm underline hover:no-underline">{t("dismiss")}</button>
                     </div>
                 )}
 
@@ -242,7 +245,7 @@ function FullTourContent() {
                 {isLoading && !itinerary && (
                     <div className="text-center py-20">
                         <Loader2 className="w-12 h-12 animate-spin text-[#5FCBC4] mx-auto mb-4" />
-                        <p className="text-lg">Loading your full tour...</p>
+                        <p className="text-lg">{t("loading")}</p>
                     </div>
                 )}
 
@@ -252,16 +255,16 @@ function FullTourContent() {
                         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-white border border-[#E4E4E7] flex items-center justify-center">
                             <MapPin className="w-10 h-10 text-[#5FCBC4]" />
                         </div>
-                        <h2 className="text-2xl font-bold mb-4">No Tour Found</h2>
+                        <h2 className="text-2xl font-bold mb-4">{t("noTourFound")}</h2>
                         <p className="text-[#A1A1AA] mb-8 max-w-md mx-auto">
-                            Please provide a valid itinerary ID.
+                            {t("noTourDesc")}
                         </p>
                         <Link
                             href="/history_tour"
                             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] text-[#FFFFFF] font-bold rounded-xl hover:scale-105 transition"
                         >
                             <Home className="w-5 h-5" />
-                            Go to History Tour
+                            {t("goToHistory")}
                         </Link>
                     </div>
                 )}
@@ -273,7 +276,7 @@ function FullTourContent() {
                         <aside className="space-y-6">
                             {/* Trip Summary Card */}
                             <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6">
-                                <h2 className="text-lg font-semibold mb-4 text-[#0F4C5C]">Trip Summary</h2>
+                                <h2 className="text-lg font-semibold mb-4 text-[#0F4C5C]">{t("tripSummary")}</h2>
 
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
@@ -281,8 +284,8 @@ function FullTourContent() {
                                             <Calendar className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A1A1AA]">Duration</p>
-                                            <p className="font-medium">{itinerary.trip_duration_days} days</p>
+                                            <p className="text-xs text-[#A1A1AA]">{t("duration")}</p>
+                                            <p className="font-medium">{itinerary.trip_duration_days} {t("days")}</p>
                                         </div>
                                     </div>
 
@@ -291,8 +294,8 @@ function FullTourContent() {
                                             <Users className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A1A1AA]">Travelers</p>
-                                            <p className="font-medium">{itinerary.guest_count} guests</p>
+                                            <p className="text-xs text-[#A1A1AA]">{t("travelers")}</p>
+                                            <p className="font-medium">{itinerary.guest_count} {t("guests")}</p>
                                         </div>
                                     </div>
 
@@ -301,7 +304,7 @@ function FullTourContent() {
                                             <DollarSign className="w-5 h-5 text-[#5FCBC4]" />
                                         </div>
                                         <div>
-                                            <p className="text-xs text-[#A1A1AA]">Budget</p>
+                                            <p className="text-xs text-[#A1A1AA]">{t("budget")}</p>
                                             <p className="font-medium">${itinerary.budget}</p>
                                         </div>
                                     </div>
@@ -310,14 +313,14 @@ function FullTourContent() {
                                 {/* Status Badge */}
                                 <div className="mt-6 pt-4 border-t border-[#E4E4E7]">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm text-[#A1A1AA]">Status</span>
+                                        <span className="text-sm text-[#A1A1AA]">{t("status")}</span>
                                         <span
                                             className={`px-3 py-1 rounded-full text-xs font-bold ${itinerary.status === "complete"
                                                 ? "bg-[#5FCBC4]/10 text-[#0F4C5C]"
                                                 : "bg-[#CCFBF1] text-[#0F4C5C]"
                                                 }`}
                                         >
-                                            {itinerary.status === "complete" ? "Complete" : "In Progress"}
+                                            {itinerary.status === "complete" ? t("statusComplete") : t("statusInProgress")}
                                         </span>
                                     </div>
                                 </div>
@@ -326,11 +329,11 @@ function FullTourContent() {
                             {/* Cost Summary (if complete) */}
                             {itinerary.summary && (
                                 <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6">
-                                    <h3 className="text-sm font-semibold mb-4 text-[#0F4C5C]">Cost Breakdown</h3>
+                                    <h3 className="text-sm font-semibold mb-4 text-[#0F4C5C]">{t("costBreakdown")}</h3>
                                     <div className="space-y-3 text-sm">
                                         {itinerary.summary?.flight_total != null || (itinerary.book_flight && itinerary.flights) ? (
                                             <div className="flex justify-between">
-                                                <span className="text-[#A1A1AA]">Tổng giá vé máy bay</span>
+                                                <span className="text-[#A1A1AA]">{t("flightTotal")}</span>
                                                 <span className="font-bold text-[#5FCBC4]">
                                                     {itinerary.summary?.flight_total != null
                                                         ? itinerary.summary.flight_total >= 1000
@@ -346,26 +349,26 @@ function FullTourContent() {
                                             </div>
                                         ) : null}
                                         <div className="flex justify-between">
-                                            <span className="text-[#A1A1AA]">Total Cost</span>
+                                            <span className="text-[#A1A1AA]">{t("totalCost")}</span>
                                             <span className="font-bold text-[#0F4C5C]">
                                                 ${itinerary.summary.total_cost}
                                             </span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#A1A1AA]">Per Person</span>
+                                            <span className="text-[#A1A1AA]">{t("perPerson")}</span>
                                             <span className="text-[#0F4C5C]">
                                                 ${itinerary.summary.cost_per_person}
                                             </span>
                                         </div>
                                         <div className="flex justify-between">
-                                            <span className="text-[#A1A1AA]">Per Day (avg)</span>
+                                            <span className="text-[#A1A1AA]">{t("perDayAvg")}</span>
                                             <span className="text-[#0F4C5C]">
                                                 ${itinerary.summary.avg_cost_per_day}
                                             </span>
                                         </div>
                                         <div className="pt-3 mt-3 border-t border-white/10">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-[#A1A1AA]">Budget Used</span>
+                                                <span className="text-[#A1A1AA]">{t("budgetUsed")}</span>
                                                 <span className={`font-bold ${itinerary.summary.budget_utilized_percent > 100
                                                     ? 'text-red-400'
                                                     : 'text-emerald-400'
@@ -394,12 +397,12 @@ function FullTourContent() {
                             {itinerary.book_flight && itinerary.flights && (
                                 <div className="rounded-2xl border border-[#E4E4E7] bg-white overflow-hidden p-6">
                                     <h3 className="text-lg font-bold text-[#0F4C5C] mb-4 flex items-center gap-2">
-                                        <span>✈️</span> Booked Flights
+                                        <span>✈️</span> {t("bookedFlights")}
                                     </h3>
                                     <div className="grid gap-4 sm:grid-cols-2">
                                         <div className="rounded-xl border border-[#E4E4E7] bg-white p-4">
                                             <p className="text-xs uppercase tracking-wider text-[#A1A1AA] mb-2">
-                                                Departure
+                                                {t("departure")}
                                             </p>
                                             <p className="font-semibold text-[#0F4C5C]">
                                                 {itinerary.flights.selectedDepartureFlight.airline}
@@ -412,7 +415,7 @@ function FullTourContent() {
                                             </p>
                                             {itinerary.flights.selectedDepartureFlight.stops && itinerary.flights.selectedDepartureFlight.stops.length > 0 && (
                                                 <div className="mt-3 pt-3 border-t border-[#E4E4E7]">
-                                                    <p className="text-xs text-[#A1A1AA] mb-1">Quá cảnh</p>
+                                                    <p className="text-xs text-[#A1A1AA] mb-1">{t("transit")}</p>
                                                     {itinerary.flights.selectedDepartureFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
                                                         <div key={i} className="text-xs text-[#A1A1AA] py-1">
                                                             <span className="font-medium text-[#3F3F46]">
@@ -421,11 +424,11 @@ function FullTourContent() {
                                                             {stop.name}
                                                             <br />
                                                             <span className="text-[#A1A1AA]">
-                                                                Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}
+                                                                {t("arrival")}: {new Date(stop.arrival).toLocaleString("vi-VN")}
                                                             </span>
                                                             <br />
                                                             <span className="text-[#A1A1AA]">
-                                                                Departure:{" "}
+                                                                {t("departure")}:{" "}
                                                                 {new Date(stop.departure).toLocaleString("vi-VN")}
                                                             </span>
                                                         </div>
@@ -440,7 +443,7 @@ function FullTourContent() {
                                         </div>
                                         <div className="rounded-xl border border-[#E4E4E7] bg-white p-4">
                                             <p className="text-xs uppercase tracking-wider text-[#A1A1AA] mb-2">
-                                                Return
+                                                {t("return")}
                                             </p>
                                             <p className="font-semibold text-[#0F4C5C]">
                                                 {itinerary.flights.selectedReturnFlight.airline}
@@ -453,7 +456,7 @@ function FullTourContent() {
                                             </p>
                                             {itinerary.flights.selectedReturnFlight.stops && itinerary.flights.selectedReturnFlight.stops.length > 0 && (
                                                 <div className="mt-3 pt-3 border-t border-[#E4E4E7]">
-                                                    <p className="text-xs text-[#A1A1AA] mb-1">Quá cảnh</p>
+                                                    <p className="text-xs text-[#A1A1AA] mb-1">{t("transit")}</p>
                                                     {itinerary.flights.selectedReturnFlight.stops.map((stop: { iata: string; name: string; arrival: string; departure: string }, i: number) => (
                                                         <div key={i} className="text-xs text-[#A1A1AA] py-1">
                                                             <span className="font-medium text-[#3F3F46]">
@@ -462,11 +465,11 @@ function FullTourContent() {
                                                             {stop.name}
                                                             <br />
                                                             <span className="text-[#A1A1AA]">
-                                                                Arrival: {new Date(stop.arrival).toLocaleString("vi-VN")}
+                                                                {t("arrival")}: {new Date(stop.arrival).toLocaleString("vi-VN")}
                                                             </span>
                                                             <br />
                                                             <span className="text-[#A1A1AA]">
-                                                                Departure:{" "}
+                                                                {t("departure")}:{" "}
                                                                 {new Date(stop.departure).toLocaleString("vi-VN")}
                                                             </span>
                                                         </div>
@@ -505,7 +508,7 @@ function FullTourContent() {
                                                     )}
                                                     <div className="text-left">
                                                         <p className="text-sm uppercase tracking-widest text-[#5FCBC4] mb-1">
-                                                            Day {day.day_number}
+                                                            {t("day")} {day.day_number}
                                                         </p>
                                                         <h2 className="text-2xl font-bold text-[#0F4C5C]">
                                                             {formatDate(day.date)}
@@ -513,16 +516,16 @@ function FullTourContent() {
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="text-sm text-[#A1A1AA]">Estimated Cost</p>
+                                                    <p className="text-sm text-[#A1A1AA]">{t("estimatedCost")}</p>
                                                     <p className="text-2xl font-bold text-[#5FCBC4]">
                                                         ${day.day_cost}
                                                     </p>
                                                 </div>
                                             </div>
                                             <div className="mt-4 flex gap-4 text-sm text-[#3F3F46]">
-                                                <span>{day.blocks.length} activities</span>
+                                                <span>{day.blocks.length} {t("activities")}</span>
                                                 <span>•</span>
-                                                <span>Full day planned</span>
+                                                <span>{t("fullDayPlanned")}</span>
                                             </div>
                                         </button>
 
@@ -559,7 +562,7 @@ function FullTourContent() {
                                                                                 <span className="text-3xl">{getBlockIcon(block.block_type)}</span>
                                                                                 <div>
                                                                                     <p className="text-xs font-semibold uppercase tracking-wide text-white/70">
-                                                                                        {getBlockLabel(block.block_type)}
+                                                                                        {getBlockLabel(block.block_type, tItinerary)}
                                                                                     </p>
                                                                                     <div className="flex items-center gap-2 text-sm text-white/60">
                                                                                         <Clock className="w-3 h-3" />
@@ -589,7 +592,7 @@ function FullTourContent() {
                                                                         <div className="flex items-center gap-4 text-sm text-white/80">
                                                                             <span>
                                                                                 {block.place.userRatingCount.toLocaleString()}{" "}
-                                                                                reviews
+                                                                                {t("reviews")}
                                                                             </span>
                                                                         </div>
 
@@ -683,7 +686,7 @@ function FullTourContent() {
                                                                                                             (
                                                                                                             {details.userRatingCount?.toLocaleString() ||
                                                                                                                 0}{" "}
-                                                                                                            reviews)
+                                                                                                            {t("reviews")})
                                                                                                         </span>
                                                                                                     </div>
 
@@ -693,7 +696,7 @@ function FullTourContent() {
                                                                                                             <DollarSign className="w-5 h-5 text-[#0F4C5C]" />
                                                                                                             <div>
                                                                                                                 <p className="text-xs text-[#0F4C5C]/70 uppercase tracking-wide">
-                                                                                                                    Avg. Price
+                                                                                                                    {t("avgPrice")}
                                                                                                                 </p>
                                                                                                                 <p className="text-xl font-bold text-[#0F4C5C]">
                                                                                                                     ${details.avg_price}
@@ -709,7 +712,7 @@ function FullTourContent() {
                                                                                         {details.editorialSummary_text && (
                                                                                             <div className="p-4 rounded-xl bg-white/5 border border-white/10">
                                                                                                 <h5 className="text-sm font-semibold text-[#5FCBC4] mb-2 uppercase tracking-wide">
-                                                                                                    About
+                                                                                                    {t("about")}
                                                                                                 </h5>
                                                                                                 <p className="text-sm text-[#E5E7EB] leading-relaxed">
                                                                                                     {details.editorialSummary_text}
@@ -721,7 +724,7 @@ function FullTourContent() {
                                                                                         {details.reviews && details.reviews.length > 0 && (
                                                                                             <div className="space-y-3">
                                                                                                 <h5 className="text-sm font-semibold text-[#5FCBC4] uppercase tracking-wide">
-                                                                                                    Recent Reviews
+                                                                                                    {t("recentReviews")}
                                                                                                 </h5>
                                                                                                 <div className="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
                                                                                                     {details.reviews
@@ -773,7 +776,7 @@ function FullTourContent() {
                                                                                     </div>
                                                                                 ) : (
                                                                                     <p className="text-sm text-[#A1A1AA]">
-                                                                                        Click to load details...
+                                                                                        {t("clickToLoad")}
                                                                                     </p>
                                                                                 )}
                                                                             </div>
@@ -789,7 +792,7 @@ function FullTourContent() {
                                                                                 <span>•</span>
                                                                                 <span>{block.distance_to_next_km} km</span>
                                                                                 <span>•</span>
-                                                                                <span>{block.travel_time_minutes} min</span>
+                                                                                <span>{block.travel_time_minutes} {t("min")}</span>
                                                                             </div>
                                                                         )}
                                                                     </div>

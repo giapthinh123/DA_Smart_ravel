@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Quote, CheckCircle2, Phone } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 const testimonials = [
   {
@@ -23,25 +24,27 @@ const testimonials = [
   },
 ]
 
-const steps = [
-  {
-    number: "1",
-    title: "Choose suitable time & flight",
-    description: "Select your preferred dates and flight options",
-  },
-  {
-    number: "2",
-    title: "Check off your favorite places",
-    description: "Pick activities and destinations you want to visit",
-  },
-  {
-    number: "3",
-    title: "Receive the N-day timeline and pay",
-    description: "Get your complete itinerary and book instantly",
-  },
-]
-
 export function CommunitySection() {
+  const t = useTranslations("Dashboard.Community")
+
+  const steps = [
+    {
+      number: "1",
+      title: t("s1Title"),
+      description: t("s1Desc"),
+    },
+    {
+      number: "2",
+      title: t("s2Title"),
+      description: t("s2Desc"),
+    },
+    {
+      number: "3",
+      title: t("s3Title"),
+      description: t("s3Desc"),
+    },
+  ]
+
   return (
     <section id="stories" className="py-20 md:py-32 bg-gradient-to-b from-blue-950/30 to-transparent">
       <div className="container mx-auto px-4 md:px-6">
@@ -50,9 +53,9 @@ export function CommunitySection() {
           <div className="space-y-8">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-balance">
-                Stories from our community of travelers
+                {t("title")}
               </h2>
-              <p className="text-lg text-gray-300">Real experiences from real adventurers</p>
+              <p className="text-lg text-gray-300">{t("subtitle")}</p>
             </div>
 
             <div className="space-y-4">
@@ -80,7 +83,7 @@ export function CommunitySection() {
           {/* Right Column - Journey Steps & Consultation */}
           <div className="space-y-8">
             <Card className="bg-white/5 backdrop-blur-xl border-white/10 p-8">
-              <h3 className="text-3xl font-bold text-white mb-6">Plan your journey in 3 steps</h3>
+              <h3 className="text-3xl font-bold text-white mb-6">{t("stepTitle")}</h3>
               <div className="space-y-6">
                 {steps.map((step) => (
                   <div key={step.number} className="flex gap-4">
@@ -104,28 +107,28 @@ export function CommunitySection() {
                   <Phone className="h-6 w-6 text-cyan-400" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">1-on-1 Travel Designer Consultation</h3>
+                  <h3 className="text-2xl font-bold text-white mb-2">{t("consultationTitle")}</h3>
                   <p className="text-gray-200">
-                    Get personalized advice from expert travel designers who understand your unique preferences
+                    {t("consultationDesc")}
                   </p>
                 </div>
               </div>
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-2 text-gray-200">
                   <CheckCircle2 className="h-5 w-5 text-cyan-400" />
-                  <span>Free 30-minute consultation</span>
+                  <span>{t("consultationPoint1")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-200">
                   <CheckCircle2 className="h-5 w-5 text-cyan-400" />
-                  <span>Expert recommendations</span>
+                  <span>{t("consultationPoint2")}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-200">
                   <CheckCircle2 className="h-5 w-5 text-cyan-400" />
-                  <span>Customized itinerary planning</span>
+                  <span>{t("consultationPoint3")}</span>
                 </div>
               </div>
               <Button size="lg" className="w-full bg-cyan-500 hover:bg-cyan-600 text-white">
-                Book a session now
+                {t("bookSession")}
               </Button>
             </Card>
           </div>

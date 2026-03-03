@@ -13,6 +13,7 @@ import { CityService } from "@/services/city.service"
 import { useRouter } from "next/navigation"
 import { Checkbox } from 'primereact/checkbox';
 import { toast } from "@/lib/toast"
+import { useTranslations } from "next-intl"
 
 function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
@@ -39,6 +40,7 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement | null>, handler: ()
 
 export default function JourneyBuilder() {
   const router = useRouter()
+  const t = useTranslations("JourneyBuilder")
   const [isIncludeFlight, setIsIncludeFlight] = useState(false)
 
   const [isGuestOpen, setIsGuestOpen] = useState(false)
@@ -113,14 +115,14 @@ export default function JourneyBuilder() {
     const numInfants = dataBuildTour.infants
 
     if (totalGuests === 0 && numInfants === 0) {
-      return "Add guests"
+      return t("addGuests")
     }
 
-    const guestLabel = `${totalGuests} ${totalGuests > 1 ? "guests" : "guest"}`
-    const infantLabel = numInfants > 0 ? `, ${numInfants} ${numInfants > 1 ? "infants" : "infant"}` : ""
+    const guestLabel = `${totalGuests} ${totalGuests > 1 ? t("guests") : t("guest")}`
+    const infantLabel = numInfants > 0 ? `, ${numInfants} ${numInfants > 1 ? t("infants") : t("infant")}` : ""
 
     return `${guestLabel}${infantLabel}`
-  }, [dataBuildTour.adults, dataBuildTour.children, dataBuildTour.infants])
+  }, [dataBuildTour.adults, dataBuildTour.children, dataBuildTour.infants, t])
 
   const renderBudget = useCallback(() => {
     return dataBuildTour.budget.toLocaleString('en-US')
@@ -129,15 +131,15 @@ export default function JourneyBuilder() {
   // Handle form submission
   const handleSubmit = useCallback(async () => {
     const missing: string[] = []
-    if (!dataBuildTour.departure) missing.push('Điểm xuất phát')
-    if (!dataBuildTour.destination) missing.push('Điểm đến')
-    if (!dataBuildTour.departureDate) missing.push('Ngày đi')
-    if (!dataBuildTour.returnDate) missing.push('Ngày về')
-    if (!dataBuildTour.budget) missing.push('Ngân sách')
-    if (dataBuildTour.adults === 0) missing.push('Số khách (ít nhất 1 người lớn)')
+    if (!dataBuildTour.departure) missing.push(t("valDeparture"))
+    if (!dataBuildTour.destination) missing.push(t("valDestination"))
+    if (!dataBuildTour.departureDate) missing.push(t("valDepartureDate"))
+    if (!dataBuildTour.returnDate) missing.push(t("valReturnDate"))
+    if (!dataBuildTour.budget) missing.push(t("valBudget"))
+    if (dataBuildTour.adults === 0) missing.push(t("valGuests"))
 
     if (missing.length > 0) {
-      toast.warning(`Vui lòng điền đầy đủ: ${missing.join(', ')}.`, 'Thiếu thông tin')
+      toast.warning(`${t("pleaseFillAll")} ${missing.join(', ')}.`, t("missingInfo"))
       return
     }
 
@@ -175,10 +177,10 @@ export default function JourneyBuilder() {
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Processing...
+            {t("processing")}
           </span>
         ) : (
-          "Build itinerary"
+          t("buildItinerary")
         )}
       </button>
     )
@@ -190,10 +192,10 @@ export default function JourneyBuilder() {
       <div className="rounded-3xl  bg-white/3 p-8 backdrop-blur travel-search__inner">
         {/* Header */}
         <header className="travel-search__header">
-          <span className="travel-search__tag">Curated Journey Builder</span>
-          <h1 className="travel-search__title">Craft your signature journey</h1>
+          <span className="travel-search__tag">{t("tagline")}</span>
+          <h1 className="travel-search__title">{t("title")}</h1>
           <p className="travel-search__subtitle">
-            Define routes, travel window and investment so we can choreograph a bespoke escape in your style.
+            {t("description")}
           </p>
         </header>
 
@@ -202,13 +204,13 @@ export default function JourneyBuilder() {
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur travel-search__card">
             <div className="mb-6">
               <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
-                Chapter 01
+                {t("chapter1")}
               </p>
               <h3 className="text-2xl font-semibold text-[#8bbcb7]">
-                Route & preferred schedule
+                {t("routeSchedule")}
               </h3>
               <p className="mt-2 text-sm text-[#486c68]">
-                We connect every crafted stop while balancing each moment across your stay.
+                {t("routeDesc")}
               </p>
             </div>
 
@@ -216,7 +218,7 @@ export default function JourneyBuilder() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="travel-search__field dashboard-form__field">
                   <label className="dashboard-form__label">
-                    Departure <span className="text-red-400">*</span>
+                    {t("departure")} <span className="text-red-400">*</span>
                   </label>
                   <Dropdown
                     value={dataBuildTour.departure}
@@ -234,7 +236,7 @@ export default function JourneyBuilder() {
                     }))}
                     optionLabel="label"
                     optionValue="value"
-                    placeholder={'Search departure...'}
+                    placeholder={t("searchDeparture")}
                     filter
                     showClear={false}
                     className="dashboard-form__prime"
@@ -243,7 +245,7 @@ export default function JourneyBuilder() {
                 </div>
                 <div className="travel-search__field dashboard-form__field">
                   <label className="dashboard-form__label">
-                    Destination <span className="text-red-400">*</span>
+                    {t("destination")} <span className="text-red-400">*</span>
                   </label>
                   <Dropdown
                     value={dataBuildTour.destination}
@@ -261,7 +263,7 @@ export default function JourneyBuilder() {
                     }))}
                     optionLabel="label"
                     optionValue="value"
-                    placeholder={'Search destination...'}
+                    placeholder={t("searchDestination")}
                     filter
                     showClear={false}
                     className="dashboard-form__prime"
@@ -273,10 +275,10 @@ export default function JourneyBuilder() {
               <div className="grid gap-5 w-full">
                 <div className="travel-search__field dashboard-form__field">
                   <label className="dashboard-form__label">
-                    Departure date <span className="text-red-400">*</span>
+                    {t("departureDate")} <span className="text-red-400">*</span>
                   </label>
                   <Calendar
-                    placeholder={'Select your date range...'}
+                    placeholder={t("selectDateRange")}
                     selectionMode="range"
                     value={dates}
                     onChange={(event) => {
@@ -308,7 +310,7 @@ export default function JourneyBuilder() {
               </div>
               <div className="flex items-center gap-2">
                 <Checkbox inputId="checkbox_flight" checked={isIncludeFlight} onChange={() => setIsIncludeFlight(!isIncludeFlight)} />
-                <label htmlFor="checkbox_flight" className="text-[#3DA8A0]">You want to include flights in your journey?</label>
+                <label htmlFor="checkbox_flight" className="text-[#3DA8A0]">{t("includeFlights")}</label>
               </div>
             </div>
           </div>
@@ -317,13 +319,13 @@ export default function JourneyBuilder() {
           <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur travel-search__card">
             <div className="mb-6">
               <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#5FCBC4]">
-                Chapter 02
+                {t("chapter2")}
               </p>
               <h3 className="text-2xl font-semibold text-[#8bbcb7]">
-                Investment & travel party
+                {t("investmentParty")}
               </h3>
               <p className="mt-2 text-sm text-[#486c68]">
-                Refine the planned investment and company so every service feels personal.
+                {t("investmentDesc")}
               </p>
             </div>
 
@@ -331,13 +333,13 @@ export default function JourneyBuilder() {
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="travel-search__field dashboard-form__field">
                   <label className="dashboard-form__label">
-                    Preferred budget <span className="text-red-400">*</span>
+                    {t("preferredBudget")} <span className="text-red-400">*</span>
                   </label>
                   <NumericFormat
                     customInput={InputText}
                     className="dashboard-form__prime"
                     style={{ color: '#3DA8A0' }}
-                    placeholder={'Enter your budget...'}
+                    placeholder={t("enterBudget")}
                     value={dataBuildTour.budget || ''}
                     onValueChange={(values: any) => {
                       setDataBuildTour({ ...dataBuildTour, budget: values.floatValue || 0 })
@@ -351,7 +353,7 @@ export default function JourneyBuilder() {
                 </div>
                 <div className="travel-search__field dashboard-form__field">
                   <label className="dashboard-form__label">
-                    Travelers <span className="text-red-400">*</span>
+                    {t("travelers")} <span className="text-red-400">*</span>
                   </label>
                   <div className="guest-selector" ref={guestCounterRef}>
                     <button
@@ -377,8 +379,8 @@ export default function JourneyBuilder() {
                         {/* Adults */}
                         <div className="counter-row">
                           <div className="counter-label">
-                            <strong>Adults</strong>
-                            <span>12+ years</span>
+                            <strong>{t("adults")}</strong>
+                            <span>{t("adultsAge")}</span>
                           </div>
                           <div className="counter-buttons">
                             <button
@@ -399,8 +401,8 @@ export default function JourneyBuilder() {
                         {/* Children */}
                         <div className="counter-row">
                           <div className="counter-label">
-                            <strong>Children</strong>
-                            <span>2-11 years</span>
+                            <strong>{t("children")}</strong>
+                            <span>{t("childrenAge")}</span>
                           </div>
                           <div className="counter-buttons">
                             <button
@@ -421,8 +423,8 @@ export default function JourneyBuilder() {
                         {/* Infants */}
                         <div className="counter-row">
                           <div className="counter-label">
-                            <strong>Infants</strong>
-                            <span>Under 2 years</span>
+                            <strong>{t("infantsLabel")}</strong>
+                            <span>{t("infantsAge")}</span>
                           </div>
                           <div className="counter-buttons">
                             <button
@@ -444,7 +446,7 @@ export default function JourneyBuilder() {
                           onClick={() => setIsGuestOpen(false)}
                           className="done-button"
                         >
-                          Done
+                          {t("done")}
                         </button>
                       </div>
                     )}
@@ -455,17 +457,17 @@ export default function JourneyBuilder() {
               {/* Summary Cards */}
               <div className="travel-search__meta">
                 <div>
-                  <span className="travel-search__meta-label">Time frame</span>
+                  <span className="travel-search__meta-label">{t("timeFrame")}</span>
                   <div className="travel-search__meta-value">{calculateDays()}</div>
                 </div>
 
                 <div>
-                  <span className="travel-search__meta-label">Travel party</span>
+                  <span className="travel-search__meta-label">{t("travelParty")}</span>
                   <div className="travel-search__meta-value">{renderGuestLabel()}</div>
                 </div>
 
                 <div>
-                  <span className="travel-search__meta-label">Planned budget</span>
+                  <span className="travel-search__meta-label">{t("plannedBudget")}</span>
                   <div className="travel-search__meta-value">{renderBudget()}$</div>
                 </div>
               </div>

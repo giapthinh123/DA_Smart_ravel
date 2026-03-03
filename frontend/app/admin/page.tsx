@@ -5,12 +5,12 @@ import { useAuthStore } from '@/store/useAuthStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { 
-  Users, 
-  Plane, 
-  MapPin, 
-  TrendingUp, 
-  Calendar, 
+import {
+  Users,
+  Plane,
+  MapPin,
+  TrendingUp,
+  Calendar,
   BarChart3,
   Search,
   Bell,
@@ -26,6 +26,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
+import { LanguageSwitcher } from '@/components/i18n/language-switcher'
+import { useTranslations } from 'next-intl'
 // Sidebar navigation items
 
 
@@ -33,6 +35,7 @@ function AdminDashboard() {
   const { user, logout } = useAuthStore()
   const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
+  const t = useTranslations("AdminDashboard")
 
   useEffect(() => {
     setMounted(true)
@@ -40,37 +43,37 @@ function AdminDashboard() {
 
   // Mock data - replace with real API calls
   const stats = [
-    { 
-      title: 'Total Tours', 
-      value: '248', 
-      change: '+12%', 
+    {
+      title: t("stats.totalTours"),
+      value: '248',
+      change: '+12%',
       icon: Globe,
       isPositive: true,
       bgColor: 'bg-cyan-100',
       iconColor: 'text-cyan-600'
     },
-    { 
-      title: 'Total Users', 
-      value: '1,543', 
-      change: '+23%', 
+    {
+      title: t("stats.totalUsers"),
+      value: '1,543',
+      change: '+23%',
       icon: Users,
       isPositive: true,
       bgColor: 'bg-purple-100',
       iconColor: 'text-purple-600'
     },
-    { 
-      title: 'Total Bookings', 
-      value: '892', 
-      change: '+18%', 
+    {
+      title: t("stats.totalBookings"),
+      value: '892',
+      change: '+18%',
       icon: Calendar,
       isPositive: true,
       bgColor: 'bg-blue-100',
       iconColor: 'text-blue-600'
     },
-    { 
-      title: 'Total Revenue', 
-      value: '$45,231', 
-      change: '-5%', 
+    {
+      title: t("stats.totalRevenue"),
+      value: '$45,231',
+      change: '-5%',
       icon: DollarSign,
       isPositive: false,
       bgColor: 'bg-orange-100',
@@ -79,31 +82,31 @@ function AdminDashboard() {
   ]
 
   const recentActivities = [
-    { 
-      action: 'Created new tour', 
-      detail: 'Paris City Tour', 
-      time: '2 hours ago',
+    {
+      action: t("activities.createdTour"),
+      detail: 'Paris City Tour',
+      time: t("activities.time2h"),
       icon: CheckCircle,
       iconColor: 'text-cyan-600'
     },
-    { 
-      action: 'Updated tour', 
-      detail: 'Bali Beach Paradise', 
-      time: '4 hours ago',
+    {
+      action: t("activities.updatedTour"),
+      detail: 'Bali Beach Paradise',
+      time: t("activities.time4h"),
       icon: Edit,
       iconColor: 'text-blue-600'
     },
-    { 
-      action: 'Approved booking', 
-      detail: 'Booking BK001', 
-      time: '6 hours ago',
+    {
+      action: t("activities.approvedBooking"),
+      detail: 'Booking BK001',
+      time: t("activities.time6h"),
       icon: CheckCircle,
       iconColor: 'text-cyan-600'
     },
-    { 
-      action: 'New user registered', 
-      detail: 'John Doe', 
-      time: '8 hours ago',
+    {
+      action: t("activities.newUser"),
+      detail: 'John Doe',
+      time: t("activities.time8h"),
       icon: User,
       iconColor: 'text-purple-600'
     },
@@ -126,14 +129,15 @@ function AdminDashboard() {
             {/* Search Bar */}
             <div className="relative w-96">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input 
-                placeholder="Search tours, users, bookings..." 
+              <Input
+                placeholder={t("searchPlaceholder")}
                 className="pl-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-blue-500"
               />
             </div>
 
             {/* Right side */}
             <div className="flex items-center gap-4">
+              <LanguageSwitcher />
               <Button variant="ghost" size="icon" className="relative text-gray-600 hover:text-gray-900">
                 <Bell className="h-5 w-5" />
                 <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
@@ -152,8 +156,8 @@ function AdminDashboard() {
         <main className="flex-1 overflow-y-auto p-8 bg-gray-50">
           {/* Page Title */}
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h2>
-            <p className="text-gray-600">Welcome back! Here's your travel business overview.</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">{t("pageTitle")}</h2>
+            <p className="text-gray-600">{t("pageDesc")}</p>
           </div>
 
           {/* Stats Grid */}
@@ -189,14 +193,14 @@ function AdminDashboard() {
             {/* Bookings & User Growth Chart */}
             <Card className="lg:col-span-2 bg-white border-gray-200">
               <CardHeader className="border-b border-gray-200">
-                <CardTitle className="text-xl font-bold text-gray-900">Bookings & User Growth</CardTitle>
+                <CardTitle className="text-xl font-bold text-gray-900">{t("charts.growthTitle")}</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
                   <div className="text-center">
                     <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                    <p className="text-gray-600 font-medium">Chart visualization</p>
-                    <p className="text-sm text-gray-500 mt-1">Connect your analytics data</p>
+                    <p className="text-gray-600 font-medium">{t("charts.chartVisualization")}</p>
+                    <p className="text-sm text-gray-500 mt-1">{t("charts.connectAnalytics")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -205,7 +209,7 @@ function AdminDashboard() {
             {/* Recent Activity */}
             <Card className="bg-white border-gray-200">
               <CardHeader className="border-b border-gray-200">
-                <CardTitle className="text-xl font-bold text-gray-900">Recent Activity</CardTitle>
+                <CardTitle className="text-xl font-bold text-gray-900">{t("recentActivityTitle")}</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="divide-y divide-gray-200">

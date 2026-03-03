@@ -24,12 +24,14 @@ import { useEffect, useState } from 'react'
 import { UserService, UserStats } from '@/services/user.service'
 import { User as UserType } from '@/types/domain'
 import { toast } from '@/lib/toast'
+import { useTranslations } from 'next-intl'
 
 /**
  * User Management Page - Admin Only
  * Features: View users, search, filter, edit role, delete, create, update
  */
 function UserManagementPage() {
+    const t = useTranslations('AdminUsers')
     const { user: currentUser } = useAuthStore()
 
     // User data states
@@ -139,7 +141,7 @@ function UserManagementPage() {
             setShowDeleteModal(false)
             setSelectedUser(null)
         } catch (err: any) {
-            toast.error(err.message || 'Không thể xóa người dùng.', 'Lỗi')
+            toast.error(err.message || t('toast.deleteError'), t('toast.errorTitle'))
         } finally {
             setActionLoading(false)
         }
@@ -156,7 +158,7 @@ function UserManagementPage() {
             setShowRoleModal(false)
             setSelectedUser(null)
         } catch (err: any) {
-            toast.error(err.message || 'Không thể cập nhật quyền.', 'Lỗi')
+            toast.error(err.message || t('toast.roleError'), t('toast.errorTitle'))
         } finally {
             setActionLoading(false)
         }
@@ -179,7 +181,7 @@ function UserManagementPage() {
                 status: 'active'
             })
         } catch (err: any) {
-            toast.error(err.message || 'Không thể tạo người dùng.', 'Lỗi')
+            toast.error(err.message || t('toast.createError'), t('toast.errorTitle'))
         } finally {
             setActionLoading(false)
         }
@@ -205,7 +207,7 @@ function UserManagementPage() {
                 status: 'active'
             })
         } catch (err: any) {
-            toast.error(err.message || 'Không thể cập nhật người dùng.', 'Lỗi')
+            toast.error(err.message || t('toast.editError'), t('toast.errorTitle'))
         } finally {
             setActionLoading(false)
         }
@@ -218,7 +220,7 @@ function UserManagementPage() {
     const totalPages = Math.ceil(filteredUsers.length / usersPerPage)
 
     return (
-        <AdminLayout title="User Management" description="Manage and monitor all users in the system">
+        <AdminLayout title={t('pageTitle')} description={t('pageDesc')}>
             {/* Stats Grid */}
             {stats && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -226,7 +228,7 @@ function UserManagementPage() {
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-2">Total Users</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.totalUsers')}</p>
                                     <h3 className="text-3xl font-bold text-gray-900">{stats.total_users}</h3>
                                 </div>
                                 <div className="p-3 rounded-xl bg-purple-100">
@@ -240,7 +242,7 @@ function UserManagementPage() {
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-2">Active Users</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.activeUsers')}</p>
                                     <h3 className="text-3xl font-bold text-gray-900">{stats.active_users}</h3>
                                 </div>
                                 <div className="p-3 rounded-xl bg-green-100">
@@ -254,7 +256,7 @@ function UserManagementPage() {
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-2">Admins</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.admins')}</p>
                                     <h3 className="text-3xl font-bold text-gray-900">{stats.by_role.admin}</h3>
                                 </div>
                                 <div className="p-3 rounded-xl bg-cyan-100">
@@ -268,7 +270,7 @@ function UserManagementPage() {
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
-                                    <p className="text-sm font-medium text-gray-600 mb-2">Regular Users</p>
+                                    <p className="text-sm font-medium text-gray-600 mb-2">{t('stats.regularUsers')}</p>
                                     <h3 className="text-3xl font-bold text-gray-900">{stats.by_role.user}</h3>
                                 </div>
                                 <div className="p-3 rounded-xl bg-blue-100">

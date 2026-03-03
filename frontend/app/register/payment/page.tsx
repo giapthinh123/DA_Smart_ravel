@@ -18,64 +18,12 @@ import {
   Zap
 } from "lucide-react"
 import { toast } from "@/lib/toast"
+import { LanguageSwitcher } from "@/components/i18n/language-switcher"
+import { useTranslations } from "next-intl"
 
 // ========================================
 // MEMBERSHIP BENEFITS DATA
 // ========================================
-const MEMBERSHIP_BENEFITS = [
-  {
-    icon: Crown,
-    title: "Tài khoản Premium",
-    description: "Truy cập đầy đủ tất cả tính năng cao cấp của hệ thống",
-    color: "text-yellow-600",
-    bgColor: "bg-yellow-50"
-  },
-  {
-    icon: MapPin,
-    title: "Lên kế hoạch không giới hạn",
-    description: "Tạo và quản lý số lượng chuyến đi không giới hạn",
-    color: "text-blue-600",
-    bgColor: "bg-blue-50"
-  },
-  {
-    icon: Users,
-    title: "Hỗ trợ ưu tiên",
-    description: "Đội ngũ chăm sóc khách hàng 24/7 dành riêng cho bạn",
-    color: "text-green-600",
-    bgColor: "bg-green-50"
-  },
-]
-
-// ========================================
-// PRICING PLANS
-// ========================================
-const PRICING_PLANS = [
-  {
-    id: "monthly",
-    name: "Gói tháng",
-    price: 199000,
-    duration: "30 ngày",
-    savings: null,
-    popular: false
-  },
-  {
-    id: "yearly",
-    name: "Gói năm",
-    price: 1990000,
-    duration: "365 ngày",
-    savings: "Tiết kiệm 398.000đ",
-    popular: true
-  },
-  {
-    id: "lifetime",
-    name: "Trọn đời",
-    price: 4990000,
-    duration: "Vĩnh viễn",
-    savings: "Tiết kiệm hơn 60%",
-    popular: false
-  }
-]
-
 // ========================================
 // MAIN COMPONENT
 // ========================================
@@ -89,9 +37,62 @@ interface RegistrationData {
 export default function RegisterPaymentPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const t = useTranslations("RegisterPaymentPage")
   const [selectedPlan, setSelectedPlan] = useState("yearly")
   const [isProcessing, setIsProcessing] = useState(false)
   const [registrationData, setRegistrationData] = useState<RegistrationData | null>(null)
+
+  // Move arrays to render cycle to access translations
+  const MEMBERSHIP_BENEFITS = [
+    {
+      icon: Crown,
+      title: t("benefits.premium.title"),
+      description: t("benefits.premium.desc"),
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50"
+    },
+    {
+      icon: MapPin,
+      title: t("benefits.unlimited.title"),
+      description: t("benefits.unlimited.desc"),
+      color: "text-blue-600",
+      bgColor: "bg-blue-50"
+    },
+    {
+      icon: Users,
+      title: t("benefits.support.title"),
+      description: t("benefits.support.desc"),
+      color: "text-green-600",
+      bgColor: "bg-green-50"
+    },
+  ]
+
+  const PRICING_PLANS = [
+    {
+      id: "monthly",
+      name: t("plans.monthly.name"),
+      price: 199000,
+      duration: t("plans.monthly.duration"),
+      savings: null,
+      popular: false
+    },
+    {
+      id: "yearly",
+      name: t("plans.yearly.name"),
+      price: 1990000,
+      duration: t("plans.yearly.duration"),
+      savings: t("plans.yearly.savings"),
+      popular: true
+    },
+    {
+      id: "lifetime",
+      name: t("plans.lifetime.name"),
+      price: 4990000,
+      duration: t("plans.lifetime.duration"),
+      savings: t("plans.lifetime.savings"),
+      popular: false
+    }
+  ]
 
   useEffect(() => {
     const data = sessionStorage.getItem('registration_data')
@@ -112,7 +113,7 @@ export default function RegisterPaymentPage() {
 
   const handlePayment = async () => {
     if (!registrationData) {
-      toast.warning('Không tìm thấy thông tin đăng ký. Vui lòng thử lại.', 'Thiếu dữ liệu')
+      toast.warning(t("toast.missingDataDesc"), t("toast.missingDataTitle"))
       router.push('/register')
       return
     }
@@ -157,7 +158,7 @@ export default function RegisterPaymentPage() {
     } catch (error) {
       console.error('Payment error:', error)
       setIsProcessing(false)
-      toast.error(error instanceof Error ? error.message : 'Có lỗi xảy ra. Vui lòng thử lại.', 'Thanh toán thất bại')
+      toast.error(error instanceof Error ? error.message : t("toast.paymentFailedDesc"), t("toast.paymentFailedTitle"))
     }
   }
 
@@ -175,14 +176,16 @@ export default function RegisterPaymentPage() {
 
       {/* Header */}
       <div className="relative z-10 border-b border-[#5FCBC4]/20 bg-white/80 backdrop-blur-md">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
           <button
             onClick={handleBack}
             className="flex items-center gap-2 text-sm text-[#64748B] hover:text-[#5FCBC4] transition-colors group"
           >
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-            Quay lại
+            {t("goBack")}
           </button>
+
+          <LanguageSwitcher />
         </div>
       </div>
 
@@ -192,13 +195,13 @@ export default function RegisterPaymentPage() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#5FCBC4]/10 border border-[#5FCBC4]/20 mb-4">
             <Star className="h-4 w-4 text-[#5FCBC4]" />
-            <span className="text-sm font-medium text-[#5FCBC4]">Bước cuối cùng</span>
+            <span className="text-sm font-medium text-[#5FCBC4]">{t("finalStep")}</span>
           </div>
           <h1 className="text-4xl font-bold text-[#0F172A] mb-3">
-            Hoàn tất đăng ký
+            {t("title")}
           </h1>
           <p className="text-lg text-[#64748B] max-w-2xl mx-auto">
-            Chọn gói thành viên phù hợp và bắt đầu hành trình khám phá thế giới cùng chúng tôi
+            {t("subtitle")}
           </p>
         </div>
 
@@ -213,7 +216,7 @@ export default function RegisterPaymentPage() {
                   <Crown className="h-5 w-5 text-[#5FCBC4]" />
                 </div>
                 <h2 className="text-2xl font-bold text-[#0F172A]">
-                  Quyền lợi thành viên
+                  {t("memberBenefits")}
                 </h2>
               </div>
 
@@ -254,7 +257,7 @@ export default function RegisterPaymentPage() {
             {/* Plan Selection */}
             <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10 p-6">
               <h3 className="text-lg font-bold text-[#0F172A] mb-4">
-                Chọn gói thành viên
+                {t("selectPlanLabel")}
               </h3>
 
               <div className="space-y-3">
@@ -263,8 +266,8 @@ export default function RegisterPaymentPage() {
                     key={plan.id}
                     onClick={() => setSelectedPlan(plan.id)}
                     className={`w-full text-left rounded-2xl border-2 p-4 transition-all ${selectedPlan === plan.id
-                        ? "border-[#5FCBC4] bg-[#5FCBC4]/5 shadow-lg"
-                        : "border-gray-200 bg-white hover:border-[#5FCBC4]/30"
+                      ? "border-[#5FCBC4] bg-[#5FCBC4]/5 shadow-lg"
+                      : "border-gray-200 bg-white hover:border-[#5FCBC4]/30"
                       }`}
                   >
                     <div className="flex items-start justify-between mb-2">
@@ -275,7 +278,7 @@ export default function RegisterPaymentPage() {
                           </h4>
                           {plan.popular && (
                             <span className="px-2 py-0.5 rounded-full bg-[#5FCBC4] text-white text-xs font-medium">
-                              Phổ biến
+                              {t("popular")}
                             </span>
                           )}
                         </div>
@@ -284,8 +287,8 @@ export default function RegisterPaymentPage() {
                         </p>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedPlan === plan.id
-                          ? "border-[#5FCBC4] bg-[#5FCBC4]"
-                          : "border-gray-300"
+                        ? "border-[#5FCBC4] bg-[#5FCBC4]"
+                        : "border-gray-300"
                         }`}>
                         {selectedPlan === plan.id && (
                           <div className="w-2 h-2 rounded-full bg-white" />
@@ -315,12 +318,12 @@ export default function RegisterPaymentPage() {
             {/* Payment Summary */}
             <div className="rounded-3xl border border-[#5FCBC4]/20 bg-white/90 backdrop-blur-2xl shadow-xl shadow-[#5FCBC4]/10 p-6">
               <h3 className="text-lg font-bold text-[#0F172A] mb-4">
-                Thông tin thanh toán
+                {t("paymentInfo")}
               </h3>
 
               {registrationData && (
                 <div className="mb-4 p-3 rounded-xl bg-gray-50 border border-gray-200">
-                  <p className="text-xs text-[#64748B] mb-1">Email đăng ký</p>
+                  <p className="text-xs text-[#64748B] mb-1">{t("registeredEmail")}</p>
                   <p className="text-sm font-medium text-[#0F172A] truncate">
                     {registrationData.email}
                   </p>
@@ -329,14 +332,14 @@ export default function RegisterPaymentPage() {
 
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-sm text-[#64748B]">Gói đã chọn</span>
+                  <span className="text-sm text-[#64748B]">{t("selectedPlan")}</span>
                   <span className="text-sm font-medium text-[#0F172A]">
                     {currentPlan?.name}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center py-2">
-                  <span className="text-sm text-[#64748B]">Thời hạn</span>
+                  <span className="text-sm text-[#64748B]">{t("durationLabel")}</span>
                   <span className="text-sm font-medium text-[#0F172A]">
                     {currentPlan?.duration}
                   </span>
@@ -346,7 +349,7 @@ export default function RegisterPaymentPage() {
 
                 <div className="flex justify-between items-center py-2">
                   <span className="text-base font-semibold text-[#0F172A]">
-                    Tổng thanh toán
+                    {t("totalPayment")}
                   </span>
                   <span className="text-2xl font-bold text-[#5FCBC4]">
                     {currentPlan?.price.toLocaleString('vi-VN')}đ
@@ -364,12 +367,12 @@ export default function RegisterPaymentPage() {
                   {isProcessing ? (
                     <>
                       <Loader2 className="h-5 w-5 animate-spin" />
-                      Đang xử lý...
+                      {t("processing")}
                     </>
                   ) : (
                     <>
                       <CreditCard className="h-5 w-5" />
-                      Thanh toán ngay
+                      {t("payNow")}
                     </>
                   )}
                 </span>
@@ -378,7 +381,7 @@ export default function RegisterPaymentPage() {
               {/* Payment Methods Info */}
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-xs text-center text-[#64748B] mb-2">
-                  Chúng tôi chấp nhận
+                  {t("acceptedMethods")}
                 </p>
                 <div className="flex items-center justify-center gap-3">
                   <div className="px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-200">
@@ -396,7 +399,7 @@ export default function RegisterPaymentPage() {
               {/* Security Badge */}
               <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#64748B]">
                 <Shield className="h-4 w-4 text-green-600" />
-                <span>Thanh toán an toàn & bảo mật</span>
+                <span>{t("securePayment")}</span>
               </div>
             </div>
 
@@ -408,10 +411,10 @@ export default function RegisterPaymentPage() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-green-900 text-sm mb-1">
-                    Đảm bảo hoàn tiền 100%
+                    {t("guaranteeTitle")}
                   </h4>
                   <p className="text-xs text-green-700 leading-relaxed">
-                    Nếu không hài lòng trong 7 ngày đầu, chúng tôi sẽ hoàn lại toàn bộ số tiền.
+                    {t("guaranteeDesc")}
                   </p>
                 </div>
               </div>

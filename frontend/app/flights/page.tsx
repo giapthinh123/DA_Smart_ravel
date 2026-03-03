@@ -22,9 +22,11 @@ import api from "@/lib/axios"
 import { TravelService } from "@/services/travel.service"
 import { UserMenu } from "@/components/user-menu"
 import { Footer } from "@/components/footer"
+import { useTranslations } from "next-intl"
 function FlightsContent() {
   const router = useRouter()
   const { user, logout } = useAuthStore()
+  const t = useTranslations("FlightsPage")
   const [step, setStep] = useState<1 | 2>(1)
   const [selectedOutbound, setSelectedOutbound] = useState<any>(null)
   const [selectedReturn, setSelectedReturn] = useState<any>(null)
@@ -387,44 +389,45 @@ function FlightsContent() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-[#94A3B8]">
-              VietJourney
+              {t("brand")}
             </p>
             <p className="text-xl font-semibold text-[#0F172A]">
-              Mapping Vietnam experiences
+              {t("tagline")}
             </p>
           </div>
-          <nav className="flex items-center gap-2 text-sm font-medium">
-            <Link href="/" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
-              Home
-            </Link>
-            <Link href="/planner" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
-              Dashboard
-            </Link>
-            <Link href="/tours" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
-              Personalities
-            </Link>
-            <Link href="#" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
-              Contact
-            </Link>
-            <span className="mx-2 h-4 w-px bg-white/20"></span>
-
-            {/* User Menu Dropdown */}
-            <UserMenu />
-          </nav>
         </div>
-      </header>
+        <nav className="flex items-center gap-2 text-sm font-medium">
+          <Link href="/" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+            {t("home")}
+          </Link>
+          <Link href="/planner" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+            {t("dashboard")}
+          </Link>
+          <Link href="/tours" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+            {t("tours")}
+          </Link>
+          <Link href="#" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
+            {t("contact")}
+          </Link>
+          <span className="mx-2 h-4 w-px bg-white/20"></span>
+
+          {/* User Menu Dropdown */}
+          <UserMenu />
+        </nav>
+
+      </header >
 
       <main className="mx-auto max-w-[1600px] px-6 ">
         {/* Page Title Section */}
         <section className="mb-12 text-center">
           <p className="mb-3 text-xs uppercase tracking-[0.4em] text-[#94A3B8]">
-            Flight Booking
+            {t("flightBookingLabel")}
           </p>
           <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-[#5FCBC4] drop-shadow-[0_12px_24px_rgba(95,203,196,1)]">
-            Book Your Flight
+            {t("heroTitle")}
           </h1>
           <p className="text-base text-[#64748B] max-w-2xl mx-auto leading-relaxed mb-8">
-            Search and book flights at the best prices for your journey
+            {t("heroDesc")}
           </p>
           <div className="flex items-center justify-center gap-4 mb-8">
             <div
@@ -469,7 +472,7 @@ function FlightsContent() {
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 mb-6 p-4 rounded-xl bg-white/5 border border-white/10">
               {/* Time Sort */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full lg:w-auto">
-                <span className="text-sm text-[#64748B] font-medium whitespace-nowrap">Departure time:</span>
+                <span className="text-sm text-[#64748B] font-medium whitespace-nowrap">{t("departureTime")}</span>
                 <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={() => {
@@ -481,7 +484,7 @@ function FlightsContent() {
                       : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Default
+                    {t("default")}
                   </button>
                   <button
                     onClick={() => {
@@ -493,7 +496,7 @@ function FlightsContent() {
                       : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Earliest
+                    {t("earliest")}
                   </button>
                   <button
                     onClick={() => {
@@ -505,14 +508,14 @@ function FlightsContent() {
                       : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Latest
+                    {t("latest")}
                   </button>
                 </div>
               </div>
 
               {/* Price Sort */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full lg:w-auto">
-                <span className="text-sm text-[#64748B] font-medium whitespace-nowrap">Price:</span>
+                <span className="text-sm text-[#64748B] font-medium whitespace-nowrap">{t("price")}</span>
                 <div className="flex gap-2 flex-wrap">
                   <button
                     onClick={() => {
@@ -524,7 +527,7 @@ function FlightsContent() {
                       : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Default
+                    {t("default")}
                   </button>
                   <button
                     onClick={() => {
@@ -536,7 +539,7 @@ function FlightsContent() {
                       : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Lowest
+                    {t("lowest")}
                   </button>
                   <button
                     onClick={() => {
@@ -548,7 +551,7 @@ function FlightsContent() {
                       : 'bg-white/5 text-[#475569] hover:bg-white/10 border border-white/10'
                       }`}
                   >
-                    Highest
+                    {t("highest")}
                   </button>
                 </div>
               </div>
@@ -578,8 +581,8 @@ function FlightsContent() {
               ) : isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
                   <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[#5FCBC4]"></div>
-                  <p className="text-[#64748B] text-lg">Searching for the best flights for you...</p>
-                  <p className="text-[#94A3B8] text-sm">Please wait, this may take 20–30 seconds</p>
+                  <p className="text-[#64748B] text-lg">{t("searchingFlights")}</p>
+                  <p className="text-[#94A3B8] text-sm">{t("searchingDesc")}</p>
                 </div>
               ) : (
                 <div className="grid gap-4">
@@ -651,7 +654,7 @@ function FlightsContent() {
                             <div className="text-right">
                               <div className="text-2xl font-bold text-[#5FCBC4]">{flight.price}$</div>
                               <div className="text-[10px] text-[#64748B] uppercase tracking-tighter">
-                                Tax included
+                                {t("taxIncluded")}
                               </div>
                             </div>
                             <Button
@@ -663,10 +666,10 @@ function FlightsContent() {
                             >
                               {selectedCurrentId === flight.id ? (
                                 <span className="flex items-center gap-2">
-                                  <ShieldCheck className="w-4 h-4" /> Selected
+                                  <ShieldCheck className="w-4 h-4" /> {t("selected")}
                                 </span>
                               ) : (
-                                "Select"
+                                t("select")
                               )}
                             </Button>
                           </div>
@@ -680,7 +683,7 @@ function FlightsContent() {
                     <div className="flex justify-center mt-8 py-4">
                       <div className="flex items-center gap-3 text-[#64748B]">
                         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#5FCBC4]"></div>
-                        <span>Loading more...</span>
+                        <span>{t("loadingMore")}</span>
                       </div>
                     </div>
                   )}
@@ -716,14 +719,14 @@ function FlightsContent() {
             <div className="lg:sticky lg:top-8 bg-white rounded-3xl border border-[#E4E4E7] animate-in slide-in-from-right duration-500 shadow-sm">
               {/* Header */}
               <div className="px-8 pt-8 pb-6 border-b border-[#E4E4E7]">
-                <h2 className="text-2xl font-bold text-[#0F4C5C]">Booking Summary</h2>
+                <h2 className="text-2xl font-bold text-[#0F4C5C]">{t("bookingSummary")}</h2>
               </div>
 
               {/* Content */}
               <div className="px-8 py-6 space-y-6">
                 {/* Selected Flights */}
                 <div>
-                  <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">Selected Flights</h3>
+                  <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">{t("selectedFlights")}</h3>
 
                   {/* Departure */}
                   {selectedOutbound ? (
@@ -739,7 +742,7 @@ function FlightsContent() {
                   ) : (
                     <div className="mb-4 p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7] border-dashed">
                       <div className="text-center py-4">
-                        <p className="text-sm text-[#A1A1AA]">No departure flight selected</p>
+                        <p className="text-sm text-[#A1A1AA]">{t("noDepartureFlight")}</p>
                       </div>
                     </div>
                   )}
@@ -758,7 +761,7 @@ function FlightsContent() {
                   ) : (
                     <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7] border-dashed">
                       <div className="text-center py-4">
-                        <p className="text-sm text-[#A1A1AA]">No return flight selected</p>
+                        <p className="text-sm text-[#A1A1AA]">{t("noReturnFlight")}</p>
                       </div>
                     </div>
                   )}
@@ -766,18 +769,18 @@ function FlightsContent() {
 
                 {/* Price Details */}
                 <div>
-                  <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">Price Details</h3>
+                  <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">{t("priceDetails")}</h3>
 
                   <div className="space-y-3">
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-[#3F3F46]">Departure flight</span>
+                      <span className="text-[#3F3F46]">{t("departureFlight")}</span>
                       <span className="text-[#0F4C5C] font-semibold">
                         {selectedOutbound ? `${(selectedOutbound.price)}$` : '-'}
                       </span>
                     </div>
 
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-[#3F3F46]">Return flight</span>
+                      <span className="text-[#3F3F46]">{t("returnFlight")}</span>
                       <span className="text-[#0F4C5C] font-semibold">
                         {selectedReturn ? `${(selectedReturn.price)}$` : '-'}
                       </span>
@@ -786,7 +789,7 @@ function FlightsContent() {
                     {/* Total */}
                     <div className="pt-4 border-t border-[#E4E4E7]">
                       <div className="flex justify-between items-center p-4 rounded-xl bg-[#CCFBF1] border border-[#5FCBC4]/30">
-                        <span className="text-lg font-bold text-[#0F4C5C]">Total</span>
+                        <span className="text-lg font-bold text-[#0F4C5C]">{t("total")}</span>
                         <span className="text-2xl font-bold text-[#5FCBC4]">{(totalPrice)}$</span>
                       </div>
                     </div>
@@ -815,7 +818,7 @@ function FlightsContent() {
 
       {/* Footer */}
       <Footer />
-    </div>
+    </div >
   )
 }
 

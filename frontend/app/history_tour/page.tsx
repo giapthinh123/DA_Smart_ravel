@@ -5,6 +5,8 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
+import { LanguageSwitcher } from "@/components/i18n/language-switcher"
+import { useTranslations } from "next-intl"
 import { ItineraryService, TourHistoryItem } from "@/services/itinerary.service"
 
 interface TourHistory {
@@ -22,6 +24,7 @@ interface TourHistory {
 
 export default function HistoryTourPage() {
     const router = useRouter()
+    const t = useTranslations("HistoryTourPage")
     const [filter, setFilter] = useState<string>("All")
     const [searchQuery, setSearchQuery] = useState<string>("")
     const [tourHistory, setTourHistory] = useState<TourHistory[]>([])
@@ -155,16 +158,18 @@ export default function HistoryTourPage() {
                         </div>
                         <nav className="flex items-center gap-2 text-sm font-medium">
                             <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                                Home
+                                {t("home")}
                             </Link>
                             <Link href="/history_tour" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                                History Tour
+                                {t("historyTour")}
                             </Link>
                             <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                                Tours
+                                {t("tours")}
                             </Link>
                             <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
                             <UserMenu />
+                            <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
+                            <LanguageSwitcher />
                         </nav>
                     </div>
                 </header>
@@ -174,10 +179,10 @@ export default function HistoryTourPage() {
                     {/* Page Title */}
                     <div className="mb-8">
                         <h1 className="text-4xl font-bold text-[#0F4C5C] mb-3">
-                            Tour History
+                            {t("pageTitle")}
                         </h1>
                         <p className="text-[#A1A1AA] text-lg">
-                            Explore your past adventures and planned journeys
+                            {t("pageDesc")}
                         </p>
                     </div>
 
@@ -185,19 +190,19 @@ export default function HistoryTourPage() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                         <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
                             <div className="text-3xl font-bold text-[#5FCBC4] mb-2">{stats.total}</div>
-                            <div className="text-sm text-[#A1A1AA]">Total Tours</div>
+                            <div className="text-sm text-[#A1A1AA]">{t("stats.totalTours")}</div>
                         </div>
                         <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
                             <div className="text-3xl font-bold text-[#0F4C5C] mb-2">{stats.completed}</div>
-                            <div className="text-sm text-[#A1A1AA]">Completed</div>
+                            <div className="text-sm text-[#A1A1AA]">{t("stats.completed")}</div>
                         </div>
                         <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
                             <div className="text-3xl font-bold text-[#3F3F46] mb-2">{stats.inProgress}</div>
-                            <div className="text-sm text-[#A1A1AA]">In Progress</div>
+                            <div className="text-sm text-[#A1A1AA]">{t("stats.inProgress")}</div>
                         </div>
                         <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
                             <div className="text-3xl font-bold text-[#3F3F46] mb-2">{stats.saved}</div>
-                            <div className="text-sm text-[#A1A1AA]">Payed</div>
+                            <div className="text-sm text-[#A1A1AA]">{t("stats.payed")}</div>
                         </div>
                     </div>
 
@@ -205,18 +210,23 @@ export default function HistoryTourPage() {
                     <div className="mb-8 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
                         {/* Filter Chips */}
                         <div className="flex flex-wrap gap-2">
-                            {filterOptions.map((option) => (
-                                <button
-                                    key={option}
-                                    onClick={() => setFilter(option)}
-                                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === option
-                                        ? "bg-[#5FCBC4] text-[#FFFFFF]"
-                                        : "border border-[#E4E4E7] text-[#3F3F46] hover:bg-[#CCFBF1] hover:border-[#5FCBC4]"
-                                        }`}
-                                >
-                                    {option}
-                                </button>
-                            ))}
+                            {filterOptions.map((option) => {
+                                const filterKey = option === "All" ? "all" :
+                                    option === "Completed" ? "completed" :
+                                        option === "In Progress" ? "inProgress" : "payed"
+                                return (
+                                    <button
+                                        key={option}
+                                        onClick={() => setFilter(option)}
+                                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === option
+                                            ? "bg-[#5FCBC4] text-[#FFFFFF]"
+                                            : "border border-[#E4E4E7] text-[#3F3F46] hover:bg-[#CCFBF1] hover:border-[#5FCBC4]"
+                                            }`}
+                                    >
+                                        {t(`filters.${filterKey}`)}
+                                    </button>
+                                )
+                            })}
                         </div>
 
                         {/* Search Bar */}
@@ -226,7 +236,7 @@ export default function HistoryTourPage() {
                             </svg>
                             <input
                                 type="text"
-                                placeholder="Search tours or destinations..."
+                                placeholder={t("searchPlaceholder")}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[#E4E4E7] bg-white text-[#3F3F46] placeholder:text-[#A1A1AA] focus:outline-none focus:border-[#5FCBC4] focus:ring-2 focus:ring-[#5FCBC4]/20 transition"
@@ -238,8 +248,8 @@ export default function HistoryTourPage() {
                     {loading && (
                         <div className="text-center py-20 rounded-2xl border border-[#E4E4E7] bg-white">
                             <div className="w-16 h-16 mx-auto mb-4 border-4 border-[#5FCBC4] border-t-transparent rounded-full animate-spin"></div>
-                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">Loading your tours...</h3>
-                            <p className="text-[#A1A1AA]">Please wait a moment</p>
+                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">{t("loadingTitle")}</h3>
+                            <p className="text-[#A1A1AA]">{t("loadingDesc")}</p>
                         </div>
                     )}
 
@@ -249,13 +259,13 @@ export default function HistoryTourPage() {
                             <svg className="w-16 h-16 mx-auto mb-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">Error Loading Tours</h3>
+                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">{t("errorTitle")}</h3>
                             <p className="text-[#A1A1AA] mb-4">{error}</p>
                             <button
                                 onClick={() => window.location.reload()}
                                 className="px-6 py-2 rounded-lg bg-[#5FCBC4] text-[#FFFFFF] font-semibold hover:bg-[#4AB8B0] transition"
                             >
-                                Retry
+                                {t("retry")}
                             </button>
                         </div>
                     )}
@@ -266,13 +276,13 @@ export default function HistoryTourPage() {
                             <svg className="w-16 h-16 mx-auto mb-4 text-[#A1A1AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">No tours found</h3>
-                            <p className="text-[#A1A1AA] mb-4">Try adjusting your filters or search query</p>
+                            <h3 className="text-xl font-semibold text-[#0F4C5C] mb-2">{t("noToursFound")}</h3>
+                            <p className="text-[#A1A1AA] mb-4">{t("adjustFilters")}</p>
                             <Link
                                 href="/tours"
                                 className="inline-block px-6 py-2 rounded-lg bg-[#5FCBC4] text-[#FFFFFF] font-semibold hover:bg-[#4AB8B0] transition"
                             >
-                                Create New Tour
+                                {t("createNewTour")}
                             </Link>
                         </div>
                     )}
@@ -336,7 +346,7 @@ export default function HistoryTourPage() {
                                                 <div className="flex items-center gap-4">
                                                     <span className="text-lg font-bold text-[#5FCBC4]">{tour.budget}</span>
                                                     <span className="text-xs text-[#A1A1AA]">·</span>
-                                                    <span className="text-sm text-[#A1A1AA]">{tour.activities} activities</span>
+                                                    <span className="text-sm text-[#A1A1AA]">{tour.activities} {t("activities")}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -431,8 +441,8 @@ export default function HistoryTourPage() {
                 {/* Footer */}
                 <footer className="mt-8 border-t border-[#E4E4E7] bg-[#1E293B] py-10">
                     <div className="mx-auto max-w-7xl px-6 text-center text-sm text-[#94A3B8]">
-                        <p>© 2025 VietJourney. All rights reserved</p>
-                        <p className="mt-2">Preserving your travel memories.</p>
+                        <p>{t("copyright")}</p>
+                        <p className="mt-2">{t("tagline")}</p>
                     </div>
                 </footer>
             </div>
