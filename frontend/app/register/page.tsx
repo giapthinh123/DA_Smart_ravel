@@ -6,7 +6,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { LoaderCircle, CheckCircle2 } from "lucide-react"
 import { EyeIcon, EyeCloseIcon } from "@/components/icon/icon"
-
+import { AuthService } from "@/services/auth.service"
 // ========================================
 // INPUT ERROR COMPONENT
 // ========================================
@@ -87,16 +87,18 @@ export default function RegisterPage() {
 
     setIsLoading(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      await AuthService.register(formData)
       setShowSuccess(true)
-
-      // Redirect to login page after 2 seconds
       setTimeout(() => {
-        router.push("/login")
+        router.push("/")
       }, 2000)
-    }, 1000)
+    } catch (error) {
+      console.error("Registration error:", error)
+      setErrors({ email: "Registration failed. Please try again." })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleInputChange = (field: string, value: string) => {

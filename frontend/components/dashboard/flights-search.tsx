@@ -12,17 +12,72 @@ function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
 }
 
-export default function FlightsSearch({ data_build_tour }: { data_build_tour: data_build_tour }) {
+export default function FlightsSearch({ data_build_tour, check_required_fields }: { data_build_tour: data_build_tour, check_required_fields?: boolean }) {
   const router = useRouter()
+
+  // Format date to YYYY-MM-DD for backend API
+  const formatDate = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+    return `${year}-${month}-${day}`
+  }
+
+  // Parse date string (dd/mm/yyyy or YYYY-MM-DD) to Date
+  const parseDateStringToDate = (dateStr?: string | null): Date | null => {
+    if (!dateStr) return null
+    const trimmed = dateStr.trim()
+    if (!trimmed) return null
+
+    let day: number
+    let month: number
+    let year: number
+
+    if (trimmed.includes('/')) {
+      const [d, m, y] = trimmed.split('/')
+      day = Number(d)
+      month = Number(m)
+      year = Number(y)
+    } else if (trimmed.includes('-')) {
+      const [y, m, d] = trimmed.split('-')
+      day = Number(d)
+      month = Number(m)
+      year = Number(y)
+    } else {
+      return null
+    }
+
+    if (!day || !month || !year) return null
+    return new Date(year, month - 1, day)
+  }
+
+  // Ưu tiên dùng ngày bay đã lưu, nếu chưa có thì dùng ngày chuyến đi
+  const initialFlightDepartureDate = parseDateStringToDate(
+    data_build_tour.flight_departure_date || data_build_tour.departureDate
+  )
+  const initialFlightReturnDate = parseDateStringToDate(
+    data_build_tour.flight_return_date || data_build_tour.returnDate
+  )
+
   const [departure, setDeparture] = useState<string | null>(data_build_tour.departure)
   const [destination, setDestination] = useState<string | null>(data_build_tour.destination)
   const [isLoading, setIsLoading] = useState(false)
   const [cities, setCities] = useState<City[]>([])
-  const [flightDepartureDate, setFlightDepartureDate] = useState<Date | null>(null)
-  const [flightReturnDate, setFlightReturnDate] = useState<Date | null>(null)
-  const [formattedFlightDepartureDate, setFormattedFlightDepartureDate] = useState<string>('')
-  const [formattedFlightReturnDate, setFormattedFlightReturnDate] = useState<string>('')
+  const [flightDepartureDate, setFlightDepartureDate] = useState<Date | null>(initialFlightDepartureDate)
+  const [flightReturnDate, setFlightReturnDate] = useState<Date | null>(initialFlightReturnDate)
+  const [formattedFlightDepartureDate, setFormattedFlightDepartureDate] = useState<string>(
+    initialFlightDepartureDate ? formatDate(initialFlightDepartureDate) : ''
+  )
+  const [formattedFlightReturnDate, setFormattedFlightReturnDate] = useState<string>(
+    initialFlightReturnDate ? formatDate(initialFlightReturnDate) : ''
+  )
   const [dataBuildTour, setDataBuildTour] = useState<data_build_tour>(data_build_tour)
+
+  useEffect(() => {
+    console.log('FlightsSearch data_build_tour:', data_build_tour)
+  }, [data_build_tour])
+
+
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -37,17 +92,13 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
     }
     fetchCities()
   }, [])
-
-  // Format date to YYYY-MM-DD for backend API
-  const formatDate = (date: Date): string => {
-    const day = String(date.getDate()).padStart(2, '0')
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const year = date.getFullYear()
-    return `${year}-${month}-${day}`
-  }
   const handleSubmit = useCallback(() => {
     if (!departure || !destination || !flightDepartureDate || !flightReturnDate) {
       alert("Please fill all required fields")
+      return
+    }
+    if (check_required_fields === true && (dataBuildTour.budget === 0 || dataBuildTour.adults === 0)) {
+      alert("Please fill in all required fields and uncheck, then reselect to update. ")
       return
     }
     dataBuildTour.flight_departure_date = formattedFlightDepartureDate
@@ -100,7 +151,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
               onChange={(e) => setDeparture(e.value)}
               options={cities.map((city) => ({
                 label: city.city + ", " + city.country,
-                value: city.id
+                value: city.city
               }))}
               optionLabel="label"
               optionValue="value"
@@ -121,7 +172,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
               onChange={(e) => setDestination(e.value)}
               options={cities.map((city) => ({
                 label: city.city + ", " + city.country,
-                value: city.id
+                value: city.city
               }))}              optionLabel="label"
               optionValue="value"
               placeholder="Search destination..."

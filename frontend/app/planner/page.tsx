@@ -59,7 +59,7 @@ export default function DashboardPage() {
       case "Hotels":
         return <HotelsSearch />
       case "Flights":
-        return <FlightsSearch data_build_tour={dataBuildTour} />
+        return <FlightsSearch data_build_tour={dataBuildTour}/>
       case "Food":
         return <FoodSearch />
       case "Activities":

@@ -461,7 +461,7 @@ export default function JourneyBuilder() {
           </div>
         </div>
         <>
-          {isIncludeFlight ? <FlightsSearch data_build_tour={dataBuildTour} /> : null}
+          {isIncludeFlight ? <FlightsSearch data_build_tour={dataBuildTour} check_required_fields={true}  /> : null}
           {/* <FlightsSearch /> */}
         </>
       </div>
