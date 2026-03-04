@@ -92,6 +92,7 @@ export interface LoginCredentials {
   email: string
   password: string
   remember?: boolean
+  device_id?: string
 }
 
 export interface RegisterData {
@@ -102,6 +103,7 @@ export interface RegisterData {
   phone?: string
   gender?: string
   birthYear?: number
+  device_id?: string
 }
 
 export type Currency = 'USD' | 'VND'

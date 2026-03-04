@@ -6,7 +6,11 @@ import { useRouter, useParams } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
 import { TourService, TourDocument, TourDay, TourActivity } from "@/services/tour.service"
+import { PaymentService } from "@/services/payment.service"
+import { ItineraryService } from "@/services/itinerary.service"
 import { useTranslations } from "next-intl"
+import { toast } from "@/lib/toast"
+import { useAuthStore } from "@/store/useAuthStore"
 
 // Helper: format date
 function formatDate(dateStr: string) {
@@ -74,12 +78,16 @@ export default function TourDetailPage() {
     const router = useRouter()
     const params = useParams()
     const tourId = params.tour_id as string
-
+    const { isAuthenticated } = useAuthStore()
     const [tour, setTour] = useState<TourDocument | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState("")
     const [activeDay, setActiveDay] = useState(1)
     const [activeImageIndex, setActiveImageIndex] = useState(0)
+    const [showPaymentModal, setShowPaymentModal] = useState(false)
+    const [paymentLoading, setPaymentLoading] = useState(false)
+    const [savingTour, setSavingTour] = useState(false)
+    const [tourSaved, setTourSaved] = useState(false)
 
     // Fetch tour data
     useEffect(() => {
@@ -125,6 +133,50 @@ export default function TourDetailPage() {
         return tour.itinerary.reduce((sum: number, day: any) => sum + (day.activities?.length || 0), 0)
     }, [tour])
 
+    // Handle payment
+    const handlePayment = async () => {
+        if (!tour) return
+
+        try {
+            setPaymentLoading(true)
+
+            // Create VNPAY payment URL
+            const result = await PaymentService.createVnpayPaymentUrl({
+                itinerary_id: tour.tour_id,
+                amount_usd: tour.pricing?.total || 0,
+                order_info: `Thanh toan tour ${tour.title}`,
+                language: 'vn'
+            })
+
+            // Redirect to VNPAY payment page
+            window.location.href = result.payment_url
+
+        } catch (err: any) {
+            console.error("Payment error:", err)
+            toast.error(err.message || t("paymentError"))
+            setPaymentLoading(false)
+        }
+    }
+
+    const handleSaveTour = async () => {
+        if (!tour) return
+        try {
+            setSavingTour(true)
+            await ItineraryService.savePremadeTour(tour.tour_id)
+            setTourSaved(true)
+            toast.success(t("tourSavedSuccess"))
+        } catch (err: any) {
+            if (err.message?.includes("already saved")) {
+                setTourSaved(true)
+                toast.success(t("tourAlreadySaved"))
+            } else {
+                toast.error(err.message || t("tourSaveError"))
+            }
+        } finally {
+            setSavingTour(false)
+        }
+    }
+
     return (
         <AuthGuard>
             <div className="relative min-h-screen bg-[#F0FDFA] text-[#3F3F46]">
@@ -165,8 +217,16 @@ export default function TourDetailPage() {
                             <Link href="/history_tour" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                                 {t("historyTour")}
                             </Link>
-                            <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
-                            <UserMenu />
+                            {isAuthenticated ? (
+                                <>
+                                    <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
+                                    <UserMenu />
+                                </>
+                            ) : (
+                                <Link href="/login" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                                    {t("login")}
+                                </Link>
+                            )}
                         </nav>
                     </div>
                 </header>
@@ -564,18 +624,182 @@ export default function TourDetailPage() {
                                 </svg>
                                 {t("backToTours")}
                             </button>
-                            <Link
-                                href="/planner"
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#5FCBC4] text-white font-semibold hover:bg-[#4AB8B0] transition shadow-lg shadow-[#5FCBC4]/25"
-                            >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                </svg>
-                                {t("planNewTour")}
-                            </Link>
+                            <div className="flex items-center gap-3">
+                                {/* Save Tour Button */}
+                                {tourSaved ? (
+                                    <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-700 font-semibold">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                        </svg>
+                                        {t("tourSaved")}
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={handleSaveTour}
+                                        disabled={savingTour}
+                                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[#E4E4E7] text-[#3F3F46] font-medium hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {savingTour ? (
+                                            <div className="w-4 h-4 border-2 border-[#3F3F46] border-t-transparent rounded-full animate-spin" />
+                                        ) : (
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                            </svg>
+                                        )}
+                                        {t("saveTour")}
+                                    </button>
+                                )}
+                                <button
+                                    onClick={() => setShowPaymentModal(true)}
+                                    className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] text-white font-semibold hover:shadow-lg hover:shadow-[#5FCBC4]/30 transition-all"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                    </svg>
+                                    {t("payNow")}
+                                </button>
+
+                            </div>
                         </div>
 
                     </main>
+                )}
+
+                {/* Payment Modal */}
+                {showPaymentModal && tour && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                            {/* Modal Header */}
+                            <div className="sticky top-0 bg-white border-b border-[#E4E4E7] px-6 py-4 flex items-center justify-between rounded-t-2xl">
+                                <div>
+                                    <h3 className="text-xl font-bold text-[#0F4C5C]">{t("paymentTitle")}</h3>
+                                    <p className="text-sm text-[#A1A1AA] mt-1">{t("paymentSubtitle")}</p>
+                                </div>
+                                <button
+                                    onClick={() => setShowPaymentModal(false)}
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-[#F0FDFA] text-[#A1A1AA] hover:text-[#0F4C5C] transition"
+                                >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            {/* Modal Body */}
+                            <div className="p-6 space-y-6">
+                                {/* Tour Summary */}
+                                <div className="rounded-xl border border-[#E4E4E7] bg-[#F0FDFA] p-4">
+                                    <h4 className="text-sm font-semibold text-[#0F4C5C] mb-3">{t("tourSummary")}</h4>
+                                    <div className="space-y-2">
+                                        <div className="flex items-start justify-between">
+                                            <span className="text-sm text-[#A1A1AA]">{t("tourName")}</span>
+                                            <span className="text-sm font-medium text-[#3F3F46] text-right max-w-[60%]">{tour.title}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm text-[#A1A1AA]">{t("destination")}</span>
+                                            <span className="text-sm font-medium text-[#3F3F46]">{tour.destination.city}, {tour.destination.country}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm text-[#A1A1AA]">{t("duration")}</span>
+                                            <span className="text-sm font-medium text-[#3F3F46]">{tour.duration_days} {t("days")}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-sm text-[#A1A1AA]">{t("activities")}</span>
+                                            <span className="text-sm font-medium text-[#3F3F46]">{totalActivities} {t("activities")}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Price Breakdown */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-[#0F4C5C]">{t("priceBreakdown")}</h4>
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-[#A1A1AA]">{t("costAccommodation")}</span>
+                                            <span className="font-medium text-[#3F3F46]">${tour.pricing?.accommodation || 0}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-[#A1A1AA]">{t("costActivities")}</span>
+                                            <span className="font-medium text-[#3F3F46]">${tour.pricing?.activities || 0}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-[#A1A1AA]">{t("costTransportation")}</span>
+                                            <span className="font-medium text-[#3F3F46]">${tour.pricing?.transportation || 0}</span>
+                                        </div>
+                                        <div className="flex items-center justify-between text-sm">
+                                            <span className="text-[#A1A1AA]">{t("costMisc")}</span>
+                                            <span className="font-medium text-[#3F3F46]">${tour.pricing?.misc || 0}</span>
+                                        </div>
+                                    </div>
+                                    <div className="pt-3 border-t-2 border-[#E4E4E7] flex items-center justify-between">
+                                        <span className="text-base font-bold text-[#0F4C5C]">{t("totalAmount")}</span>
+                                        <span className="text-2xl font-bold text-[#5FCBC4]">${tour.pricing?.total || 0}</span>
+                                    </div>
+                                </div>
+
+                                {/* Payment Method */}
+                                <div className="rounded-xl border border-[#E4E4E7] bg-white p-4">
+                                    <h4 className="text-sm font-semibold text-[#0F4C5C] mb-3">{t("paymentMethod")}</h4>
+                                    <div className="flex items-center gap-3 p-3 rounded-lg bg-[#F0FDFA] border border-[#5FCBC4]/30">
+                                        <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center border border-[#E4E4E7]">
+                                            <img src="/vnpay-logo.png" alt="VNPAY" className="w-10 h-10 object-contain" onError={(e) => {
+                                                e.currentTarget.style.display = 'none'
+                                                e.currentTarget.parentElement!.innerHTML = '<span class="text-[#5FCBC4] font-bold text-xs">VNPAY</span>'
+                                            }} />
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-sm font-semibold text-[#0F4C5C]">VNPAY</p>
+                                            <p className="text-xs text-[#A1A1AA]">{t("vnpayDesc")}</p>
+                                        </div>
+                                        <svg className="w-5 h-5 text-[#5FCBC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                {/* Security Notice */}
+                                <div className="flex items-start gap-3 p-4 rounded-xl bg-blue-50 border border-blue-100">
+                                    <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-semibold text-blue-900">{t("securePayment")}</p>
+                                        <p className="text-xs text-blue-700 mt-1">{t("securePaymentDesc")}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Modal Footer */}
+                            <div className="sticky bottom-0 bg-white border-t border-[#E4E4E7] px-6 py-4 flex items-center gap-3 rounded-b-2xl">
+                                <button
+                                    onClick={() => setShowPaymentModal(false)}
+                                    disabled={paymentLoading}
+                                    className="flex-1 px-5 py-2.5 rounded-xl border border-[#E4E4E7] text-[#3F3F46] font-medium hover:bg-[#F0FDFA] transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {t("cancel")}
+                                </button>
+                                <button
+                                    onClick={handlePayment}
+                                    disabled={paymentLoading}
+                                    className="flex-1 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#5FCBC4] to-[#4AB8B0] text-white font-semibold hover:shadow-lg hover:shadow-[#5FCBC4]/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    {paymentLoading ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            {t("processing")}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                            </svg>
+                                            {t("proceedToPayment")}
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 )}
 
                 {/* Footer */}

@@ -32,6 +32,7 @@ interface RegistrationData {
   password: string
   fullname: string
   phone: string
+  device_id: string
 }
 
 export default function RegisterPaymentPage() {
@@ -137,6 +138,7 @@ export default function RegisterPaymentPage() {
           password: registrationData.password,
           fullname: registrationData.fullname,
           phone: registrationData.phone,
+          device_id: registrationData.device_id,
           plan_id: selectedPlan,
           order_info: `Thanh toan dang ky tai khoan premium - ${plan.name}`
         })

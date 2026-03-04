@@ -53,6 +53,21 @@ class places:
                 "image_url" : 1,
             }
         )
+
+    @staticmethod
+    def get_place_summary(mongo, place_id):
+        """Return a place with only summary fields for tour enrichment."""
+        return mongo.db.places.find_one(
+            {"id": place_id},
+            {
+                "_id": 0,
+                "displayName_text": 1,
+                "search_type": 1,
+                "rating": 1,
+                "avg_price": 1,
+                "image_url": 1,
+            },
+        )
     @staticmethod
     def set_preferences(mongo, preferences, user_id, city_id):
         return mongo.db.user_preferences.insert_one({

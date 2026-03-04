@@ -16,6 +16,8 @@ from ..models.payments import Payments
 from ..models.users import Users
 from ..models.pending_registrations import PendingRegistrations
 from ..models.itinerary_models import TourItinerary
+from ..models.tour_bookings import TourBookings
+from ..models.itineraries import Itineraries
 from ..config import Config
 
 logger = logging.getLogger(__name__)
@@ -97,8 +99,8 @@ def create_payment():
     }
     """
     try:
-        identity = get_jwt_identity()
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        from ..extensions import get_user_id_from_jwt
+        user_id = get_user_id_from_jwt()
         data = request.get_json() or {}
 
         # Validate required fields
@@ -153,8 +155,8 @@ def confirm_payment(payment_id):
     }
     """
     try:
-        identity = get_jwt_identity()
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        from ..extensions import get_user_id_from_jwt
+        user_id = get_user_id_from_jwt()
         data = request.get_json() or {}
 
         # Verify payment exists and belongs to user
@@ -175,10 +177,15 @@ def confirm_payment(payment_id):
         if success:
             updated = Payments.find_by_payment_id(mongo, payment_id)
             logger.info(f"Payment {payment_id} confirmed: {new_status}")
-            mongo.db.itineraries.update_one(
-                {"itinerary_id": payment["tour_id"]},
-                {"$set": {"status": "payed", "updated_at": datetime.now()}}
-            )
+            Itineraries.update_status(mongo, payment["tour_id"], "payed")
+            # Update tour_bookings status to paid
+            try:
+                TourBookings.update_status_by_tour_ref(
+                    mongo, payment["tour_id"], "paid", payment_id
+                )
+            except Exception as be:
+                logger.warning(f"Failed to update tour_booking on confirm: {be}")
+
             return jsonify({
                 "message": f"Payment {new_status}",
                 "payment": updated,
@@ -196,8 +203,9 @@ def confirm_payment(payment_id):
 def get_payment(payment_id):
     """Get a specific payment by payment_id"""
     try:
-        identity = get_jwt_identity()
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        from ..extensions import get_user_id_from_jwt, parse_jwt_identity
+        user_id = get_user_id_from_jwt()
+        identity = parse_jwt_identity()
 
         payment = Payments.find_by_payment_id(mongo, payment_id)
         if not payment:
@@ -226,8 +234,8 @@ def get_user_payments():
         - skip: pagination offset (default 0)
     """
     try:
-        identity = get_jwt_identity()
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        from ..extensions import get_user_id_from_jwt
+        user_id = get_user_id_from_jwt()
 
         limit = int(request.args.get("limit", 50))
         skip = int(request.args.get("skip", 0))
@@ -267,8 +275,8 @@ def get_tour_payments(tour_id):
 def get_payment_stats():
     """Get payment statistics for current user"""
     try:
-        identity = get_jwt_identity()
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        from ..extensions import get_user_id_from_jwt
+        user_id = get_user_id_from_jwt()
 
         total_payments = Payments.count_by_user(mongo, user_id)
         total_spent = Payments.get_total_spent(mongo, user_id)
@@ -307,8 +315,8 @@ def vnpay_create_payment_url():
     }
     """
     try:
-        identity = get_jwt_identity()
-        user_id = identity["id"] if isinstance(identity, dict) else identity
+        from ..extensions import get_user_id_from_jwt
+        user_id = get_user_id_from_jwt()
         data = request.get_json() or {}
 
         itinerary_id = data.get("itinerary_id")
@@ -421,10 +429,15 @@ def vnpay_return():
             if new_status == "completed":
                 payment = Payments.find_by_payment_id(mongo, txn_ref)
                 if payment:
-                    mongo.db.itineraries.update_one(
-                        {"itinerary_id": payment.get("tour_id")},
-                        {"$set": {"status": "payed", "updated_at": datetime.now()}},
-                    )
+                    tour_ref = payment.get("tour_id")
+                    Itineraries.update_status(mongo, tour_ref, "payed")
+                    # Update tour_bookings status to paid
+                    try:
+                        TourBookings.update_status_by_tour_ref(
+                            mongo, tour_ref, "paid", txn_ref
+                        )
+                    except Exception as be:
+                        logger.warning(f"Failed to update tour_booking on vnpay return: {be}")
 
         logger.info(f"VNPAY return: txn={txn_ref}, code={response_code}, status={new_status}")
 
@@ -487,6 +500,7 @@ def vnpay_create_payment_url_register():
         "fullname": "John Doe",
         "phone": "+84123456789",
         "plan_id": "yearly",
+        "device_id": "uuid-v4-string",
         "order_info": "Thanh toan dang ky tai khoan premium"
     }
     Returns:
@@ -504,8 +518,9 @@ def vnpay_create_payment_url_register():
         fullname = data.get("fullname")
         phone = data.get("phone")
         plan_id = data.get("plan_id")
+        device_id = data.get("device_id")
 
-        if not all([email, password, fullname, phone, plan_id]):
+        if not all([email, password, fullname, phone, plan_id, device_id]):
             return jsonify({"error": "Missing required fields"}), 400
 
         if plan_id not in Config.REGISTRATION_PLANS:
@@ -549,6 +564,7 @@ def vnpay_create_payment_url_register():
             "plan_id": plan_id,
             "amount_usd": amount_usd,
             "payment_id": payment_id,
+            "device_id": device_id,
         }
         pending_reg = PendingRegistrations.create(registration_data, mongo)
         registration_id = pending_reg["registration_id"]
@@ -638,6 +654,15 @@ def vnpay_return_register():
             # Insert user directly to avoid double-hashing
             # (password_hash is already hashed in create-payment-url-register)
             import uuid
+            devices = []
+            if pending_reg.get("device_id"):
+                devices.append({
+                    "device_id": pending_reg.get("device_id"),
+                    "device_name": "Registration Device",
+                    "added_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "last_used": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                })
+            
             user_doc = {
                 "id": str(uuid.uuid4()),
                 "email": pending_reg["email"],
@@ -650,11 +675,12 @@ def vnpay_return_register():
                 "premium_plan": pending_reg["plan_id"],
                 "premium_status": "active",
                 "premium_expiry_date": expiry_date,
+                "devices": devices,
                 "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
             
-            mongo.db.users.insert_one(user_doc)
+            Users.insert_user_doc(mongo, user_doc)
             logger.info(f"User account created: email={pending_reg['email']}, plan={pending_reg['plan_id']}")
             
             Payments.update_status(mongo, payment_id, new_status, transaction_no)

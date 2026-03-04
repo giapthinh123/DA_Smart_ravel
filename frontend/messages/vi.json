@@ -25,7 +25,7 @@
         "brandTagline": "Khám phá theo cách của bạn",
         "badge": "Nền tảng gợi ý tour đầu tiên tại Việt Nam",
         "heroHeadline": "Lập lịch trình du lịch cá nhân hóa trong vài phút",
-        "heroDescription": "Smart Travel giúp bạn tự thiết kế hành trình: chọn điểm đi/đến, đặt vé máy bay khứ hồi, chọn nhà hàng, khách sạn và địa điểm yêu thích, rồi nhận ngay lịch trình hàng ngày tối ưu.",
+        "heroDescription": "Smart Travel giúp bạn tự lên kế hoạch hành trình: chọn điểm đi/đến, đặt vé máy bay khứ hồi, chọn nhà hàng, khách sạn và địa điểm yêu thích, rồi nhận ngay lịch trình hàng ngày tối ưu.",
         "statJourneys": "Hành trình được tối ưu",
         "statSatisfied": "Khách hàng hài lòng",
         "statCountries": "Quốc gia đối tác",
@@ -58,7 +58,60 @@
         "newHere": "Lần đầu đến đây?",
         "newHereDesc": "Tạo tài khoản để bắt đầu hành trình",
         "createAccount": "Tạo tài khoản",
-        "loginFailed": "Đăng nhập thất bại"
+        "loginFailed": "Đăng nhập thất bại",
+        "deviceNotAuthorized": "Thiết bị này không được phép đăng nhập. Vui lòng đăng nhập từ thiết bị đã đăng ký."
+    },
+    "VerifyDevicePage": {
+        "title": "Xác thực thiết bị",
+        "subtitle": "Vui lòng nhập mã xác thực đã được gửi đến email của bạn",
+        "sentTo": "Đã gửi đến",
+        "codeLabel": "Mã xác thực",
+        "codeHint": "Nhập mã 6 ký tự (chữ thường và số)",
+        "warning": "Sau khi xác thực, thiết bị cũ của bạn sẽ bị đăng xuất và thiết bị này sẽ trở thành thiết bị duy nhất được phép đăng nhập.",
+        "verify": "Xác thực",
+        "backToLogin": "Quay lại đăng nhập",
+        "invalidCodeLength": "Mã xác thực phải có 6 ký tự",
+        "error": "Lỗi",
+        "invalidCode": "Mã xác thực không hợp lệ hoặc đã hết hạn",
+        "errorGeneric": "Có lỗi xảy ra. Vui lòng thử lại.",
+        "success": "Xác thực thành công! Đang chuyển hướng...",
+        "successTitle": "Thành công"
+    },
+    "ResetPasswordPage": {
+        "title": "Đặt lại mật khẩu",
+        "subtitle": "Nhập email của bạn và chúng tôi sẽ gửi mã xác thực",
+        "stepEmail": "Email",
+        "stepCode": "Mã",
+        "stepPassword": "Mật khẩu",
+        "emailLabel": "Email",
+        "emailPlaceholder": "info@example.com...",
+        "sendCode": "Gửi mã xác thực",
+        "sending": "Đang gửi...",
+        "codeSent": "Mã xác thực đã được gửi đến email của bạn",
+        "codeSentTitle": "Đã gửi mã",
+        "codeTitle": "Nhập mã xác thực",
+        "codeSubtitle": "Vui lòng nhập mã 6 chữ số đã gửi đến email",
+        "sentTo": "Đã gửi đến",
+        "codeLabel": "Mã xác thực",
+        "codeHint": "Nhập mã 6 chữ số từ email",
+        "verifyCode": "Xác thực mã",
+        "invalidCodeLength": "Mã phải có 6 chữ số",
+        "codeVerified": "Mã xác thực hợp lệ!",
+        "codeVerifiedTitle": "Xác thực thành công",
+        "newPasswordTitle": "Đặt mật khẩu mới",
+        "newPasswordSubtitle": "Chọn mật khẩu mới mạnh cho tài khoản của bạn",
+        "newPasswordLabel": "Mật khẩu mới",
+        "newPasswordPlaceholder": "Nhập mật khẩu mới (tối thiểu 8 ký tự)...",
+        "confirmPasswordLabel": "Xác nhận mật khẩu",
+        "confirmPasswordPlaceholder": "Xác nhận mật khẩu mới...",
+        "passwordTooShort": "Mật khẩu phải có ít nhất 8 ký tự",
+        "passwordMismatch": "Mật khẩu không khớp",
+        "resetButton": "Đặt lại mật khẩu",
+        "resetting": "Đang đặt lại...",
+        "resetSuccess": "Mật khẩu đã được đặt lại thành công!",
+        "resetSuccessTitle": "Đặt lại mật khẩu",
+        "errorGeneric": "Có lỗi xảy ra. Vui lòng thử lại.",
+        "backToLogin": "Quay lại đăng nhập"
     },
     "RegisterPage": {
         "title": "Tạo tài khoản",
@@ -188,6 +241,7 @@
         "tagline": "Tạo ra những trải nghiệm du lịch khó quên."
     },
     "TourDetailPage": {
+        "login": "Đăng nhập",
         "pageTitle": "Chi tiết Tour",
         "home": "Trang chủ",
         "tours": "Tour",
@@ -226,7 +280,30 @@
         "copyright": "VietJourney. Đã đăng ký bản quyền",
         "tagline": "Tạo ra những trải nghiệm du lịch khó quên.",
         "restaurant": "Ăn uống",
-        "attraction": "Tham quan"
+        "attraction": "Tham quan",
+        "paid": "Đã thanh toán",
+        "saveTour": "Lưu Tour",
+        "tourSaved": "Đã lưu",
+        "tourSavedSuccess": "Tour đã được lưu vào lịch sử!",
+        "tourAlreadySaved": "Tour đã có trong lịch sử của bạn",
+        "tourSaveError": "Lưu tour thất bại. Vui lòng thử lại.",
+        "payNow": "Thanh toán ngay",
+        "paymentTitle": "Hoàn tất thanh toán",
+        "paymentSubtitle": "Xem lại và xác nhận đặt tour của bạn",
+        "tourSummary": "Tóm tắt Tour",
+        "tourName": "Tên Tour",
+        "destination": "Điểm đến",
+        "duration": "Thời gian",
+        "priceBreakdown": "Chi tiết giá",
+        "totalAmount": "Tổng tiền",
+        "paymentMethod": "Phương thức thanh toán",
+        "vnpayDesc": "Cổng thanh toán an toàn và bảo mật",
+        "securePayment": "Thanh toán bảo mật",
+        "securePaymentDesc": "Thông tin thanh toán của bạn được mã hóa và bảo mật",
+        "cancel": "Hủy",
+        "processing": "Đang xử lý...",
+        "proceedToPayment": "Tiến hành thanh toán",
+        "paymentError": "Thanh toán thất bại. Vui lòng thử lại."
     },
     "FullTourPage": {
         "back": "Quay lại",
@@ -244,7 +321,7 @@
         "budget": "Ngân sách",
         "status": "Trạng thái",
         "statusComplete": "Hoàn thành",
-        "statusInProgress": "Đang thiết kế",
+        "statusInProgress": "Đang lên kế hoạch",
         "costBreakdown": "Chi tiết Chi phí",
         "flightTotal": "Tổng giá vé máy bay",
         "totalCost": "Tổng chi phí",
@@ -280,8 +357,8 @@
         "flightsDesc": "Tìm chuyến bay cho điểm đi và đến",
         "hotels": "Khách sạn",
         "hotelsDesc": "Tìm chỗ ở được tuyển chọn và phù hợp ngân sách",
-        "food": "Ẩm thực",
-        "foodDesc": "Tìm nhà hàng và quán cà phê",
+        "food": "Nhà Hàng",
+        "foodDesc": "Tìm nhà hàng được tuyển chọn và phù hợp ngân sách",
         "activities": "Hoạt động",
         "activitiesDesc": "Tìm hoạt động được tuyển chọn và phù hợp ngân sách",
         "loginRequired": "Đăng nhập để sử dụng chức năng này",
@@ -305,7 +382,7 @@
         "step3Desc": "Xem lại các gợi ý tự động và điều chỉnh điểm đến, hoạt động và chỗ ở trước khi hoàn thiện:",
         "step3Item1": "So sánh vé chỗ ở",
         "step3Item2": "Điều chỉnh logic kéo-thả AI",
-        "step3Item3": "Xem hành trình cá nhân để đặt chỗ"
+        "step3Item3": "Xem lịch trình cá nhân để đặt chỗ"
     },
     "ProfilePage": {
         "brand": "VietJourney",
@@ -355,7 +432,7 @@
         "brand": "VietJourney",
         "tagline": "Khám phá trải nghiệm Việt Nam",
         "home": "Trang chủ",
-        "dashboard": "Bảng điều khiển",
+        "dashboard": "Trang tổng quan",
         "tours": "Tour",
         "contact": "Liên hệ",
         "flightBookingLabel": "Đặt chuyến bay",
@@ -391,7 +468,7 @@
         "brand": "VietJourney",
         "tagline": "Khám phá trải nghiệm Việt Nam",
         "home": "Trang chủ",
-        "dashboard": "Bảng điều khiển",
+        "dashboard": "Trang tổng quan",
         "tours": "Tour",
         "contact": "Liên hệ",
         "labelTitle": "Tùy chọn cá nhân",
@@ -411,11 +488,11 @@
         "brand": "VietJourney",
         "pageTitle": "Lịch Trình Của Bạn",
         "profile": "Hồ Sơ",
-        "dashboard": "Bảng Điều Khiển",
+        "dashboard": "Trang tổng quan",
         "logout": "Đăng Xuất",
         "noItineraryTitle": "Không Tìm Thấy Lịch Trình",
         "noItineraryDesc": "Hãy bắt đầu lên kế hoạch cho chuyến đi của bạn bằng cách chọn điểm đến và sở thích.",
-        "goToPlanner": "Đến Bảng Điều Khiển",
+        "goToPlanner": "Đến Trang tổng quan",
         "tripSummary": "Tóm tắt chuyến đi",
         "duration": "Thời lượng",
         "days": "ngày",
@@ -450,16 +527,18 @@
         "pageDesc": "Khám phá những chuyến phiêu lưu đã qua và những chuyến đi dự kiến",
         "filters": {
             "all": "Tất cả",
-            "completed": "Đã hoàn thành",
-            "inProgress": "Đang thiết kế",
-            "payed": "Đã thanh toán"
+            "paid": "Đã thanh toán",
+            "created": "Đã tạo",
+            "planning": "Đang lên kế hoạch",
+            "saved": "Đã lưu"
         },
         "searchPlaceholder": "Tìm kiếm chuyến đi hoặc điểm đến...",
         "stats": {
             "totalTours": "Tổng số Tour",
-            "completed": "Hoàn thành",
-            "inProgress": "Đang thiết kế",
-            "payed": "Đã thanh toán"
+            "paid": "Đã thanh toán",
+            "created": "Đã tạo",
+            "planning": "Đang lên kế hoạch",
+            "saved": "Đã lưu"
         },
         "loadingTitle": "Đang tải chuyến đi của bạn...",
         "loadingDesc": "Vui lòng đợi một lát",
@@ -470,7 +549,8 @@
         "createNewTour": "Tạo Tour Mới",
         "activities": "hoạt động",
         "copyright": "© 2025 VietJourney. Mọi quyền được bảo lưu",
-        "tagline": "Lưu giữ kỷ niệm du lịch của bạn."
+        "tagline": "Lưu giữ kỷ niệm du lịch của bạn.",
+        "login": "Đăng nhập"
     },
     "RegisterPaymentPage": {
         "benefits": {
@@ -529,20 +609,26 @@
         "guaranteeDesc": "Nếu không hài lòng trong 7 ngày đầu, chúng tôi sẽ hoàn lại toàn bộ số tiền."
     },
     "AdminDashboard": {
-        "pageTitle": "Bảng Điều Khiển Quản Trị",
+        "pageTitle": "Trang tổng quan",
         "pageDesc": "Chào mừng trở lại! Đây là tổng quan về hoạt động kinh doanh du lịch của bạn.",
-        "searchPlaceholder": "Tìm kiếm chuyến đi, người dùng, đặt chỗ...",
+        "searchPlaceholder": "Tìm kiếm Tour, người dùng, thanh toán...",
         "recentActivityTitle": "Hoạt động gần đây",
         "stats": {
             "totalTours": "Tổng số Tour",
             "totalUsers": "Người dùng",
-            "totalBookings": "Lượng Đặt chỗ",
-            "totalRevenue": "Doanh thu"
+            "totalBookings": "Lượng Tour đã tạo",
+            "totalRevenue": "Doanh thu",
+            "toursCreated": "Tour đã tạo",
+            "newUsers": "Người dùng mới",
+            "revenue": "Doanh thu",
+            "paidTours": "Tour đã thanh toán",
+            "monthlyTitle": "Thống kê tháng {month}/{year}",
+            "loading": "Đang tải..."
         },
         "activities": {
             "createdTour": "Tour mới được tạo",
             "updatedTour": "Đã cập nhật Tour",
-            "approvedBooking": "Đã chấp thuận đặt chỗ",
+            "approvedBooking": "Đã chấp thuận Tour",
             "newUser": "Người dùng mới đăng ký",
             "time2h": "2 giờ trước",
             "time4h": "4 giờ trước",
@@ -550,16 +636,64 @@
             "time8h": "8 giờ trước"
         },
         "charts": {
-            "growthTitle": "Tăng trưởng Đặt chỗ & Người dùng",
+            "growthTitle": "Biểu đồ Tạo tour & Người dùng",
             "chartVisualization": "Biểu diễn trực quan",
-            "connectAnalytics": "Kết nối dữ liệu phân tích của bạn"
+            "connectAnalytics": "Kết nối dữ liệu phân tích của bạn",
+            "bookings": "Tour đã tạo",
+            "users": "Người dùng",
+            "loading": "Đang tải dữ liệu biểu đồ...",
+            "noData": "Không có dữ liệu"
+        }
+    },
+    "AdminReport": {
+        "pageTitle": "Báo cáo & Thống kê",
+        "pageDesc": "Xem báo cáo kinh doanh chi tiết và phân tích dữ liệu",
+        "tabs": {
+            "month": "Theo tháng",
+            "quarter": "Theo quý",
+            "year": "Theo năm"
+        },
+        "stats": {
+            "totalRevenue": "Tổng doanh thu",
+            "totalPayments": "Tổng thanh toán",
+            "newUsers": "Người dùng mới",
+            "toursCreated": "Tour đã tạo",
+            "completedPayments": "hoàn thành",
+            "pending": "đang chờ",
+            "failed": "thất bại",
+            "registeredInPeriod": "Đăng ký trong kỳ",
+            "createdInPeriod": "Được tạo trong kỳ"
+        },
+        "charts": {
+            "revenueTitle": "Tổng quan doanh thu",
+            "paymentStatusTitle": "Trạng thái thanh toán",
+            "growthTitle": "Tăng trưởng người dùng & Tour",
+            "revenue": "Doanh thu",
+            "users": "Người dùng mới",
+            "tours": "Tour đã tạo",
+            "noData": "Không có dữ liệu"
+        },
+        "pie": {
+            "completed": "Hoàn thành",
+            "pending": "Đang chờ",
+            "failed": "Thất bại"
+        },
+        "table": {
+            "title": "Bảng chi tiết",
+            "period": "Kỳ",
+            "revenue": "Doanh thu",
+            "payments": "Thanh toán",
+            "users": "Người dùng",
+            "tours": "Tour",
+            "total": "Tổng cộng",
+            "noData": "Không có dữ liệu cho kỳ này"
         }
     },
     "AdminSidebar": {
-        "brand": "Quản Trị GoTrips",
+        "brand": "Admin",
         "logout": "Đăng xuất",
         "menu": {
-            "dashboard": "Bảng điều khiển",
+            "dashboard": "Trang tổng quan",
             "tourManagement": "Quản lý Tour",
             "locationManagement": "Quản lý Địa điểm",
             "userManagement": "Quản lý Người dùng",
@@ -737,7 +871,7 @@
     "JourneyBuilder": {
         "tagline": "Lên lộ trình cá nhân hóa",
         "title": "Tạo dấu ấn cho chuyến đi của bạn",
-        "description": "Lựa chọn tuyến đường, thời gian và mức ngân sách để chúng tôi có thể thiết kế một chuyến đi theo đúng phong cách của bạn.",
+        "description": "Lựa chọn tuyến đường, thời gian và mức ngân sách để chúng tôi có thể lên kế hoạch một chuyến đi theo đúng phong cách của bạn.",
         "chapter1": "Chương 01",
         "routeSchedule": "Lộ trình & Lịch trình",
         "routeDesc": "Chúng tôi kết nối từng điểm đến được chọn lọc kỹ lưỡng, cân bằng từng khoảnh khắc trong suốt chuyến đi.",
@@ -915,7 +1049,7 @@
         },
         "Catalog": {
             "title": "Danh mục lịch trình cá nhân hóa dựa trên mục tiêu của bạn",
-            "description": "Những hành trình được tuyển chọn kỹ lưỡng thiết kế để phù hợp với giấc mơ du lịch của bạn",
+            "description": "Những hành trình được tuyển chọn kỹ lưỡng lên kế hoạch để phù hợp với giấc mơ du lịch của bạn",
             "consultation": "Nhận tư vấn miễn phí",
             "d1Title": "Thiên đường Đảo Bali",
             "d1Desc": "Trải nghiệm những bãi biển nhiệt đới, đền thờ cổ kính và văn hóa sôi động",
@@ -937,8 +1071,8 @@
             "s2Desc": "Chọn các hoạt động và điểm đến bạn muốn ghé thăm",
             "s3Title": "Nhận dòng thời gian N-ngày và thanh toán",
             "s3Desc": "Nhận toàn bộ lịch trình và đặt ngay lập tức",
-            "consultationTitle": "Tư vấn thiết kế chuyến đi 1-1",
-            "consultationDesc": "Nhận tư vấn cá nhân hóa từ các chuyên gia thiết kế chuyến đi thấu hiểu sở thích độc đáo của bạn",
+            "consultationTitle": "Tư vấn lên kế hoạch chuyến đi 1-1",
+            "consultationDesc": "Nhận tư vấn cá nhân hóa từ các chuyên gia lên kế hoạch chuyến đi thấu hiểu sở thích độc đáo của bạn",
             "consultationPoint1": "Tư vấn 30 phút miễn phí",
             "consultationPoint2": "Đề xuất từ chuyên gia",
             "consultationPoint3": "Lên kế hoạch lịch trình tùy chỉnh",
@@ -1039,6 +1173,46 @@
             "save": "Lưu & Đặt tour",
             "lunchAt": "Ăn trưa tại",
             "dinnerAt": "Ăn tối tại"
+        }
+    },
+    "EditItineraryPage": {
+        "title": "Chỉnh sửa tour cá nhân",
+        "loadingDesc": "Đang tải thông tin tour...",
+        "sectionOverview": "Thông tin tour",
+        "sectionOverviewDesc": "Cập nhật các thông tin chính của tour cá nhân trước khi hệ thống sinh lại lịch trình.",
+        "fields": {
+            "name": "Tên tour",
+            "destination": "Điểm đến",
+            "startDate": "Ngày khởi hành",
+            "tripDurationDays": "Số ngày",
+            "guestCount": "Số khách",
+            "budget": "Ngân sách (USD)"
+        },
+        "placeholders": {
+            "name": "Ví dụ: Hành trình Hà Nội"
+        },
+        "warnings": {
+            "hasGeneratedDays": "Tour này đã có lịch trình chi tiết theo ngày.",
+            "mayRegenerate": "Thay đổi ngày khởi hành hoặc số ngày có thể xóa timeline hiện tại và sinh lại."
+        },
+        "buttons": {
+            "saving": "Đang lưu...",
+            "continue": "Tiếp tục"
+        },
+        "errors": {
+            "title": "Không thể tải tour",
+            "missingBookingId": "Thiếu mã đặt tour. Vui lòng mở lại trang này từ Lịch sử tour.",
+            "loadFailed": "Tải thông tin tour thất bại. Vui lòng thử lại.",
+            "saveFailed": "Lưu thay đổi thất bại. Vui lòng thử lại."
+        },
+        "validation": {
+            "startDateRequired": "Vui lòng chọn ngày khởi hành",
+            "durationInvalid": "Số ngày phải lớn hơn hoặc bằng 1",
+            "guestsInvalid": "Số khách phải lớn hơn hoặc bằng 1",
+            "budgetInvalid": "Ngân sách không được âm"
+        },
+        "confirm": {
+            "regenerateTimeline": "Bạn đã thay đổi ngày khởi hành hoặc số ngày. Lịch trình chi tiết có thể bị xóa và sinh lại. Bạn có chắc muốn tiếp tục?"
         }
     }
 }

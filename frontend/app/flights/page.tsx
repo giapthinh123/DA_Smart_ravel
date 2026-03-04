@@ -7,25 +7,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Plane, Clock, ShieldCheck, ArrowRight, CheckCircle2 } from "lucide-react"
 import { data_build_tour, data_flight, data_flight_search, SelectedFlightForItinerary, FlightsSelectionPayload } from "@/types/domain"
 import { AuthGuard } from "@/components/auth-guard"
-import { AdminOnly } from "@/components/role-gate"
-import { useAuthStore } from "@/store/useAuthStore"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
-import api from "@/lib/axios"
 import { TravelService } from "@/services/travel.service"
 import { UserMenu } from "@/components/user-menu"
 import { Footer } from "@/components/footer"
 import { useTranslations } from "next-intl"
 function FlightsContent() {
   const router = useRouter()
-  const { user, logout } = useAuthStore()
   const t = useTranslations("FlightsPage")
   const [step, setStep] = useState<1 | 2>(1)
   const [selectedOutbound, setSelectedOutbound] = useState<any>(null)
@@ -35,13 +23,19 @@ function FlightsContent() {
   const [flightReturn, setFlightReturn] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Lazy loading states
+  const [isIncludeFlight, setIsIncludeFlight] = useState<boolean>(false)
   const [displayCount, setDisplayCount] = useState(10)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const ITEMS_PER_PAGE = 10
 
-  // Sort states
+  useEffect(() => {
+    const storedData = sessionStorage.getItem('isIncludeFlight')
+    if (storedData) {
+      const parsedData = JSON.parse(storedData) as boolean
+      setIsIncludeFlight(parsedData)
+    }
+  }, [])
+
   type SortOption = 'default' | 'lowest' | 'highest'
   const [timeSort, setTimeSort] = useState<SortOption>('default')
   const [priceSort, setPriceSort] = useState<SortOption>('default')
@@ -406,13 +400,12 @@ function FlightsContent() {
           <Link href="/tours" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
             {t("tours")}
           </Link>
-          <Link href="#" className="rounded-full px-4 py-2 text-[#64748B] transition hover:text-[#0F172A]">
-            {t("contact")}
-          </Link>
           <span className="mx-2 h-4 w-px bg-white/20"></span>
 
           {/* User Menu Dropdown */}
-          <UserMenu />
+          <div className="flex items-center gap-2 ml-auto">
+            <UserMenu />
+          </div>
         </nav>
 
       </header >
@@ -448,8 +441,11 @@ function FlightsContent() {
             </div>
             <ArrowRight className="text-[#94A3B8]" />
             <div
-              onClick={() => selectedOutbound && setStep(2)}
-              className={`flex items-center gap-3 px-6 py-3 rounded-2xl transition-all border backdrop-blur ${!selectedOutbound ? "opacity-50 cursor-not-allowed bg-white/5 text-[#94A3B8] border-white/10" : "cursor-pointer"
+              onClick={() => {
+                if (!isIncludeFlight || selectedOutbound) {
+                  setStep(2)
+                }
+              }} className={`flex items-center gap-3 px-6 py-3 rounded-2xl transition-all border backdrop-blur ${((isIncludeFlight && !selectedOutbound)) ? "opacity-50 cursor-not-allowed bg-white/5 text-[#94A3B8] border-white/10" : "cursor-pointer"
                 } ${step === 2 ? "bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] text-[#0F172A] border-[#5FCBC4] shadow-lg shadow-[#5FCBC4]/30" : "bg-white/5 text-[#475569] border-white/10 hover:bg-white/10 hover:border-[#5FCBC4]/40"}`}
             >
               <div
@@ -657,21 +653,23 @@ function FlightsContent() {
                                 {t("taxIncluded")}
                               </div>
                             </div>
-                            <Button
-                              onClick={() => handleSelect(flight)}
-                              className={`rounded-xl px-8 h-12 font-semibold transition-all border ${selectedCurrentId === flight.id
-                                ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 scale-105 shadow-lg shadow-emerald-500/30"
-                                : "bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] hover:shadow-lg hover:shadow-[#4AB8B0]/30 text-[#FFFFFF] border-[#5FCBC4]"
-                                }`}
-                            >
-                              {selectedCurrentId === flight.id ? (
-                                <span className="flex items-center gap-2">
-                                  <ShieldCheck className="w-4 h-4" /> {t("selected")}
-                                </span>
-                              ) : (
-                                t("select")
-                              )}
-                            </Button>
+                            {isIncludeFlight == true && (
+                              <Button
+                                onClick={() => handleSelect(flight)}
+                                className={`rounded-xl px-8 h-12 font-semibold transition-all border ${selectedCurrentId === flight.id
+                                  ? "bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500 scale-105 shadow-lg shadow-emerald-500/30"
+                                  : "bg-gradient-to-r from-[#A8E6E0] via-[#7DD8D2] to-[#4AB8B0] hover:shadow-lg hover:shadow-[#4AB8B0]/30 text-[#FFFFFF] border-[#5FCBC4]"
+                                  }`}
+                              >
+                                {selectedCurrentId === flight.id ? (
+                                  <span className="flex items-center gap-2">
+                                    <ShieldCheck className="w-4 h-4" /> {t("selected")}
+                                  </span>
+                                ) : (
+                                  t("select")
+                                )}
+                              </Button>
+                            )}
                           </div>
                         </div>
                       </CardContent>
@@ -715,103 +713,105 @@ function FlightsContent() {
             </div>
             {/* End Scrollable Container */}
           </div>
-          <div className="w-full lg:w-[420px] shrink-0">
-            <div className="lg:sticky lg:top-8 bg-white rounded-3xl border border-[#E4E4E7] animate-in slide-in-from-right duration-500 shadow-sm">
-              {/* Header */}
-              <div className="px-8 pt-8 pb-6 border-b border-[#E4E4E7]">
-                <h2 className="text-2xl font-bold text-[#0F4C5C]">{t("bookingSummary")}</h2>
-              </div>
-
-              {/* Content */}
-              <div className="px-8 py-6 space-y-6">
-                {/* Selected Flights */}
-                <div>
-                  <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">{t("selectedFlights")}</h3>
-
-                  {/* Departure */}
-                  {selectedOutbound ? (
-                    <div className="mb-4 p-4 rounded-xl bg-[#F0FDFA] border border-[#5FCBC4]/30">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-xs text-[#A1A1AA]">Departure • {formatBookingDate(dataBuildTour?.flight_departure_date || null)}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-bold text-[#0F4C5C] uppercase">{selectedOutbound.airline}</span>
-                        <span className="text-sm font-bold text-[#5FCBC4]">{selectedOutbound.departureTime}</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="mb-4 p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7] border-dashed">
-                      <div className="text-center py-4">
-                        <p className="text-sm text-[#A1A1AA]">{t("noDepartureFlight")}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Return */}
-                  {selectedReturn ? (
-                    <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#5FCBC4]/30">
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-xs text-[#A1A1AA]">Return • {formatBookingDate(dataBuildTour?.flight_return_date || null)}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-bold text-[#0F4C5C] uppercase">{selectedReturn.airline}</span>
-                        <span className="text-sm font-bold text-[#5FCBC4]">{selectedReturn.departureTime}</span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7] border-dashed">
-                      <div className="text-center py-4">
-                        <p className="text-sm text-[#A1A1AA]">{t("noReturnFlight")}</p>
-                      </div>
-                    </div>
-                  )}
+          {isIncludeFlight && (
+            <div className="w-full lg:w-[420px] shrink-0">
+              <div className="lg:sticky lg:top-8 bg-white rounded-3xl border border-[#E4E4E7] animate-in slide-in-from-right duration-500 shadow-sm">
+                {/* Header */}
+                <div className="px-8 pt-8 pb-6 border-b border-[#E4E4E7]">
+                  <h2 className="text-2xl font-bold text-[#0F4C5C]">{t("bookingSummary")}</h2>
                 </div>
 
-                {/* Price Details */}
-                <div>
-                  <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">{t("priceDetails")}</h3>
+                {/* Content */}
+                <div className="px-8 py-6 space-y-6">
+                  {/* Selected Flights */}
+                  <div>
+                    <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">{t("selectedFlights")}</h3>
 
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-[#3F3F46]">{t("departureFlight")}</span>
-                      <span className="text-[#0F4C5C] font-semibold">
-                        {selectedOutbound ? `${(selectedOutbound.price)}$` : '-'}
-                      </span>
-                    </div>
+                    {/* Departure */}
+                    {selectedOutbound ? (
+                      <div className="mb-4 p-4 rounded-xl bg-[#F0FDFA] border border-[#5FCBC4]/30">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-xs text-[#A1A1AA]">Departure • {formatBookingDate(dataBuildTour?.flight_departure_date || null)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-bold text-[#0F4C5C] uppercase">{selectedOutbound.airline}</span>
+                          <span className="text-sm font-bold text-[#5FCBC4]">{selectedOutbound.departureTime}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mb-4 p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7] border-dashed">
+                        <div className="text-center py-4">
+                          <p className="text-sm text-[#A1A1AA]">{t("noDepartureFlight")}</p>
+                        </div>
+                      </div>
+                    )}
 
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-[#3F3F46]">{t("returnFlight")}</span>
-                      <span className="text-[#0F4C5C] font-semibold">
-                        {selectedReturn ? `${(selectedReturn.price)}$` : '-'}
-                      </span>
-                    </div>
+                    {/* Return */}
+                    {selectedReturn ? (
+                      <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#5FCBC4]/30">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-xs text-[#A1A1AA]">Return • {formatBookingDate(dataBuildTour?.flight_return_date || null)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-bold text-[#0F4C5C] uppercase">{selectedReturn.airline}</span>
+                          <span className="text-sm font-bold text-[#5FCBC4]">{selectedReturn.departureTime}</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-4 rounded-xl bg-[#F0FDFA] border border-[#E4E4E7] border-dashed">
+                        <div className="text-center py-4">
+                          <p className="text-sm text-[#A1A1AA]">{t("noReturnFlight")}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                    {/* Total */}
-                    <div className="pt-4 border-t border-[#E4E4E7]">
-                      <div className="flex justify-between items-center p-4 rounded-xl bg-[#CCFBF1] border border-[#5FCBC4]/30">
-                        <span className="text-lg font-bold text-[#0F4C5C]">{t("total")}</span>
-                        <span className="text-2xl font-bold text-[#5FCBC4]">{(totalPrice)}$</span>
+                  {/* Price Details */}
+                  <div>
+                    <h3 className="text-xs uppercase tracking-wider text-[#A1A1AA] font-bold mb-4">{t("priceDetails")}</h3>
+
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-[#3F3F46]">{t("departureFlight")}</span>
+                        <span className="text-[#0F4C5C] font-semibold">
+                          {selectedOutbound ? `${(selectedOutbound.price)}$` : '-'}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-[#3F3F46]">{t("returnFlight")}</span>
+                        <span className="text-[#0F4C5C] font-semibold">
+                          {selectedReturn ? `${(selectedReturn.price)}$` : '-'}
+                        </span>
+                      </div>
+
+                      {/* Total */}
+                      <div className="pt-4 border-t border-[#E4E4E7]">
+                        <div className="flex justify-between items-center p-4 rounded-xl bg-[#CCFBF1] border border-[#5FCBC4]/30">
+                          <span className="text-lg font-bold text-[#0F4C5C]">{t("total")}</span>
+                          <span className="text-2xl font-bold text-[#5FCBC4]">{(totalPrice)}$</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Footer */}
-              <div className="px-8 pb-8">
-                <button
-                  onClick={handleConfirmBooking}
-                  disabled={!selectedOutbound || !selectedReturn}
-                  className={`w-full py-4 rounded-2xl font-bold text-lg transition-all ${selectedOutbound && selectedReturn
-                    ? 'bg-[#5FCBC4] hover:bg-[#4AB8B0] text-white hover:scale-[1.02] cursor-pointer shadow-sm'
-                    : 'bg-[#E4E4E7] text-[#A1A1AA] cursor-not-allowed opacity-60'
-                    }`}
-                >
-                  Confirm Booking & Continue to Tour
-                </button>
+                {/* Footer */}
+                <div className="px-8 pb-8">
+                  <button
+                    onClick={handleConfirmBooking}
+                    disabled={!selectedOutbound || !selectedReturn}
+                    className={`w-full py-4 rounded-2xl font-bold text-lg transition-all ${selectedOutbound && selectedReturn
+                      ? 'bg-[#5FCBC4] hover:bg-[#4AB8B0] text-white hover:scale-[1.02] cursor-pointer shadow-sm'
+                      : 'bg-[#E4E4E7] text-[#A1A1AA] cursor-not-allowed opacity-60'
+                      }`}
+                  >
+                    Confirm Booking & Continue to Tour
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
         {/* End Two Column Layout */}
       </main>

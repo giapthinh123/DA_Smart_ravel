@@ -8,6 +8,7 @@ import { LoaderCircle, CheckCircle2 } from "lucide-react"
 import { EyeIcon, EyeCloseIcon } from "@/components/icon/icon"
 import { useTranslations } from "next-intl"
 import { LanguageSwitcher } from "@/components/i18n/language-switcher"
+import { getOrCreateDeviceId } from "@/lib/device-fingerprint"
 
 // ========================================
 // INPUT ERROR COMPONENT
@@ -79,11 +80,14 @@ export default function RegisterPage() {
     if (!validateForm()) return
     setIsLoading(true)
     try {
+      const deviceId = getOrCreateDeviceId()
+      
       const registrationData = {
         email: formData.email,
         password: formData.password,
         fullname: formData.fullName,
         phone: formData.phone,
+        device_id: deviceId,
       }
       sessionStorage.setItem("registration_data", JSON.stringify(registrationData))
       setTimeout(() => {

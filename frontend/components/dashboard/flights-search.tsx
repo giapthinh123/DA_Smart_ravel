@@ -14,11 +14,11 @@ function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(" ")
 }
 
-export default function FlightsSearch({ data_build_tour }: { data_build_tour: data_build_tour }) {
+export default function FlightsSearch({ data_build_tour, isIncludeFlight }: { data_build_tour: data_build_tour, isIncludeFlight: boolean }) {
   const router = useRouter()
   const t = useTranslations("FlightsSearch")
-  const [departure, setDeparture] = useState<string | null>(data_build_tour.departure)
-  const [destination, setDestination] = useState<string | null>(data_build_tour.destination)
+  const [departure, setDeparture] = useState<string | null>(data_build_tour?.departure)
+  const [destination, setDestination] = useState<string | null>(data_build_tour?.destination)
   const [isLoading, setIsLoading] = useState(false)
   const [cities, setCities] = useState<City[]>([])
   const [flightDepartureDate, setFlightDepartureDate] = useState<Date | null>(null)
@@ -59,6 +59,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
       toast.warning(`${t("pleaseFillAll")} ${missing.join(', ')}.`, t("missingInfo"))
       return
     }
+
     dataBuildTour.flight_departure_date = formattedFlightDepartureDate
     dataBuildTour.flight_return_date = formattedFlightReturnDate
 
@@ -76,13 +77,18 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
     if (!dataBuildTour.returnDate || dataBuildTour.returnDate === "") {
       dataBuildTour.returnDate = formattedFlightReturnDate
     }
+    if (isIncludeFlight) {
+      dataBuildTour.flight_departure_date = formattedFlightDepartureDate
+      dataBuildTour.flight_return_date = formattedFlightReturnDate
+    }
 
     // Lưu dữ liệu vào sessionStorage thay vì truyền qua URL
     sessionStorage.setItem('flightSearchData', JSON.stringify(dataBuildTour))
+    sessionStorage.setItem('isIncludeFlight', JSON.stringify(isIncludeFlight))
 
     // Navigate không cần query params
     router.push('/flights')
-  }, [dataBuildTour, departure, destination, flightDepartureDate, flightReturnDate, formattedFlightDepartureDate, formattedFlightReturnDate, router])
+  }, [dataBuildTour, departure, destination, flightDepartureDate, flightReturnDate, formattedFlightDepartureDate, formattedFlightReturnDate, router, isIncludeFlight])
 
   return (
     <div className="p-8">
@@ -109,7 +115,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
               onChange={(e) => setDeparture(e.value)}
               options={cities.map((city) => ({
                 label: city.city + ", " + city.country,
-                value: city.id
+                value: city.city
               }))}
               optionLabel="label"
               optionValue="value"
@@ -130,7 +136,7 @@ export default function FlightsSearch({ data_build_tour }: { data_build_tour: da
               onChange={(e) => setDestination(e.value)}
               options={cities.map((city) => ({
                 label: city.city + ", " + city.country,
-                value: city.id
+                value: city.city
               }))} optionLabel="label"
               optionValue="value"
               placeholder={t("searchDestination")}

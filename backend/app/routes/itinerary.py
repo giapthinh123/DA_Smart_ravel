@@ -5,11 +5,14 @@ Day-by-day itinerary generation endpoints
 
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
-from datetime import date
+from datetime import date, datetime
 import logging
 
 from ..extensions import mongo, get_user_id_from_jwt
 from ..controller.itinerary_controller import ItineraryController
+from ..models.tour_bookings import TourBookings
+from ..models.citys import citys as CitysModel
+from ..models.itineraries import Itineraries
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +39,7 @@ def create_itinerary():
     try:
         user_id = get_user_id_from_jwt()
         data = request.get_json() or {}
-        
+        print(data)
         city_id = data.get("city_id")
         if not city_id:
             return jsonify({"error": "city_id is required"}), 400
@@ -63,7 +66,33 @@ def create_itinerary():
             book_flight=book_flight,
             flights=flights
         )
-        
+
+        # Also create a tour_booking record for unified history
+        dest_name = city_name or ""
+        if not dest_name and city_id:
+            city_doc = CitysModel.find_city_by_id(mongo, city_id)
+            if city_doc:
+                dest_name = city_doc.get("name", "")
+
+        try:
+            TourBookings.create(
+                {
+                    "user_id": user_id,
+                    "tour_type": "itinerary",
+                    "tour_ref_id": result.get("itinerary_id", ""),
+                    "booking_status": "planning",
+                    "tour_name": name or f"{dest_name} Adventure",
+                    "destination": dest_name,
+                    "total_cost": budget or 0,
+                    "duration_days": trip_duration_days,
+                    "guest_count": guest_count,
+                    "start_date": start_date,
+                },
+                mongo,
+            )
+        except Exception as booking_err:
+            logger.warning(f"Failed to create tour_booking record: {booking_err}")
+
         return jsonify(result), 201
         
     except Exception as e:
@@ -99,7 +128,28 @@ def generate_day():
             itinerary_id=itinerary_id,
             day_number=int(day_number)
         )
-        
+
+        # When itinerary is complete, update booking status to "created"
+        if result.get("status") == "complete":
+            try:
+                summary = result.get("summary", {})
+                update_fields = {"booking_status": "created"}
+                if summary.get("total_cost"):
+                    update_fields["total_cost"] = summary["total_cost"]
+                TourBookings.update_status_by_tour_ref(
+                    mongo, itinerary_id, "created"
+                )
+                if summary.get("total_cost"):
+                    booking = TourBookings.find_by_tour_ref(mongo, itinerary_id)
+                    if booking:
+                        TourBookings.update_info(
+                            mongo,
+                            booking["booking_id"],
+                            {"total_cost": summary["total_cost"]},
+                        )
+            except Exception as booking_err:
+                logger.warning(f"Failed to update tour_booking status: {booking_err}")
+
         return jsonify(result), 200
         
     except ValueError as e:
@@ -215,8 +265,7 @@ def get_tour_history():
             query["status"] = backend_status
         
         # Get itineraries from database
-        itineraries_cursor = mongo.db.itineraries.find(query).sort("created_at", -1).skip(skip).limit(limit)
-        itineraries = list(itineraries_cursor)
+        itineraries = Itineraries.find_with_query(mongo, query, sort_field="created_at", sort_order=-1, skip=skip, limit=limit)
         
         # Transform to frontend format
         history = []
@@ -226,7 +275,7 @@ def get_tour_history():
                 city = None
                 city_id = itin.get("city_id")
                 if city_id:
-                    city = mongo.db.citys.find_one({"id": str(city_id)})
+                    city = CitysModel.find_city_by_id(mongo, city_id)
                 
                 # Use city collection name, fallback to city_name field in document, then "Unknown"
                 destination = (city.get("name") if city else None) or itin.get("city_name") or "Unknown"
@@ -329,7 +378,7 @@ def get_tour_history():
                 continue
         
         # Get total count for pagination (before search filter)
-        total_count = mongo.db.itineraries.count_documents(query)
+        total_count = Itineraries.count_by_query(mongo, query)
         
         return jsonify({
             "count": len(history),
@@ -339,4 +388,181 @@ def get_tour_history():
         
     except Exception as e:
         logger.error(f"Error getting tour history: {e}", exc_info=True)
+        return jsonify({"error": str(e)}), 500
+
+
+@itinerary_bp.route("/edit-context", methods=["GET"])
+@jwt_required()
+def get_itinerary_edit_context():
+    """
+    Get combined itinerary + booking info for editing.
+
+    Query params:
+    - booking_id (preferred)
+    - itinerary_id
+    """
+    try:
+        user_id = get_user_id_from_jwt()
+        booking_id = request.args.get("booking_id")
+        itinerary_id = request.args.get("itinerary_id")
+
+        if not booking_id and not itinerary_id:
+            return jsonify({"error": "booking_id or itinerary_id is required"}), 400
+
+        booking = None
+        if booking_id:
+            booking = TourBookings.find_by_booking_id(mongo, booking_id)
+        else:
+            booking = TourBookings.find_by_tour_ref(mongo, itinerary_id)
+
+        if not booking:
+            return jsonify({"error": "Booking not found"}), 404
+
+        if booking.get("user_id") != user_id:
+            return jsonify({"error": "Unauthorized"}), 403
+
+        if booking.get("tour_type") != "itinerary":
+            return jsonify({"error": "Only itinerary bookings can be edited"}), 400
+
+        booking_status = booking.get("booking_status", "planning")
+        if booking_status not in ("planning", "created"):
+            return jsonify({"error": "Booking status does not allow editing"}), 400
+
+        itin_id = booking.get("tour_ref_id")
+        controller = ItineraryController(mongo)
+        itinerary = controller.get_itinerary(itin_id)
+        if not itinerary:
+            return jsonify({"error": "Itinerary not found"}), 404
+
+        has_generated_days = bool(itinerary.get("daily_itinerary"))
+
+        context = {
+            "itinerary_id": itin_id,
+            "booking_id": booking.get("booking_id"),
+            "tour_type": booking.get("tour_type", "itinerary"),
+            "booking_status": booking_status,
+            "name": itinerary.get("name") or booking.get("tour_name") or "",
+            "destination": booking.get("destination") or itinerary.get("city_name") or "",
+            "start_date": itinerary.get("start_date") or booking.get("start_date") or "",
+            "trip_duration_days": itinerary.get("trip_duration_days", booking.get("duration_days", 1)),
+            "guest_count": itinerary.get("guest_count", booking.get("guest_count", 1)),
+            "budget": itinerary.get("budget", booking.get("total_cost", 0)),
+            "has_generated_days": has_generated_days,
+        }
+
+        return jsonify(context), 200
+
+    except Exception as e:
+        logger.error(f"Error getting itinerary edit context: {e}", exc_info=True)
+        return jsonify({"error": str(e)}), 500
+
+
+@itinerary_bp.route("/update-metadata", methods=["POST"])
+@jwt_required()
+def update_itinerary_metadata():
+    """
+    Update itinerary metadata (start_date, duration, budget, guests, name)
+    and keep TourBookings in sync. May clear existing daily_itinerary when
+    core scheduling fields change.
+    """
+    try:
+        user_id = get_user_id_from_jwt()
+        data = request.get_json() or {}
+
+        booking_id = data.get("booking_id")
+        itinerary_id = data.get("itinerary_id")
+
+        if not booking_id and not itinerary_id:
+            return jsonify({"error": "booking_id or itinerary_id is required"}), 400
+
+        booking = None
+        if booking_id:
+            booking = TourBookings.find_by_booking_id(mongo, booking_id)
+        else:
+            booking = TourBookings.find_by_tour_ref(mongo, itinerary_id)
+
+        if not booking:
+            return jsonify({"error": "Booking not found"}), 404
+
+        if booking.get("user_id") != user_id:
+            return jsonify({"error": "Unauthorized"}), 403
+
+        if booking.get("tour_type") != "itinerary":
+            return jsonify({"error": "Only itinerary bookings can be edited"}), 400
+
+        booking_status = booking.get("booking_status", "planning")
+        if booking_status not in ("planning", "created"):
+            return jsonify({"error": "Booking status does not allow editing"}), 400
+
+        itin_id = booking.get("tour_ref_id")
+        controller = ItineraryController(mongo)
+        itinerary = controller.get_itinerary(itin_id)
+        if not itinerary:
+            return jsonify({"error": "Itinerary not found"}), 404
+
+        original_start_date = itinerary.get("start_date") or booking.get("start_date") or ""
+        original_duration = int(itinerary.get("trip_duration_days", booking.get("duration_days", 1)))
+        original_budget = float(itinerary.get("budget", booking.get("total_cost", 0) or 0))
+        original_guest_count = int(itinerary.get("guest_count", booking.get("guest_count", 1)))
+        original_name = itinerary.get("name") or booking.get("tour_name") or ""
+
+        new_start_date = data.get("start_date") or original_start_date
+        new_duration = int(data.get("trip_duration_days") or original_duration)
+        new_budget = float(data.get("budget") if data.get("budget") is not None else original_budget)
+        new_guest_count = int(data.get("guest_count") or original_guest_count)
+        new_name = data.get("name") or original_name
+
+        has_existing_days = bool(itinerary.get("daily_itinerary"))
+
+        changed_start_date = new_start_date != original_start_date
+        changed_duration = new_duration != original_duration
+        changed_budget = new_budget != original_budget
+        changed_guest_count = new_guest_count != original_guest_count
+        changed_name = new_name != original_name
+
+        full_regen = (changed_start_date or changed_duration) and has_existing_days
+
+        itinerary_update = {
+            "start_date": new_start_date,
+            "trip_duration_days": new_duration,
+            "guest_count": new_guest_count,
+            "budget": new_budget,
+            "name": new_name,
+            "updated_at": datetime.utcnow(),
+        }
+
+        if full_regen:
+            itinerary_update["daily_itinerary"] = []
+            itinerary_update["status"] = "pending"
+            itinerary_update["summary"] = None
+
+        Itineraries.update_by_id(mongo, itin_id, itinerary_update)
+
+        booking_update_fields = {
+            "tour_name": new_name,
+            "duration_days": new_duration,
+            "guest_count": new_guest_count,
+            "start_date": new_start_date,
+        }
+        if changed_budget:
+            booking_update_fields["total_cost"] = new_budget
+
+        TourBookings.update_info(
+            mongo,
+            booking.get("booking_id"),
+            booking_update_fields,
+        )
+
+        response = {
+            "message": "Itinerary updated",
+            "itinerary_id": itin_id,
+            "booking_id": booking.get("booking_id"),
+            "regen_mode": "full" if full_regen else "metadata_only",
+            "has_existing_days": has_existing_days,
+        }
+
+        return jsonify(response), 200
+
+    except Exception as e:
+        logger.error(f"Error updating itinerary metadata: {e}", exc_info=True)
         return jsonify({"error": str(e)}), 500

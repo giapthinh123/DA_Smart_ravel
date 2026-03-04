@@ -12,7 +12,7 @@ class PendingRegistrations:
     def create(data, mongo):
         """
         Tạo pending registration mới
-        Data should include: email, password_hash, fullname, phone, plan_id, amount_usd, payment_id
+        Data should include: email, password_hash, fullname, phone, plan_id, amount_usd, payment_id, device_id
         """
         registration = {
             "registration_id": str(uuid.uuid4()),
@@ -23,6 +23,7 @@ class PendingRegistrations:
             "plan_id": data["plan_id"],
             "amount_usd": data["amount_usd"],
             "payment_id": data["payment_id"],
+            "device_id": data.get("device_id"),
             "created_at": datetime.now(),
             "expires_at": datetime.now() + timedelta(minutes=30),
         }

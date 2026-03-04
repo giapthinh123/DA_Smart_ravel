@@ -45,6 +45,14 @@ class Config:
         "yearly": {"price_usd": 79.6, "duration_days": 365, "name": "Gói năm"},
         "lifetime": {"price_usd": 199.6, "duration_days": 36500, "name": "Trọn đời"}
     }
+    
+    # SMTP Email Configuration
+    SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+    SMTP_USERNAME = os.getenv("SMTP_USERNAME", "")
+    SMTP_PASSWORD = os.getenv("SMTP_PASSWORD", "")
+    SMTP_FROM_EMAIL = os.getenv("SMTP_FROM_EMAIL", "noreply@smarttravel.com")
+    
     # Security Headers (OWASP)
     SECURITY_HEADERS = {
         "X-Content-Type-Options": "nosniff",

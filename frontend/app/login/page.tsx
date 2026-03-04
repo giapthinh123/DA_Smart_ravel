@@ -9,26 +9,34 @@ import { LoaderCircle } from "lucide-react"
 import { EyeIcon, EyeCloseIcon } from "@/components/icon/icon"
 import { useTranslations } from "next-intl"
 import { LanguageSwitcher } from "@/components/i18n/language-switcher"
+import { getOrCreateDeviceId } from "@/lib/device-fingerprint"
 
 export default function LoginPage() {
   const router = useRouter()
   const t = useTranslations("LoginPage")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [remember, setRemember] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const login = useAuthStore((state) => state.login)
   const [showPassword, setShowPassword] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       setIsLoading(true)
-      await login({ email, password, remember })
+      const deviceId = getOrCreateDeviceId()
+
+      await login({
+        email,
+        password,
+        device_id: deviceId
+      })
       router.push("/planner")
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : t("loginFailed"))
+    } catch (error: any) {
+      if (error.error_type === 'device_mismatch') {
+      } else if (error.error_type === 'device_verification_required') {
+        router.push(`/verify-device?email=${encodeURIComponent(email)}`)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -92,11 +100,6 @@ export default function LoginPage() {
                     />
                   </div>
                 </div>
-
-                {/* Error Message */}
-                {errorMessage && (
-                  <p className="text-sm text-[#d34e4e] -mt-2">{errorMessage}</p>
-                )}
 
                 {/* Password Field */}
                 <div className="grid gap-2">

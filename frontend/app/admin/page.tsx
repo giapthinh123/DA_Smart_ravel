@@ -20,223 +20,300 @@ import {
   LayoutDashboard,
   CheckCircle,
   Edit,
-  User
+  User,
+  Loader2
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { LanguageSwitcher } from '@/components/i18n/language-switcher'
 import { useTranslations } from 'next-intl'
-// Sidebar navigation items
+import { AdminLayout } from '@/components/admin/AdminLayout'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
+interface AdminStats {
+  month: number
+  year: number
+  tours_created: number
+  new_users: number
+  revenue: number
+  paid_tours_count: number
+}
+
+interface ChartDataPoint {
+  month: string
+  month_name: string
+  bookings: number
+  users: number
+}
 
 function AdminDashboard() {
-  const { user, logout } = useAuthStore()
+  const { user, token } = useAuthStore()
   const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [statsData, setStatsData] = useState<AdminStats | null>(null)
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([])
+  const [isChartLoading, setIsChartLoading] = useState(true)
   const t = useTranslations("AdminDashboard")
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  // Mock data - replace with real API calls
-  const stats = [
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!token) return
+
+      try {
+        setIsLoading(true)
+        const now = new Date()
+        const month = now.getMonth() + 1
+        const year = now.getFullYear()
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/stats?month=${month}&year=${year}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch stats')
+        }
+
+        const data = await response.json()
+        setStatsData(data)
+      } catch (error) {
+        console.error('Error fetching admin stats:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (mounted) {
+      fetchStats()
+    }
+  }, [mounted, token])
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      if (!token) return
+
+      try {
+        setIsChartLoading(true)
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/growth-chart?months=6`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch chart data')
+        }
+
+        const result = await response.json()
+        setChartData(result.data || [])
+      } catch (error) {
+        console.error('Error fetching chart data:', error)
+      } finally {
+        setIsChartLoading(false)
+      }
+    }
+
+    if (mounted) {
+      fetchChartData()
+    }
+  }, [mounted, token])
+
+  const getMonthName = (month: number) => {
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    return monthNames[month - 1] || ''
+  }
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+    }).format(amount)
+  }
+
+  const stats = statsData ? [
     {
-      title: t("stats.totalTours"),
-      value: '248',
-      change: '+12%',
+      title: t("stats.toursCreated"),
+      value: statsData.tours_created.toString(),
       icon: Globe,
-      isPositive: true,
       bgColor: 'bg-cyan-100',
       iconColor: 'text-cyan-600'
     },
     {
-      title: t("stats.totalUsers"),
-      value: '1,543',
-      change: '+23%',
+      title: t("stats.newUsers"),
+      value: statsData.new_users.toString(),
       icon: Users,
-      isPositive: true,
       bgColor: 'bg-purple-100',
       iconColor: 'text-purple-600'
     },
     {
-      title: t("stats.totalBookings"),
-      value: '892',
-      change: '+18%',
+      title: t("stats.paidTours"),
+      value: statsData.paid_tours_count.toString(),
       icon: Calendar,
-      isPositive: true,
       bgColor: 'bg-blue-100',
       iconColor: 'text-blue-600'
     },
     {
-      title: t("stats.totalRevenue"),
-      value: '$45,231',
-      change: '-5%',
+      title: t("stats.revenue"),
+      value: formatCurrency(statsData.revenue),
       icon: DollarSign,
-      isPositive: false,
       bgColor: 'bg-orange-100',
       iconColor: 'text-orange-600'
     },
-  ]
-
-  const recentActivities = [
-    {
-      action: t("activities.createdTour"),
-      detail: 'Paris City Tour',
-      time: t("activities.time2h"),
-      icon: CheckCircle,
-      iconColor: 'text-cyan-600'
-    },
-    {
-      action: t("activities.updatedTour"),
-      detail: 'Bali Beach Paradise',
-      time: t("activities.time4h"),
-      icon: Edit,
-      iconColor: 'text-blue-600'
-    },
-    {
-      action: t("activities.approvedBooking"),
-      detail: 'Booking BK001',
-      time: t("activities.time6h"),
-      icon: CheckCircle,
-      iconColor: 'text-cyan-600'
-    },
-    {
-      action: t("activities.newUser"),
-      detail: 'John Doe',
-      time: t("activities.time8h"),
-      icon: User,
-      iconColor: 'text-purple-600'
-    },
-  ]
+  ] : []
 
   if (!mounted) {
     return null
   }
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
-      {/* Sidebar */}
-      <AdminSidebar />
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Header */}
-        <header className="bg-white border-b border-gray-200 px-8 py-4">
-          <div className="flex items-center justify-between">
-            {/* Search Bar */}
-            <div className="relative w-96">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder={t("searchPlaceholder")}
-                className="pl-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-blue-500"
-              />
+        <AdminLayout title={t('pageTitle')} description={t('pageDesc')}>
+          {statsData && (
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {t("stats.monthlyTitle", { 
+                  month: getMonthName(statsData.month), 
+                  year: statsData.year 
+                })}
+              </h2>
             </div>
-
-            {/* Right side */}
-            <div className="flex items-center gap-4">
-              <LanguageSwitcher />
-              <Button variant="ghost" size="icon" className="relative text-gray-600 hover:text-gray-900">
-                <Bell className="h-5 w-5" />
-                <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-              </Button>
-              <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <User className="h-4 w-4 text-white" />
-                </div>
-                <span className="text-sm font-medium text-gray-900">Admin</span>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-8 bg-gray-50">
-          {/* Page Title */}
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">{t("pageTitle")}</h2>
-            <p className="text-gray-600">{t("pageDesc")}</p>
-          </div>
+          )}
 
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon
-              return (
-                <Card key={index} className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
+            {isLoading ? (
+              Array.from({ length: 4 }).map((_, index) => (
+                <Card key={index} className="bg-white border-gray-200">
                   <CardContent className="p-6">
                     <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600 mb-2">{stat.title}</p>
-                        <h3 className="text-3xl font-bold text-gray-900">{stat.value}</h3>
+                      <div className="flex-1">
+                        <div className="h-4 bg-gray-200 rounded w-24 mb-3 animate-pulse"></div>
+                        <div className="h-8 bg-gray-200 rounded w-16 animate-pulse"></div>
                       </div>
-                      <div className={`p-3 rounded-xl ${stat.bgColor}`}>
-                        <Icon className={`h-6 w-6 ${stat.iconColor}`} />
+                      <div className="p-3 rounded-xl bg-gray-100">
+                        <Loader2 className="h-6 w-6 text-gray-400 animate-spin" />
                       </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <TrendingUp className={`h-4 w-4 ${stat.isPositive ? 'text-green-600' : 'text-red-600'} ${!stat.isPositive && 'rotate-180'}`} />
-                      <span className={`text-sm font-medium ${stat.isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                        {stat.change}
-                      </span>
                     </div>
                   </CardContent>
                 </Card>
-              )
-            })}
+              ))
+            ) : (
+              stats.map((stat, index) => {
+                const Icon = stat.icon
+                return (
+                  <Card key={index} className="bg-white border-gray-200 hover:border-gray-300 transition-colors">
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <p className="text-sm font-medium text-gray-600 mb-2">{stat.title}</p>
+                          <h3 className="text-3xl font-bold text-gray-900">{stat.value}</h3>
+                        </div>
+                        <div className={`p-3 rounded-xl ${stat.bgColor}`}>
+                          <Icon className={`h-6 w-6 ${stat.iconColor}`} />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })
+            )}
           </div>
 
           {/* Charts and Activity Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Bookings & User Growth Chart */}
             <Card className="lg:col-span-2 bg-white border-gray-200">
               <CardHeader className="border-b border-gray-200">
                 <CardTitle className="text-xl font-bold text-gray-900">{t("charts.growthTitle")}</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
-                  <div className="text-center">
-                    <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                    <p className="text-gray-600 font-medium">{t("charts.chartVisualization")}</p>
-                    <p className="text-sm text-gray-500 mt-1">{t("charts.connectAnalytics")}</p>
+                {isChartLoading ? (
+                  <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="text-center">
+                      <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-3 animate-spin" />
+                      <p className="text-gray-600 font-medium">{t("charts.loading")}</p>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card className="bg-white border-gray-200">
-              <CardHeader className="border-b border-gray-200">
-                <CardTitle className="text-xl font-bold text-gray-900">{t("recentActivityTitle")}</CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="divide-y divide-gray-200">
-                  {recentActivities.map((activity, index) => {
-                    const Icon = activity.icon
-                    return (
-                      <div key={index} className="p-4 hover:bg-gray-50 transition-colors">
-                        <div className="flex items-start gap-3">
-                          <div className={`mt-1 ${activity.iconColor}`}>
-                            <Icon className="h-5 w-5" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-900">{activity.action}</p>
-                            <p className="text-xs text-gray-600 mt-1">{activity.detail}</p>
-                            <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
+                ) : chartData.length === 0 ? (
+                  <div className="h-80 flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="text-center">
+                      <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                      <p className="text-gray-600 font-medium">{t("charts.noData")}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-80">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart
+                        data={chartData}
+                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <XAxis 
+                          dataKey="month_name" 
+                          stroke="#6b7280"
+                          style={{ fontSize: '12px' }}
+                        />
+                        <YAxis 
+                          stroke="#6b7280"
+                          style={{ fontSize: '12px' }}
+                        />
+                        <Tooltip 
+                          contentStyle={{
+                            backgroundColor: 'white',
+                            border: '1px solid #e5e7eb',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                          }}
+                        />
+                        <Legend 
+                          wrapperStyle={{ paddingTop: '20px' }}
+                          iconType="line"
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="bookings" 
+                          stroke="#3b82f6" 
+                          strokeWidth={2}
+                          name={t("charts.bookings")}
+                          dot={{ fill: '#3b82f6', r: 4 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="users" 
+                          stroke="#8b5cf6" 
+                          strokeWidth={2}
+                          name={t("charts.users")}
+                          dot={{ fill: '#8b5cf6', r: 4 }}
+                          activeDot={{ r: 6 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
-        </main>
-      </div>
-    </div>
+        </AdminLayout>
   )
 }
 

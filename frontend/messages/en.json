@@ -58,7 +58,60 @@
         "newHere": "New Here?",
         "newHereDesc": "Create an account to start your journey",
         "createAccount": "Create Account",
-        "loginFailed": "Login failed"
+        "loginFailed": "Login failed",
+        "deviceNotAuthorized": "This device is not authorized. Please login from your registered device."
+    },
+    "VerifyDevicePage": {
+        "title": "Verify Device",
+        "subtitle": "Please enter the verification code sent to your email",
+        "sentTo": "Sent to",
+        "codeLabel": "Verification Code",
+        "codeHint": "Enter 6-character code (lowercase letters and numbers)",
+        "warning": "After verification, your old device will be logged out and this device will become the only authorized device.",
+        "verify": "Verify",
+        "backToLogin": "Back to Login",
+        "invalidCodeLength": "Verification code must be 6 characters",
+        "error": "Error",
+        "invalidCode": "Invalid or expired verification code",
+        "errorGeneric": "An error occurred. Please try again.",
+        "success": "Verification successful! Redirecting...",
+        "successTitle": "Success"
+    },
+    "ResetPasswordPage": {
+        "title": "Reset Password",
+        "subtitle": "Enter your email and we'll send you a verification code",
+        "stepEmail": "Email",
+        "stepCode": "Code",
+        "stepPassword": "Password",
+        "emailLabel": "Email",
+        "emailPlaceholder": "info@example.com...",
+        "sendCode": "Send Verification Code",
+        "sending": "Sending...",
+        "codeSent": "A verification code has been sent to your email",
+        "codeSentTitle": "Code Sent",
+        "codeTitle": "Enter Verification Code",
+        "codeSubtitle": "Please enter the 6-digit code sent to your email",
+        "sentTo": "Sent to",
+        "codeLabel": "Verification Code",
+        "codeHint": "Enter the 6-digit code from your email",
+        "verifyCode": "Verify Code",
+        "invalidCodeLength": "Code must be 6 digits",
+        "codeVerified": "Verification code is valid!",
+        "codeVerifiedTitle": "Code Verified",
+        "newPasswordTitle": "Set New Password",
+        "newPasswordSubtitle": "Choose a strong new password for your account",
+        "newPasswordLabel": "New Password",
+        "newPasswordPlaceholder": "Enter new password (min. 8 characters)...",
+        "confirmPasswordLabel": "Confirm Password",
+        "confirmPasswordPlaceholder": "Confirm new password...",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "passwordMismatch": "Passwords do not match",
+        "resetButton": "Reset Password",
+        "resetting": "Resetting...",
+        "resetSuccess": "Your password has been reset successfully!",
+        "resetSuccessTitle": "Password Reset",
+        "errorGeneric": "An error occurred. Please try again.",
+        "backToLogin": "Back to Login"
     },
     "RegisterPage": {
         "title": "Create Account",
@@ -226,7 +279,30 @@
         "copyright": "VietJourney. All rights reserved",
         "tagline": "Crafting unforgettable travel experiences.",
         "restaurant": "Dining",
-        "attraction": "Attraction"
+        "attraction": "Attraction",
+        "paid": "Paid",
+        "saveTour": "Save Tour",
+        "tourSaved": "Saved",
+        "tourSavedSuccess": "Tour saved to your history!",
+        "tourAlreadySaved": "Tour is already in your history",
+        "tourSaveError": "Failed to save tour. Please try again.",
+        "payNow": "Pay Now",
+        "paymentTitle": "Complete Payment",
+        "paymentSubtitle": "Review and confirm your tour booking",
+        "tourSummary": "Tour Summary",
+        "tourName": "Tour Name",
+        "destination": "Destination",
+        "duration": "Duration",
+        "priceBreakdown": "Price Breakdown",
+        "totalAmount": "Total Amount",
+        "paymentMethod": "Payment Method",
+        "vnpayDesc": "Safe and secure payment gateway",
+        "securePayment": "Secure Payment",
+        "securePaymentDesc": "Your payment information is encrypted and secure",
+        "cancel": "Cancel",
+        "processing": "Processing...",
+        "proceedToPayment": "Proceed to Payment",
+        "paymentError": "Payment failed. Please try again."
     },
     "FullTourPage": {
         "back": "Back",
@@ -450,16 +526,18 @@
         "pageDesc": "Explore your past adventures and planned journeys",
         "filters": {
             "all": "All",
-            "completed": "Completed",
-            "inProgress": "In Progress",
-            "payed": "Payed"
+            "paid": "Paid",
+            "created": "Created",
+            "planning": "Planning",
+            "saved": "Saved"
         },
         "searchPlaceholder": "Search tours or destinations...",
         "stats": {
             "totalTours": "Total Tours",
-            "completed": "Completed",
-            "inProgress": "In Progress",
-            "payed": "Payed"
+            "paid": "Paid",
+            "created": "Created",
+            "planning": "Planning",
+            "saved": "Saved"
         },
         "loadingTitle": "Loading your tours...",
         "loadingDesc": "Please wait a moment",
@@ -537,7 +615,13 @@
             "totalTours": "Total Tours",
             "totalUsers": "Total Users",
             "totalBookings": "Total Bookings",
-            "totalRevenue": "Total Revenue"
+            "totalRevenue": "Total Revenue",
+            "toursCreated": "Tours Created",
+            "newUsers": "New Users",
+            "revenue": "Revenue",
+            "paidTours": "Paid Tours",
+            "monthlyTitle": "{month} {year} Statistics",
+            "loading": "Loading..."
         },
         "activities": {
             "createdTour": "Created new tour",
@@ -552,11 +636,59 @@
         "charts": {
             "growthTitle": "Bookings & User Growth",
             "chartVisualization": "Chart visualization",
-            "connectAnalytics": "Connect your analytics data"
+            "connectAnalytics": "Connect your analytics data",
+            "bookings": "Bookings",
+            "users": "Users",
+            "loading": "Loading chart data...",
+            "noData": "No data available"
+        }
+    },
+    "AdminReport": {
+        "pageTitle": "Reports & Statistics",
+        "pageDesc": "View detailed business reports and analytics",
+        "tabs": {
+            "month": "Monthly",
+            "quarter": "Quarterly",
+            "year": "Yearly"
+        },
+        "stats": {
+            "totalRevenue": "Total Revenue",
+            "totalPayments": "Total Payments",
+            "newUsers": "New Users",
+            "toursCreated": "Tours Created",
+            "completedPayments": "completed",
+            "pending": "pending",
+            "failed": "failed",
+            "registeredInPeriod": "Registered in this period",
+            "createdInPeriod": "Created in this period"
+        },
+        "charts": {
+            "revenueTitle": "Revenue Overview",
+            "paymentStatusTitle": "Payment Status",
+            "growthTitle": "Users & Tours Growth",
+            "revenue": "Revenue",
+            "users": "New Users",
+            "tours": "Tours Created",
+            "noData": "No data available"
+        },
+        "pie": {
+            "completed": "Completed",
+            "pending": "Pending",
+            "failed": "Failed"
+        },
+        "table": {
+            "title": "Detailed Breakdown",
+            "period": "Period",
+            "revenue": "Revenue",
+            "payments": "Payments",
+            "users": "Users",
+            "tours": "Tours",
+            "total": "Total",
+            "noData": "No data for this period"
         }
     },
     "AdminSidebar": {
-        "brand": "GoTrips Admin",
+        "brand": "Admin",
         "logout": "Logout",
         "menu": {
             "dashboard": "Dashboard",
@@ -1039,6 +1171,46 @@
             "save": "Save & Book Tour",
             "lunchAt": "Lunch at",
             "dinnerAt": "Dinner at"
+        }
+    },
+    "EditItineraryPage": {
+        "title": "Edit Personal Tour",
+        "loadingDesc": "Loading your tour details...",
+        "sectionOverview": "Tour Information",
+        "sectionOverviewDesc": "Update the key details of your personal tour before regenerating the itinerary.",
+        "fields": {
+            "name": "Tour name",
+            "destination": "Destination",
+            "startDate": "Start date",
+            "tripDurationDays": "Number of days",
+            "guestCount": "Guests",
+            "budget": "Budget (USD)"
+        },
+        "placeholders": {
+            "name": "e.g. Hanoi Adventure"
+        },
+        "warnings": {
+            "hasGeneratedDays": "This tour already has a generated daily itinerary.",
+            "mayRegenerate": "Changing the start date or number of days may clear the existing timeline and regenerate it."
+        },
+        "buttons": {
+            "saving": "Saving...",
+            "continue": "Continue"
+        },
+        "errors": {
+            "title": "Unable to load tour",
+            "missingBookingId": "Missing booking ID. Please open this page from the tour history.",
+            "loadFailed": "Failed to load tour information. Please try again.",
+            "saveFailed": "Failed to save changes. Please try again."
+        },
+        "validation": {
+            "startDateRequired": "Start date is required",
+            "durationInvalid": "Trip duration must be at least 1 day",
+            "guestsInvalid": "There must be at least 1 guest",
+            "budgetInvalid": "Budget cannot be negative"
+        },
+        "confirm": {
+            "regenerateTimeline": "You changed the start date or number of days. Existing daily itinerary may be cleared and regenerated. Do you want to continue?"
         }
     }
 }

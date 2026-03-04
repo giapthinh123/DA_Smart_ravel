@@ -32,4 +32,8 @@ class citys:
                 "lng": 1
             }
         )
-    
+
+    @staticmethod
+    def find_city_by_id(mongo, city_id):
+        """Find city from citys collection by id field (used by itinerary routes)."""
+        return mongo.db.citys.find_one({"id": str(city_id)})

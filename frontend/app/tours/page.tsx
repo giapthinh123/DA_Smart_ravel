@@ -180,9 +180,6 @@ export default function ToursPage() {
                             <Link href="/" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                                 {t("home")}
                             </Link>
-                            <Link href="/tours" className="rounded-full px-4 py-2 bg-[#CCFBF1] text-[#0F4C5C] font-semibold">
-                                {t("tours")}
-                            </Link>
                             <Link href="/history_tour" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                                 {t("historyTour")}
                             </Link>

@@ -64,7 +64,7 @@ export default function DashboardPage() {
       case t("hotels"):
         return <HotelsSearch />
       case t("flights"):
-        return <FlightsSearch data_build_tour={dataBuildTour} />
+        return <FlightsSearch data_build_tour={dataBuildTour} isIncludeFlight={false} />
       case t("food"):
         return <FoodSearch />
       case t("activities"):

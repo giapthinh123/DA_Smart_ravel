@@ -9,6 +9,15 @@ class Users:
     @staticmethod
     def create(data, mongo):
         """Tạo user mới với validation"""
+        devices = []
+        if data.get("device_id"):
+            devices.append({
+                "device_id": data.get("device_id"),
+                "device_name": data.get("device_name", "Unknown Device"),
+                "added_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "last_used": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
+        
         user = {
             "id": str(uuid.uuid4()),
             "email": data["email"],
@@ -21,6 +30,7 @@ class Users:
             "premium_plan": data.get("premium_plan", None),
             "premium_status": data.get("premium_status", "none"),
             "premium_expiry_date": data.get("premium_expiry_date", None),
+            "devices": devices,
             "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
@@ -87,6 +97,76 @@ class Users:
         from ..extensions import mongo
         token = mongo.db.token_blacklist.find_one({"jti": jti})
         return token is not None
+    
+    @staticmethod
+    def verify_device(mongo, email, device_id):
+        """Check if device_id exists in user's devices array"""
+        user = mongo.db.users.find_one({"email": email})
+        if not user:
+            return False
+        
+        devices = user.get("devices", [])
+        return any(d.get("device_id") == device_id for d in devices)
+    
+    @staticmethod
+    def add_device(mongo, email, device_id, device_name="Unknown Device"):
+        """Add device to user's devices array (max 1)"""
+        user = mongo.db.users.find_one({"email": email})
+        if not user:
+            return False
+        
+        devices = user.get("devices", [])
+        if len(devices) >= 1:
+            return False
+        
+        new_device = {
+            "device_id": device_id,
+            "device_name": device_name,
+            "added_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "last_used": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        
+        return mongo.db.users.update_one(
+            {"email": email},
+            {"$push": {"devices": new_device}}
+        )
+    
+    @staticmethod
+    def replace_all_devices(mongo, email, device_id, device_name="Unknown Device"):
+        """Replace all devices with new device"""
+        new_device = {
+            "device_id": device_id,
+            "device_name": device_name,
+            "added_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "last_used": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        
+        return mongo.db.users.update_one(
+            {"email": email},
+            {"$set": {"devices": [new_device]}}
+        )
+    
+    @staticmethod
+    def update_device_last_used(mongo, email, device_id):
+        """Update last_used timestamp for a device"""
+        return mongo.db.users.update_one(
+            {"email": email, "devices.device_id": device_id},
+            {"$set": {"devices.$.last_used": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}
+        )
+    
+    @staticmethod
+    def remove_device(mongo, email, device_id):
+        """Remove a device from user's devices array"""
+        return mongo.db.users.update_one(
+            {"email": email},
+            {"$pull": {"devices": {"device_id": device_id}}}
+        )
+    
+    @staticmethod
+    def get_user_devices(mongo, email):
+        """Get all devices for a user"""
+        user = mongo.db.users.find_one({"email": email}, {"devices": 1, "_id": 0})
+        return user.get("devices", []) if user else []
     
     # ========== DATABASE FUNCTIONS ==========
     
@@ -186,6 +266,18 @@ class Users:
             "jti": jti,
             "created_at": datetime.now()
         })
+
+    @staticmethod
+    def count_by_created_at_regex(mongo, regex_pattern):
+        """Count users whose created_at string matches the given regex pattern."""
+        return mongo.db.users.count_documents(
+            {"created_at": {"$regex": regex_pattern}}
+        )
+
+    @staticmethod
+    def insert_user_doc(mongo, user_doc):
+        """Insert a pre-built user document (e.g. from registration payment flow)."""
+        return mongo.db.users.insert_one(user_doc)
     
     # ========== PREMIUM MEMBERSHIP FUNCTIONS ==========
     

@@ -22,6 +22,7 @@ bcrypt>=4.1.0
 
 # Utilities
 pytz>=2023.3
+python-dateutil>=2.8.0
 
 # Flask Framework (for Flask implementation)
 Flask>=3.0.0

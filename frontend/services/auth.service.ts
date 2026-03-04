@@ -1,6 +1,5 @@
 import api from '@/lib/axios'
 import { LoginCredentials, RegisterData, AuthData, User } from '@/types/domain'
-import { ApiResponse } from '@/types/api'
 
 export class AuthService {
   /**
@@ -10,15 +9,20 @@ export class AuthService {
     AUTH_TOKEN: 'auth_token',
     USER_DATA: 'user_data',
     REFRESH_TOKEN: 'refresh_token',
-    TOKEN_EXPIRY: 'token_expiry',
   }
 
-  static async login(credentials: LoginCredentials & { remember?: boolean }): Promise<AuthData> {
+  static async login(credentials: LoginCredentials & { remember?: boolean; device_id?: string }): Promise<AuthData> {
     try {
-      const response = await api.post('/api/auth/login', credentials)
+      const response = await api.post('/api/auth/login', {
+        email: credentials.email,
+        password: credentials.password,
+        device_id: credentials.device_id,
+      })
 
       if (response.data.status === 'error') {
-        throw new Error(response.data.msg)
+        const error: any = new Error(response.data.msg)
+        error.error_type = response.data.error_type
+        throw error
       }
 
       if (response.data && response.data.auth_token && response.data.user) {
@@ -37,13 +41,6 @@ export class AuthService {
 
         localStorage.setItem(this.STORAGE_KEYS.USER_DATA, JSON.stringify(user))
 
-        // Set token expiry based on "remember me" option
-        const expiryTime = credentials.remember
-          ? Date.now() + (7 * 24 * 60 * 60 * 1000)  // 7 days
-          : Date.now() + (24 * 60 * 60 * 1000)      // 1 day
-
-        localStorage.setItem(this.STORAGE_KEYS.TOKEN_EXPIRY, expiryTime.toString())
-
         return {
           token: response.data.auth_token,
           refreshToken: response.data.refresh_token,
@@ -53,11 +50,16 @@ export class AuthService {
 
       throw new Error('Login failed - Invalid response format')
     } catch (error: any) {
-      // Xử lý lỗi im lặng - chỉ throw message, không log
+      // Preserve error_type for device mismatch errors
+      if (error.response?.data?.error_type) {
+        const err: any = new Error(error.response.data.msg)
+        err.error_type = error.response.data.error_type
+        throw err
+      }
       if (error.response?.data?.msg) {
         throw new Error(error.response.data.msg)
       }
-      throw new Error('Login failed')
+      throw error
     }
   }
   /**
@@ -135,14 +137,6 @@ export class AuthService {
    */
   static getStoredToken(): string | null {
     if (typeof window === 'undefined') return null
-
-    const expiry = localStorage.getItem(this.STORAGE_KEYS.TOKEN_EXPIRY)
-    if (expiry && Date.now() > parseInt(expiry)) {
-      // Token expired, clear storage
-      this.clearStorage()
-      return null
-    }
-
     return localStorage.getItem(this.STORAGE_KEYS.AUTH_TOKEN)
   }
 
@@ -247,6 +241,62 @@ export class AuthService {
         throw new Error(error.response.data.msg)
       }
       throw new Error('Failed to delete account')
+    }
+  }
+
+  /**
+   * Request password reset code via email
+   */
+  static async forgotPassword(email: string): Promise<void> {
+    try {
+      const response = await api.post('/api/auth/forgot-password', { email })
+      return
+    } catch (error: any) {
+      if (error.response?.data?.msg) {
+        throw new Error(error.response.data.msg)
+      }
+      throw new Error('Failed to send reset code')
+    }
+  }
+
+  /**
+   * Reset password with verification code
+   */
+  static async resetPassword(email: string, newPassword: string): Promise<void> {
+    try {
+      const response = await api.post('/api/auth/reset-password', {
+        email,
+        new_password: newPassword,
+      })
+
+      if (response.data?.msg === 'Password reset successfully') {
+        return
+      }
+
+      throw new Error(response.data?.msg || 'Failed to reset password')
+    } catch (error: any) {
+      if (error.response?.data?.msg) {
+        throw new Error(error.response.data.msg)
+      }
+      throw new Error('Failed to reset password')
+    }
+  }
+  static async verifyCode(email: string, code: string): Promise<string> {
+    try {
+      const response = await api.post('/api/auth/verify-code-password', {
+        email,
+        code,
+      })
+
+      if (response.data?.code === '200') {
+        return response.data.msg
+      }
+      throw new Error(response.data?.msg || 'Failed to verify code')
+    } catch (error: any) {
+      if (error.response?.data?.msg) {
+        throw new Error(error.response.data.msg)
+      }
+      throw new Error('Failed to verify code')
     }
   }
 }

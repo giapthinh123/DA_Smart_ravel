@@ -5,7 +5,7 @@ from ..services.flight import information_flight
 flight_bp = Blueprint("flight", __name__)
 
 @flight_bp.route("/", methods=["POST"])
-@jwt_required()
+# @jwt_required()
 def flight_search():
     """
     Search for flights
@@ -19,7 +19,7 @@ def flight_search():
     try:
         # Lấy data từ request body
         data = request.get_json()
-        
+        print(data)
         if not data:
             return jsonify({
                 "success": False,

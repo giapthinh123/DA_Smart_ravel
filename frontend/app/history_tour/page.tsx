@@ -7,11 +7,13 @@ import { AuthGuard } from "@/components/auth-guard"
 import { UserMenu } from "@/components/user-menu"
 import { LanguageSwitcher } from "@/components/i18n/language-switcher"
 import { useTranslations } from "next-intl"
-import { ItineraryService, TourHistoryItem } from "@/services/itinerary.service"
-
+import { ItineraryService, BookingHistoryItem } from "@/services/itinerary.service"
+import { useAuthStore } from "@/store/useAuthStore"
 interface TourHistory {
     id: string
-    status: "Completed" | "In Progress" | "Payed" | "Pending"
+    booking_id: string
+    tour_type: "itinerary" | "premade_tour"
+    status: "Paid" | "Created" | "Planning" | "Saved"
     name: string
     destination: string
     dates: string
@@ -32,42 +34,39 @@ export default function HistoryTourPage() {
     const [error, setError] = useState<string>("")
     const [currentPage, setCurrentPage] = useState<number>(1)
     const itemsPerPage = 9
+    const { isAuthenticated } = useAuthStore()
 
-    // Fetch tour history from API using ItineraryService
+    // Fetch tour history from API using unified booking history
     useEffect(() => {
         const fetchTourHistory = async () => {
             try {
                 setLoading(true)
                 setError("")
 
-
-                // Use ItineraryService to fetch tour history
-                const data = await ItineraryService.getTourHistory({
+                const data = await ItineraryService.getBookingHistory({
                     status: filter !== "All" ? filter : undefined,
                     limit: 100
-
                 })
 
-                // Check if data has history array
                 if (!data || !Array.isArray(data.history)) {
                     console.warn("Invalid response format:", data)
                     setTourHistory([])
                     return
                 }
 
-                // Transform API data to match TourHistory interface
-                const transformedHistory: TourHistory[] = data.history.map((item: TourHistoryItem) => {
-                    // Map status to proper format (backend already sends capitalized status)
-                    let status: TourHistory["status"] = "Pending"
+                const transformedHistory: TourHistory[] = data.history.map((item: BookingHistoryItem) => {
+                    let status: TourHistory["status"] = "Planning"
                     const itemStatus = (item.status || "").toLowerCase()
 
-                    if (itemStatus.includes("complete")) status = "Completed"
-                    else if (itemStatus.includes("progress") || itemStatus === "pending") status = "In Progress"
-                    else if (itemStatus === "payed") status = "Payed"
-                    else status = "Pending"
+                    if (itemStatus === "paid") status = "Paid"
+                    else if (itemStatus === "created") status = "Created"
+                    else if (itemStatus === "saved") status = "Saved"
+                    else status = "Planning"
 
                     return {
                         id: item.id || "",
+                        booking_id: item.booking_id || "",
+                        tour_type: item.tour_type || "itinerary",
                         status: status,
                         name: item.name || "Unnamed Tour",
                         destination: item.destination || "Unknown",
@@ -83,7 +82,6 @@ export default function HistoryTourPage() {
                 setTourHistory(transformedHistory)
             } catch (err: any) {
                 console.error("Error fetching tour history:", err)
-                // Check if error is auth-related
                 if (err.message?.includes("401") || err.message?.includes("unauthorized")) {
                     router.push("/login")
                     return
@@ -100,15 +98,14 @@ export default function HistoryTourPage() {
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case "Completed":
+            case "Paid":
                 return "bg-[#CCFBF1] text-[#0F4C5C] border-[#5FCBC4]/40"
-            case "In Progress":
-            case "Pending":
+            case "Created":
                 return "bg-blue-50 text-blue-600 border-blue-200"
-            case "Cancelled":
-                return "bg-red-50 text-red-600 border-red-200"
-            case "Payed":
+            case "Planning":
                 return "bg-amber-50 text-amber-600 border-amber-200"
+            case "Saved":
+                return "bg-purple-50 text-purple-600 border-purple-200"
             default:
                 return "bg-[#E4E4E7] text-[#A1A1AA] border-[#E4E4E7]"
         }
@@ -133,12 +130,13 @@ export default function HistoryTourPage() {
         setCurrentPage(1)
     }, [filter, searchQuery])
 
-    const filterOptions = ["All", "Completed", "In Progress", "Payed"]
+    const filterOptions = ["All", "Paid", "Created", "Planning", "Saved"]
     const stats = {
         total: tourHistory.length,
-        completed: tourHistory.filter(t => t.status === "Completed").length,
-        inProgress: tourHistory.filter(t => t.status === "In Progress" || t.status === "Pending").length,
-        saved: tourHistory.filter(t => t.status === "Payed").length,
+        paid: tourHistory.filter(t => t.status === "Paid").length,
+        created: tourHistory.filter(t => t.status === "Created").length,
+        planning: tourHistory.filter(t => t.status === "Planning").length,
+        saved: tourHistory.filter(t => t.status === "Saved").length,
     }
 
     return (
@@ -153,7 +151,7 @@ export default function HistoryTourPage() {
                                 VietJourney
                             </p>
                             <p className="text-sm font-semibold text-[#0F4C5C]">
-                                Your Travel Timeline
+                                {t("historyTour")}
                             </p>
                         </div>
                         <nav className="flex items-center gap-2 text-sm font-medium">
@@ -163,13 +161,18 @@ export default function HistoryTourPage() {
                             <Link href="/history_tour" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
                                 {t("historyTour")}
                             </Link>
-                            <Link href="/tours" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
-                                {t("tours")}
-                            </Link>
-                            <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
-                            <UserMenu />
-                            <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
-                            <LanguageSwitcher />
+                            <>
+                                {isAuthenticated ? (
+                                    <>
+                                        <span className="mx-2 h-4 w-px bg-[#E4E4E7]"></span>
+                                        <UserMenu />
+                                    </>
+                                ) : (
+                                    <Link href="/login" className="rounded-full px-4 py-2 text-[#3F3F46] transition hover:text-[#0F4C5C] hover:bg-[#CCFBF1]">
+                                        {t("login")}
+                                    </Link>
+                                )}
+                            </>
                         </nav>
                     </div>
                 </header>
@@ -187,22 +190,26 @@ export default function HistoryTourPage() {
                     </div>
 
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
                         <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
                             <div className="text-3xl font-bold text-[#5FCBC4] mb-2">{stats.total}</div>
                             <div className="text-sm text-[#A1A1AA]">{t("stats.totalTours")}</div>
                         </div>
                         <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
-                            <div className="text-3xl font-bold text-[#0F4C5C] mb-2">{stats.completed}</div>
-                            <div className="text-sm text-[#A1A1AA]">{t("stats.completed")}</div>
+                            <div className="text-3xl font-bold text-[#0F4C5C] mb-2">{stats.paid}</div>
+                            <div className="text-sm text-[#A1A1AA]">{t("stats.paid")}</div>
                         </div>
                         <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
-                            <div className="text-3xl font-bold text-[#3F3F46] mb-2">{stats.inProgress}</div>
-                            <div className="text-sm text-[#A1A1AA]">{t("stats.inProgress")}</div>
+                            <div className="text-3xl font-bold text-blue-600 mb-2">{stats.created}</div>
+                            <div className="text-sm text-[#A1A1AA]">{t("stats.created")}</div>
                         </div>
                         <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
-                            <div className="text-3xl font-bold text-[#3F3F46] mb-2">{stats.saved}</div>
-                            <div className="text-sm text-[#A1A1AA]">{t("stats.payed")}</div>
+                            <div className="text-3xl font-bold text-amber-600 mb-2">{stats.planning}</div>
+                            <div className="text-sm text-[#A1A1AA]">{t("stats.planning")}</div>
+                        </div>
+                        <div className="rounded-2xl border border-[#E4E4E7] bg-white p-6 transition hover:border-[#5FCBC4] hover:shadow-sm">
+                            <div className="text-3xl font-bold text-purple-600 mb-2">{stats.saved}</div>
+                            <div className="text-sm text-[#A1A1AA]">{t("stats.saved")}</div>
                         </div>
                     </div>
 
@@ -211,9 +218,14 @@ export default function HistoryTourPage() {
                         {/* Filter Chips */}
                         <div className="flex flex-wrap gap-2">
                             {filterOptions.map((option) => {
-                                const filterKey = option === "All" ? "all" :
-                                    option === "Completed" ? "completed" :
-                                        option === "In Progress" ? "inProgress" : "payed"
+                                const filterKeyMap: Record<string, string> = {
+                                    "All": "all",
+                                    "Paid": "paid",
+                                    "Created": "created",
+                                    "Planning": "planning",
+                                    "Saved": "saved",
+                                }
+                                const filterKey = filterKeyMap[option] || "all"
                                 return (
                                     <button
                                         key={option}
@@ -290,68 +302,96 @@ export default function HistoryTourPage() {
                     {!loading && !error && filteredTours.length > 0 && (
                         <>
                             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {currentTours.map((tour) => (
-                                    <div
-                                        key={tour.id}
-                                        className="group rounded-2xl border border-[#E4E4E7] bg-white overflow-hidden transition-all hover:border-[#5FCBC4] hover:shadow-md cursor-pointer"
-                                        onClick={() => router.push(`/full_tour?itineraryId=${tour.id}`)}
-                                    >
-                                        {/* Image */}
-                                        <div className="relative h-48 overflow-hidden">
-                                            <img
-                                                src={tour.image}
-                                                alt={tour.name}
-                                                width={400}
-                                                height={192}
-                                                className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                                {currentTours.map((tour) => {
+                                    const canEdit =
+                                        tour.tour_type === "itinerary" &&
+                                        (tour.status === "Planning" || tour.status === "Created")
 
-                                            {/* Status Badge */}
-                                            <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(tour.status)}`}>
-                                                {tour.status}
+                                    const handleCardClick = () => {
+                                        if (tour.tour_type === "premade_tour") {
+                                            router.push(`/tours/${tour.id}/detail`)
+                                        } else {
+                                            router.push(`/full_tour?itineraryId=${tour.id}`)
+                                        }
+                                    }
+
+                                    const handleEditClick = (e: React.MouseEvent) => {
+                                        e.stopPropagation()
+                                        if (!canEdit) return
+                                        router.push(`/itinerary/edit?bookingId=${tour.booking_id}`)
+                                    }
+
+                                    return (
+                                        <div
+                                            key={tour.id}
+                                            className="group rounded-2xl border border-[#E4E4E7] bg-white overflow-hidden transition-all hover:border-[#5FCBC4] hover:shadow-md cursor-pointer"
+                                            onClick={handleCardClick}
+                                        >
+                                            {/* Image */}
+                                            <div className="relative h-48 overflow-hidden">
+                                                <img
+                                                    src={tour.image}
+                                                    alt={tour.name}
+                                                    width={400}
+                                                    height={192}
+                                                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                                />
+                                                <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
+
+                                                {/* Status Badge */}
+                                                <div className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(tour.status)}`}>
+                                                    {tour.status}
+                                                </div>
+                                            </div>
+
+                                            {/* Content */}
+                                            <div className="p-6">
+                                                <h3 className="text-lg font-semibold text-[#0F4C5C] mb-2 group-hover:text-[#5FCBC4] transition">
+                                                    {tour.name}
+                                                </h3>
+
+                                                <div className="space-y-2 mb-4">
+                                                    <div className="flex items-center text-sm text-[#A1A1AA]">
+                                                        <svg className="w-4 h-4 mr-2 text-[#5FCBC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        </svg>
+                                                        <span className="text-[#3F3F46]">{tour.destination}</span>
+                                                    </div>
+                                                    <div className="flex items-center text-sm text-[#A1A1AA]">
+                                                        <svg className="w-4 h-4 mr-2 text-[#5FCBC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </svg>
+                                                        {tour.dates}
+                                                    </div>
+                                                    <div className="flex items-center text-sm text-[#A1A1AA]">
+                                                        <svg className="w-4 h-4 mr-2 text-[#5FCBC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                                        </svg>
+                                                        {tour.travelers}
+                                                    </div>
+                                                </div>
+
+                                                {/* Footer */}
+                                                <div className="flex items-center justify-between pt-4 border-t border-[#E4E4E7]">
+                                                    <div className="flex items-center gap-4">
+                                                        <span className="text-lg font-bold text-[#5FCBC4]">{tour.budget}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        {canEdit && (
+                                                            <button
+                                                                onClick={handleEditClick}
+                                                                className="px-3 py-1.5 text-xs font-semibold rounded-full border border-[#5FCBC4] text-[#0F4C5C] bg-[#CCFBF1] hover:bg-[#5FCBC4] hover:text-white transition"
+                                                            >
+                                                                Edit Tour
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-
-                                        {/* Content */}
-                                        <div className="p-6">
-                                            <h3 className="text-lg font-semibold text-[#0F4C5C] mb-2 group-hover:text-[#5FCBC4] transition">
-                                                {tour.name}
-                                            </h3>
-
-                                            <div className="space-y-2 mb-4">
-                                                <div className="flex items-center text-sm text-[#A1A1AA]">
-                                                    <svg className="w-4 h-4 mr-2 text-[#5FCBC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                    </svg>
-                                                    <span className="text-[#3F3F46]">{tour.destination}</span>
-                                                </div>
-                                                <div className="flex items-center text-sm text-[#A1A1AA]">
-                                                    <svg className="w-4 h-4 mr-2 text-[#5FCBC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                    </svg>
-                                                    {tour.dates}
-                                                </div>
-                                                <div className="flex items-center text-sm text-[#A1A1AA]">
-                                                    <svg className="w-4 h-4 mr-2 text-[#5FCBC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                                                    </svg>
-                                                    {tour.travelers}
-                                                </div>
-                                            </div>
-
-                                            {/* Footer */}
-                                            <div className="flex items-center justify-between pt-4 border-t border-[#E4E4E7]">
-                                                <div className="flex items-center gap-4">
-                                                    <span className="text-lg font-bold text-[#5FCBC4]">{tour.budget}</span>
-                                                    <span className="text-xs text-[#A1A1AA]">·</span>
-                                                    <span className="text-sm text-[#A1A1AA]">{tour.activities} {t("activities")}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
+                                    )
+                                })}
                             </div>
 
                             {/* Pagination Controls */}
