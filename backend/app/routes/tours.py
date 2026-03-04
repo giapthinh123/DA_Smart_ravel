@@ -4,27 +4,18 @@ from datetime import datetime, timezone
 
 from ..extensions import mongo, get_user_id_from_jwt
 from ..models.tours import TourModel
+from ..models.places import places as PlacesModel
 
 tours_bp = Blueprint("tours", __name__)
 
 
 def _get_place(place_id):
     """Fetch a place document by its `id` field."""
-    return mongo.db.places.find_one(
-        {"id": place_id},
-        {
-            "_id": 0,
-            "displayName_text": 1,
-            "search_type": 1,
-            "rating": 1,
-            "avg_price": 1,
-            "image_url": 1,
-        },
-    )
+    return PlacesModel.get_place_summary(mongo, place_id)
 
 
 @tours_bp.route("/", methods=["GET"])
-@jwt_required()
+# @jwt_required()
 def get_tours():
     """Return all tours."""
     try:
@@ -321,7 +312,7 @@ def delete_tour(tour_id):
 
 
 @tours_bp.route("/<string:tour_id>", methods=["GET"])
-@jwt_required()
+# @jwt_required()
 def get_tour(tour_id):
     """Get a single tour by tour_id."""
     try:

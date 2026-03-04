@@ -2,7 +2,7 @@
 
 import { useAuthStore } from '@/store/useAuthStore'
 import { User } from 'lucide-react'
-
+import { LanguageSwitcher } from '@/components/i18n/language-switcher'
 export function AdminHeader() {
     const { user } = useAuthStore()
 
@@ -18,6 +18,7 @@ export function AdminHeader() {
                             {user?.fullname || 'Admin'}
                         </span>
                     </div>
+                    <LanguageSwitcher />
                 </div>
             </div>
         </header>

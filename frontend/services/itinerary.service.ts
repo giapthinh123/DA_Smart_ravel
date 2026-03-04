@@ -87,6 +87,8 @@ export interface Itinerary {
 
 export interface CreateItineraryRequest {
     city_id: string
+    city_name: string
+    name: string
     trip_duration_days: number
     start_date: string
     guest_count?: number
@@ -142,6 +144,70 @@ export interface TourHistoryResponse {
     count: number
     total: number
     history: TourHistoryItem[]
+}
+
+export interface BookingHistoryItem {
+    id: string
+    booking_id: string
+    tour_type: 'itinerary' | 'premade_tour'
+    status: string
+    name: string
+    destination: string
+    dates: string
+    travelers: string
+    budget: string
+    image: string
+    activities: number
+    rating?: number
+    created_at?: string
+}
+
+export interface BookingHistoryResponse {
+    count: number
+    total: number
+    history: BookingHistoryItem[]
+}
+
+export interface SaveTourResponse {
+    message: string
+    booking: {
+        booking_id: string
+        user_id: string
+        tour_type: string
+        tour_ref_id: string
+        booking_status: string
+        tour_name: string
+        destination: string
+        total_cost: number
+        duration_days: number
+        guest_count: number
+        start_date: string
+        image: string | null
+        created_at: string
+        updated_at: string
+    }
+}
+
+export interface ItineraryEditContext {
+    itinerary_id: string
+    booking_id: string
+    tour_type: string
+    booking_status: string
+    name: string
+    destination: string
+    start_date: string
+    trip_duration_days: number
+    guest_count: number
+    budget: number
+    has_generated_days: boolean
+}
+
+export interface UpdateItineraryMetadataResponse {
+    message: string
+    itinerary_id: string
+    booking_id: string
+    regen_mode: 'full' | 'metadata_only'
+    has_existing_days: boolean
 }
 
 export class ItineraryService {
@@ -309,6 +375,108 @@ export class ItineraryService {
                 day_number: day
             })
             yield result
+        }
+    }
+
+    /**
+     * Get unified booking history (both itinerary and premade tours)
+     */
+    static async getBookingHistory(options?: {
+        status?: string
+        search?: string
+        limit?: number
+        skip?: number
+    }): Promise<BookingHistoryResponse> {
+        try {
+            const params = new URLSearchParams()
+            if (options?.status && options.status !== 'All') {
+                params.append('status', options.status)
+            }
+            if (options?.search) {
+                params.append('search', options.search)
+            }
+            if (options?.limit) {
+                params.append('limit', options.limit.toString())
+            }
+            if (options?.skip) {
+                params.append('skip', options.skip.toString())
+            }
+
+            const queryString = params.toString()
+            const url = `/api/tour-bookings/history${queryString ? `?${queryString}` : ''}`
+            
+            const response = await api.get<BookingHistoryResponse>(url)
+            return response.data
+        } catch (error: any) {
+            console.error('Error getting booking history:', error)
+            throw new Error(error.response?.data?.error || error.message || 'Failed to get booking history')
+        }
+    }
+
+    /**
+     * Save / bookmark a pre-made tour
+     */
+    static async savePremadeTour(tourId: string): Promise<SaveTourResponse> {
+        try {
+            const response = await api.post<SaveTourResponse>('/api/tour-bookings/save', {
+                tour_id: tourId
+            })
+            return response.data
+        } catch (error: any) {
+            console.error('Error saving tour:', error)
+            throw new Error(error.response?.data?.error || error.message || 'Failed to save tour')
+        }
+    }
+
+    /**
+     * Delete a booking
+     */
+    static async deleteBooking(bookingId: string): Promise<{ message: string }> {
+        try {
+            const response = await api.delete<{ message: string }>(`/api/tour-bookings/${bookingId}`)
+            return response.data
+        } catch (error: any) {
+            console.error('Error deleting booking:', error)
+            throw new Error(error.response?.data?.error || error.message || 'Failed to delete booking')
+        }
+    }
+
+    /**
+     * Get edit context for an itinerary booking (combined itinerary + booking info)
+     */
+    static async getItineraryEditContext(params: {
+        booking_id?: string
+        itinerary_id?: string
+    }): Promise<ItineraryEditContext> {
+        try {
+            const response = await api.get<ItineraryEditContext>('/api/itinerary/edit-context', {
+                params
+            })
+            return response.data
+        } catch (error: any) {
+            console.error('Error getting itinerary edit context:', error)
+            throw new Error(error.response?.data?.error || error.message || 'Failed to get edit context')
+        }
+    }
+
+    /**
+     * Update itinerary metadata (dates, duration, budget, guests, name)
+     */
+    static async updateItineraryMetadata(data: {
+        booking_id?: string
+        itinerary_id?: string
+        start_date: string
+        trip_duration_days: number
+        guest_count: number
+        budget: number
+        name?: string
+    }): Promise<UpdateItineraryMetadataResponse> {
+        try {
+            const response = await api.post<UpdateItineraryMetadataResponse>('/api/itinerary/update-metadata', data)
+            return response.data
+        } catch (error: any) {
+            console.error('Error updating itinerary metadata:', error)
+            throw new Error(error.response?.data?.error || error.message || 'Failed to update itinerary')
         }
     }
 }

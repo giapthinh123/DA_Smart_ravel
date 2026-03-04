@@ -2,11 +2,14 @@ from flask import Flask, request
 from .config import Config
 from .extensions import mongo, jwt, limiter, cors
 import logging
+import smtplib
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(Config.SMTP_USERNAME, Config.SMTP_PASSWORD)
     # Configure logging
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
@@ -17,7 +20,8 @@ def create_app():
     # CORS Configuration
     cors.init_app(app, resources={
         r"/api/*": {
-            "origins": ["http://localhost:3000", "http://a36a0a125b14.sn.mynetname.net:8116"],  
+            # "origins": ["http://localhost:3000", "http://a36a0a125b14.sn.mynetname.net:8116","https://races-merchant-schedules-kinda.trycloudflare.com"],  
+            "origins": "*",
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
             "expose_headers": ["Content-Type", "Authorization"],
@@ -41,12 +45,33 @@ def create_app():
     mongo.init_app(app)
     jwt.init_app(app)
     limiter.init_app(app)
-    # JWT token blacklist loader
+
+    # Create DB indexes after mongo is initialised
+    with app.app_context():
+        from .models.user_sessions import UserSessions
+        UserSessions.ensure_indexes(mongo)
+
     @jwt.token_in_blocklist_loader
     def check_if_token_revoked(jwt_header, jwt_payload):
         jti = jwt_payload["jti"]
-        token = mongo.db.token_blacklist.find_one({"jti": jti})
-        return token is not None
+        token_type = jwt_payload.get("type", "access")
+
+        if mongo.db.token_blacklist.find_one({"jti": jti}):
+            return True
+
+        if token_type == "access":
+            session = mongo.db.user_sessions.find_one({"access_jti": jti})
+        else:
+            session = mongo.db.user_sessions.find_one({"refresh_jti": jti})
+
+        if session is None:
+            return True
+
+        if token_type == "access":
+            from .models.user_sessions import UserSessions as _US
+            _US.update_last_used(mongo, jti)
+
+        return False
     
     # JWT identity handlers for dict identity support
     # Serialize dict identity to JSON string when creating token
@@ -80,6 +105,9 @@ def create_app():
     from .routes.itinerary import itinerary_bp
     from .routes.payments import payments_bp
     from .routes.tours import tours_bp
+    from .routes.devices import devices_bp
+    from .routes.admin import admin_bp
+    from .routes.tour_bookings import tour_bookings_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(users_bp, url_prefix="/api/users")
@@ -89,5 +117,8 @@ def create_app():
     app.register_blueprint(itinerary_bp, url_prefix="/api/itinerary")
     app.register_blueprint(payments_bp, url_prefix="/api/payments")
     app.register_blueprint(tours_bp, url_prefix="/api/tours")
+    app.register_blueprint(devices_bp, url_prefix="/api/devices")
+    app.register_blueprint(admin_bp, url_prefix="/api/admin")
+    app.register_blueprint(tour_bookings_bp, url_prefix="/api/tour-bookings")
 
     return app

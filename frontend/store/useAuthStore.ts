@@ -19,7 +19,7 @@ interface AuthActions {
   login: (credentials: LoginCredentials & { remember?: boolean }) => Promise<void>
   register: (userData: RegisterData) => Promise<void>
   logout: () => Promise<void>
-  checkAuth: () => void
+  checkAuth: () => Promise<void> | void
   clearError: () => void
   setLoading: (loading: boolean) => void
   updateUser: (user: User) => void
@@ -105,27 +105,23 @@ export const useAuthStore = create<AuthStore>()(
           }
         },
 
-        checkAuth: () => {
+        checkAuth: async () => {
           if (typeof window === 'undefined') return
 
-          // Use AuthService as single source of truth for token validity
           const token = AuthService.getStoredToken()
-          const user = AuthService.getStoredUser()
-
-          if (token && user) {
-            set({
-              user,
-              token,
-              isAuthenticated: true,
-            })
-          } else {
-            // Token expired or not found
+          if (!token) {
             AuthService.clearStorage()
-            set({
-              user: null,
-              token: null,
-              isAuthenticated: false,
-            })
+            set({ user: null, token: null, isAuthenticated: false })
+            return
+          }
+
+          try {
+            const user = await AuthService.getCurrentUser()
+            set({ user, token, isAuthenticated: true })
+            localStorage.setItem('user_data', JSON.stringify(user))
+          } catch {
+            AuthService.clearStorage()
+            set({ user: null, token: null, isAuthenticated: false })
           }
         },
 

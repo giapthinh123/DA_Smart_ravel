@@ -25,6 +25,13 @@ class TourModel:
         return TourModel._serialize(doc)
 
     @staticmethod
+    def find_tour_by_id(mongo, tour_id):
+        """Return tour document without _id (raw dict, no serialization)."""
+        return mongo.db[TourModel.COLLECTION].find_one(
+            {"tour_id": tour_id}, {"_id": 0}
+        )
+
+    @staticmethod
     def delete_tour(mongo, tour_id):
         return mongo.db[TourModel.COLLECTION].delete_one({"tour_id": tour_id})
 

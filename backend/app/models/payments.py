@@ -146,3 +146,29 @@ class Payments:
             if key in serialized and isinstance(serialized[key], datetime):
                 serialized[key] = serialized[key].isoformat()
         return serialized
+
+    @staticmethod
+    def aggregate_by_date_range(mongo, pipeline):
+        """Run an arbitrary aggregation pipeline on the payments collection."""
+        return list(mongo.db.payments.aggregate(pipeline))
+
+    @staticmethod
+    def aggregate_revenue_by_status(mongo, start_date, end_date):
+        """Aggregate revenue grouped by payment_status for a date range."""
+        pipeline = [
+            {
+                "$match": {
+                    "payment_status": "completed",
+                    "created_at": {"$gte": start_date, "$lt": end_date},
+                }
+            },
+            {
+                "$group": {
+                    "_id": None,
+                    "total_revenue": {"$sum": "$amount"},
+                    "count": {"$sum": 1},
+                }
+            },
+        ]
+        return list(mongo.db.payments.aggregate(pipeline))
+

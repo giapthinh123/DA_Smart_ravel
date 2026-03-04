@@ -256,6 +256,8 @@ function PreferencesContent() {
         // Create base tour using ItineraryService
         const result = await ItineraryService.createItinerary({
           city_id: tripData.destination_city_id || tripData.cityId,
+          city_name: tripData.destination,
+          name: tripData.departure +" to " +tripData.destination,
           trip_duration_days: durationDays,
           start_date: startDateStr,
           guest_count: (tripData.adults || 2) + (tripData.children || 0),
